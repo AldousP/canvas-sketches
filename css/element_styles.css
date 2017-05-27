@@ -67,6 +67,7 @@ pyser/* Button Look And Feels */
 }
 
 .canvas {
+    border-radius: 10px;
     padding-left: 0;
     padding-right: 0;
     margin-left: auto;

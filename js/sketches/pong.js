@@ -4,13 +4,6 @@
  */
 
 (function () {
-  var FPS = 60;
-  var elapsed = 0;
-  var lastFrame = 0;
-  var delta = 0;
-  var startTime = new Date().getTime();
-  var frameHistory = [];
-
   var canvas = document.getElementById("canvas-pong");
   var ctx = canvas.getContext("2d");
   var cW = canvas.width;
@@ -18,17 +11,21 @@
   var img = loadImage("teapot.jpg");
   var sprite_teaPot = new Sprite(loadImage("teapot.jpg"), 0, 0, 16, 16);
 
+  var last = 0;
+  var current = 0;
+  var delta;
+  var frameRate;
+  var frameHistory = [];
+  var historyCap = 30;
 
   function renderLoop() {
-    var current = new Date().getTime() - startTime;
-    delta = current - lastFrame;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     pollForInput();
     update();
     // render();
     renderDebug();
-    lastFrame = current;
-    elapsed += delta;
+    window.requestAnimationFrame(renderLoop);
   }
 
   function pollForInput() {
@@ -36,7 +33,21 @@
   }
 
   function update() {
+    current = new Date().getTime();
+    delta = (current - last) / 1000;
+    frameRate = (1000 / delta) / 1000;
+    last = current;
+    frameHistory.push(frameRate);
+    if (frameHistory.length > historyCap) {
+      frameHistory.splice(0, 1);
+    }
 
+    var avg = 0;
+    for (var i = 0; i < frameHistory.length; i ++) {
+      avg += frameHistory[i];
+    }
+    avg /= frameHistory.length;
+    frameRate = avg;
   }
 
   function render() {
@@ -47,11 +58,13 @@
   }
 
   function renderDebug() {
-    ctx.font = "30px Arial";
-    ctx.fillStyle = "#00ff00";
-    ctx.fillText("Run Time: " + elapsed, 16, 46);
+    ctx.font = "24px Questrial";
+    ctx.fillStyle = "#00FF00";
+    ctx.fillText("VIDEO 1", 16, 46);
+    ctx.fillText(frameRate.toFixed(0), cW - 48, 46);
   }
 
-  setInterval(renderLoop, 0);
+  window.requestAnimationFrame(renderLoop);
+  //
 })();
 

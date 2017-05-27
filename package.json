@@ -1,0 +1,27 @@
+{
+  "name": "canvas-sketches",
+  "version": "1.0.0",
+  "description": "Collection of canvas sketches wrapped in a responsive web context.",
+  "main": "js/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aldousp/canvas-sketches.git"
+  },
+  "keywords": [
+    "HTML5",
+    "Canvas",
+    "Art"
+  ],
+  "author": "Aldous",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aldousp/canvas-sketches/issues"
+  },
+  "homepage": "https://github.com/aldousp/canvas-sketches#readme",
+  "dependencies": {
+    "font-awesome": "^4.7.0"
+  }
+}

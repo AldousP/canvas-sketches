@@ -1,0 +1,121 @@
+#page-nav {
+    z-index: 5;
+    list-style-type: none;
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    color: black;
+    background-color: white;
+    text-decoration: none;
+    font-style: normal;
+    justify-content: space-between;
+    height: 128px;
+    transition: left 100ms, margin 200ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+#page-nav.nav-hidden {
+    left: -105%;
+}
+
+#page-nav .toggle {
+    display: none;
+}
+
+#page-nav .toggle i{
+    margin: auto;
+    padding: 0;
+    transition: all 300ms;
+}
+
+#page-nav.nav-hidden .toggle i {
+    transform: rotate(180deg);
+}
+
+#page-nav ul {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+    width: 100%;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    font-size: .85em;
+}
+
+#page-nav ul li {
+    background-color: black;
+    color: white;
+    font-style: italic;
+    flex-grow: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1px;
+}
+
+#page-nav ul :first-child {
+    border-radius: 4px 4px 0 0;
+}
+
+#page-nav ul :last-child{
+    border-radius: 0 0 4px 4px;
+}
+
+/*Mobile Considerations*/
+@media (max-width: 425px) {
+    #page-nav {
+        display: flex;
+        flex-direction: row;
+        position: fixed;
+        width: 100% !important;
+        left: 5vw;
+        padding: 0;
+        height: 75%;
+        top: 20%;
+        bottom: 15%;
+        opacity: .85;
+        background-color: rgba(255, 255, 255, 0.13) !important;
+    }
+
+    #page-nav .toggle {
+        display: flex;
+        position: absolute;
+        left: 90vw;
+        align-items: baseline;
+        align-self: center;
+        justify-content: flex-end;
+        width: 15px;
+        background-color: white;
+        height: 60px;
+        border-radius: 0 3px 3px 0;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    #page-nav ul{
+        display: flex;
+        padding: 0;
+        flex-grow: 2;
+        flex-direction: column;
+        margin: 2px;
+        color: white;
+    }
+
+    #page-nav ul li {
+        padding: 0;
+        height: initial;
+        flex-grow: 2;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 0;
+        background-color: black;
+        letter-spacing: .5em;
+        font-style: italic;
+        margin: 1px;
+        font-size: 20px;
+    }
+}

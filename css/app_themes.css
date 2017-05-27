@@ -1,0 +1,26 @@
+/*Themes */
+.moderno {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.moderno p {
+    line-height: 1.75em;
+    text-indent: 2em;
+    font-family: 'Open Sans', sans-serif;
+}
+
+#scroll-cover {
+    background-image: url(../img/cover.jpg) !important;
+    box-shadow: inset -1px 0 20px 20px rgba(0, 0, 0, 0.06) !important;
+    background-size: 150%;
+    background-position: 50%;
+    background-repeat: no-repeat;
+}
+
+/*Mobile Considerations*/
+@media (max-width: 700px) {
+    #scroll-cover {
+        background-size: 300%;
+    }
+}
+

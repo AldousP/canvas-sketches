@@ -23,7 +23,7 @@
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     pollForInput();
     update();
-    // render();
+    render();
     renderDebug();
     window.requestAnimationFrame(renderLoop);
   }
@@ -50,11 +50,17 @@
     frameRate = avg;
   }
 
-  function render() {
-    ctx.fillStyle = "#0d7da2";
-    ctx.beginPath();
-    ctx.fillRect(0, 0, 64, 64);
+  function drawLines() {
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.moveTo(cW / 2, 0);
+    ctx.lineTo(cW / 2, cH);
+    ctx.moveTo(0, cH / 2);
+    ctx.lineTo(cW, cH / 2);
     ctx.stroke();
+  }
+
+  function render() {
+    drawLines();
   }
 
   function renderDebug() {

@@ -12,39 +12,23 @@ var frameRate;
 var frameHistory = [];
 var historyCap = 30;
 
-var polygon = generatePolygon(3, 32, 0, 0, 1.5 * Math.PI);
+var polygon = generatePolygon(4, .5, 0, 0, 1.25 * Math.PI);
 var worldCam = new Camera();
 var UICam = new Camera();
-var view = new View(canvas.width * .9, canvas.height * .9);
-var polyPos = new Vector(100, 0);
+var view = new View(canvas.width * .29, canvas.height * .29);
+var polyPos = new Vector(0 , 0);
 
 window.requestAnimationFrame(renderLoop);
 
+// view.canvPos.add(-canvas.width / 4, -canvas.height / 4);
 
 function renderLoop() {
   // Blank out screen
   ctx.fillStyle = "#000000";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-
   update();
-
-  // applyCam(worldCam);
   render();
-  // renderDebug();
-
   window.requestAnimationFrame(renderLoop);
-}
-
-function applyCam(cam) {
-  ctx.save();
-  ctx.setTransform(
-      cam.zoom,
-      0,
-      0,
-      cam.zoom,
-      cam.position.x,
-      cam.position.y
-  );
 }
 
 function update() {
@@ -75,6 +59,9 @@ function render() {
   ctx.translate(canvas.width / 2, canvas.height / 2);
   ctx.strokeStyle = "#FFFFFF";
 
+  ctx.strokeText("0, 0", 0, 0);
+
+  ctx.strokeStyle = "#00FF00";
   ctx.beginPath();
   ctx.rect(
       view.canvPos.x - view.canvWidth / 2,
@@ -83,27 +70,22 @@ function render() {
       view.canvHeight);
   ctx.stroke();
   ctx.clip();
-  ctx.strokeText("mid-world", 0, 0);
+  ctx.fillStyle = "#9800ff";
+  ctx.fillRect(
+      view.canvPos.x - view.canvWidth / 2,
+      view.canvPos.y - view.canvHeight / 2,
+      view.canvWidth,
+      view.canvHeight);
 
-  ctx.beginPath();
-  ctx.fillStyle = "#00FF00";
-  drawPolygon(polygon, polyPos);
+  ctx.fillStyle = "#FFFFFF";
+  view.renderPoly(polygon, polyPos, worldCam);
   ctx.fill();
+
   ctx.restore();
 }
 
-function renderDebug() {
-  ctx.font = "24px Questrial";
-  ctx.fillStyle = "#00FF00";
-  ctx.fillText("VIDEO 1", 16, 46);
-  ctx.fillText(frameRate.toFixed(0), cW - 48, 46);
-
-  ctx.fillStyle = "#fdfff0";
-  ctx.fillText("(0 , 0)", 0, 0);
-}
-
-
 function drawPolygon(polygon, pos) {
+  ctx.beginPath();
   if (!polygon.pts) {
     console.error('No property of name [pts] found on polygon parameter.');
   } else {
@@ -166,6 +148,12 @@ function Vector(x, y) {
     return this;
   };
 
+  this.addVec = function (vector) {
+    this.x += vector.x;
+    this.y += vector.y;
+    return this;
+  };
+
   this.copy = function () {
     return new Vector(this.x, this.y);
   }
@@ -196,9 +184,25 @@ function View(canvWidth, canvHeight) {
   this.canvWidth = canvWidth;
   this.canvHeight = canvHeight;
   
-  this.renderPoly = function (poly, pos) {
-    var adjPos = pos
-    drawPolygon(poly, pos)
+  this.renderPoly = function (poly, pos, cam) {
+    var viewAspectRatio = this.canvHeight / this.canvWidth;
+    var canvasAspectRatio = canvas.height / canvas.width;
+
+    var hDiff = this.canvWidth / canvas.width;
+    var vDiff = this.canvHeight / canvas.height;
+
+    var canHDiff = canvas.width/ this.worldWidth;
+    var canVDiff = canvas.height / this.worldHeight;
+
+    ctx.setTransform(
+        hDiff * canHDiff,
+        0,
+        0,
+        vDiff * canVDiff,
+        canvas.width / 2 + this.canvPos.x,
+        canvas.height / 2 + this.canvPos.y
+    );
+    drawPolygon(poly, pos);
   }
 }
 

@@ -15,12 +15,22 @@ var historyCap = 30;
 var polygon = generatePolygon(4, .5, 0, 0, 1.25 * Math.PI);
 var worldCam = new Camera();
 var UICam = new Camera();
-var view = new View(canvas.width * .29, canvas.height * .29);
+
 var polyPos = new Vector(0 , 0);
 
-window.requestAnimationFrame(renderLoop);
+var views = [];
 
-// view.canvPos.add(-canvas.width / 4, -canvas.height / 4);
+var radius = canvas.width / 4;
+for(var i = 0; i < 2; i++) {
+  var rotation = i * (Math.PI);
+  var tempView = new View(canvas.width * .49, canvas.height * .85);
+  tempView.canvPos.add(
+      Math.cos(rotation + Math.PI) * radius,
+      Math.sin(rotation + Math.PI) * radius);
+  views.push(tempView);
+}
+
+window.requestAnimationFrame(renderLoop);
 
 function renderLoop() {
   // Blank out screen
@@ -59,27 +69,29 @@ function render() {
   ctx.translate(canvas.width / 2, canvas.height / 2);
   ctx.strokeStyle = "#FFFFFF";
 
-  ctx.strokeText("0, 0", 0, 0);
+  views.forEach(function (view) {
+    ctx.save();
+    ctx.strokeStyle = "#00FF00";
+    ctx.beginPath();
+    ctx.rect(
+        view.canvPos.x - view.canvWidth / 2,
+        view.canvPos.y - view.canvHeight / 2,
+        view.canvWidth,
+        view.canvHeight);
+    ctx.stroke();
+    ctx.clip();
+    ctx.fillStyle = "#9800ff";
+    ctx.fillRect(
+        view.canvPos.x - view.canvWidth / 2,
+        view.canvPos.y - view.canvHeight / 2,
+        view.canvWidth,
+        view.canvHeight);
 
-  ctx.strokeStyle = "#00FF00";
-  ctx.beginPath();
-  ctx.rect(
-      view.canvPos.x - view.canvWidth / 2,
-      view.canvPos.y - view.canvHeight / 2,
-      view.canvWidth,
-      view.canvHeight);
-  ctx.stroke();
-  ctx.clip();
-  ctx.fillStyle = "#9800ff";
-  ctx.fillRect(
-      view.canvPos.x - view.canvWidth / 2,
-      view.canvPos.y - view.canvHeight / 2,
-      view.canvWidth,
-      view.canvHeight);
-
-  ctx.fillStyle = "#FFFFFF";
-  view.renderPoly(polygon, polyPos, worldCam);
-  ctx.fill();
+    ctx.fillStyle = "#FFFFFF";
+    view.renderPoly(polygon, polyPos, worldCam);
+    ctx.fill();
+    ctx.restore();
+  });
 
   ctx.restore();
 }

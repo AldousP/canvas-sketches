@@ -12,7 +12,11 @@ var frameRate;
 var frameHistory = [];
 var historyCap = 30;
 
-var polygon = generatePolygon(3, 64, 0, 0, 1.5 * Math.PI);
+var polygon = generatePolygon(3, 32, 0, 0, 1.5 * Math.PI);
+var worldCam = new Camera();
+var UICam = new Camera();
+var world = new World(canvas.width * .9, canvas.height * .9);
+var polyPos = new Vector(100, 0);
 
 window.requestAnimationFrame(renderLoop);
 
@@ -23,11 +27,24 @@ function renderLoop() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   update();
-  setZoom();
+
+  // applyCam(worldCam);
   render();
-  renderDebug();
+  // renderDebug();
 
   window.requestAnimationFrame(renderLoop);
+}
+
+function applyCam(cam) {
+  ctx.save();
+  ctx.setTransform(
+      cam.zoom,
+      0,
+      0,
+      cam.zoom,
+      cam.position.x,
+      cam.position.y
+  );
 }
 
 function update() {
@@ -53,12 +70,34 @@ function setZoom() {
 }
 
 function render() {
-  drawLines();
   ctx.save();
-  ctx.translate(cW / 2, cH / 2);
+
+  ctx.translate(canvas.width / 2, canvas.height / 2);
   ctx.strokeStyle = "#FFFFFF";
-  drawPolygon(polygon);
+
+  ctx.beginPath();
+  ctx.rect(
+      world.canvPos.x - world.canvWidth / 2,
+      world.canvPos.y - world.canvHeight / 2,
+      world.canvWidth,
+      world.canvHeight);
   ctx.stroke();
+  ctx.clip();
+  ctx.strokeText("mid-world", 0, 0);
+
+  ctx.beginPath();
+  ctx.fillStyle = "#00FF00";
+  drawPolygon(polygon, polyPos);
+  ctx.fill();
+
+  ctx.strokeStyle = "#00FFF00";
+  // ctx.strokeRect(
+  //     world.canvPos.x - world.canvWidth / 2,
+  //     world.canvPos.y - world.canvHeight / 2,
+  //     world.canvWidth,
+  //     world.canvHeight);
+
+
   ctx.restore();
 }
 
@@ -67,35 +106,24 @@ function renderDebug() {
   ctx.fillStyle = "#00FF00";
   ctx.fillText("VIDEO 1", 16, 46);
   ctx.fillText(frameRate.toFixed(0), cW - 48, 46);
+
+  ctx.fillStyle = "#fdfff0";
+  ctx.fillText("(0 , 0)", 0, 0);
 }
 
 
-// Geometry rendering functions
-function drawLines() {
-  ctx.strokeStyle = "#FFFFFF";
-  ctx.moveTo(cW / 2, 0);
-  ctx.lineTo(cW / 2, cH);
-  ctx.moveTo(0, cH / 2);
-  ctx.lineTo(cW, cH / 2);
-  ctx.stroke();
-
-  ctx.font = "12px Questrial";
-  ctx.fillStyle = "#FFFFFF";
-  ctx.fillText("0, 0", 0, 0);
-}
-
-function drawPolygon(polygon) {
+function drawPolygon(polygon, pos) {
   if (!polygon.pts) {
     console.error('No property of name [pts] found on polygon parameter.');
   } else {
     var firstPt = polygon.pts[0];
-    ctx.moveTo(firstPt.x, firstPt.y);
+    ctx.moveTo(firstPt.x + pos.x, firstPt.y + pos.y);
     polygon.pts.forEach(function (pt) {
       if (pt !== firstPt) {
-        ctx.lineTo(pt.x, pt.y);
+        ctx.lineTo(pt.x + pos.x, pt.y + pos.y);
       }
     });
-    ctx.lineTo(firstPt.x, firstPt.y);
+    ctx.lineTo(firstPt.x + pos.x, firstPt.y + pos.y);
   }
 }
 
@@ -126,8 +154,6 @@ function generatePolygon(vertCount, radius, x, y, startingDegree) {
 
 // Geometry Classes
 function Polygon() {
-  this.x = 0;
-  this.y = 0;
   this.pts = [];
 }
 
@@ -135,5 +161,38 @@ function Vector(x, y) {
   this.x = x;
   this.y = y;
   this.len = Math.sqrt((x * x) + (y * y));
+  
+  this.set = function (x, y) {
+    this.x = x;
+    this.y = y;
+    this.len = Math.sqrt((x * x) + (y * y));
+  }
 }
+
+function Entity(ID) {
+  this.ID = ID;
+  this.components = [];
+}
+
+function PositionComponent() {
+  this.x = 0;
+  this.y = 0;
+  this.z = 0;
+}
+
+function Camera() {
+  this.position = new Vector(0, 0);
+  this.width = 1;
+  this.height = 1;
+  this.zoom = 1;
+}
+
+function World(canvWidth, canvHeight) {
+  this.canvPos = new Vector(0 , 0);
+  this.worldWidth = 1;
+  this.worldHeight = 1;
+  this.canvWidth = canvWidth;
+  this.canvHeight = canvHeight;
+}
+
 

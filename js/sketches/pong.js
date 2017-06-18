@@ -15,7 +15,7 @@ var historyCap = 30;
 var polygon = generatePolygon(3, 32, 0, 0, 1.5 * Math.PI);
 var worldCam = new Camera();
 var UICam = new Camera();
-var world = new World(canvas.width * .9, canvas.height * .9);
+var view = new View(canvas.width * .9, canvas.height * .9);
 var polyPos = new Vector(100, 0);
 
 window.requestAnimationFrame(renderLoop);
@@ -77,10 +77,10 @@ function render() {
 
   ctx.beginPath();
   ctx.rect(
-      world.canvPos.x - world.canvWidth / 2,
-      world.canvPos.y - world.canvHeight / 2,
-      world.canvWidth,
-      world.canvHeight);
+      view.canvPos.x - view.canvWidth / 2,
+      view.canvPos.y - view.canvHeight / 2,
+      view.canvWidth,
+      view.canvHeight);
   ctx.stroke();
   ctx.clip();
   ctx.strokeText("mid-world", 0, 0);
@@ -89,15 +89,6 @@ function render() {
   ctx.fillStyle = "#00FF00";
   drawPolygon(polygon, polyPos);
   ctx.fill();
-
-  ctx.strokeStyle = "#00FFF00";
-  // ctx.strokeRect(
-  //     world.canvPos.x - world.canvWidth / 2,
-  //     world.canvPos.y - world.canvHeight / 2,
-  //     world.canvWidth,
-  //     world.canvHeight);
-
-
   ctx.restore();
 }
 
@@ -166,6 +157,17 @@ function Vector(x, y) {
     this.x = x;
     this.y = y;
     this.len = Math.sqrt((x * x) + (y * y));
+    return this;
+  };
+  
+  this.add = function (x, y) {
+    this.x += x;
+    this.y += y;
+    return this;
+  };
+
+  this.copy = function () {
+    return new Vector(this.x, this.y);
   }
 }
 
@@ -187,12 +189,17 @@ function Camera() {
   this.zoom = 1;
 }
 
-function World(canvWidth, canvHeight) {
+function View(canvWidth, canvHeight) {
   this.canvPos = new Vector(0 , 0);
   this.worldWidth = 1;
   this.worldHeight = 1;
   this.canvWidth = canvWidth;
   this.canvHeight = canvHeight;
+  
+  this.renderPoly = function (poly, pos) {
+    var adjPos = pos
+    drawPolygon(poly, pos)
+  }
 }
 
 

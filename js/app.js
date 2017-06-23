@@ -23,7 +23,6 @@ function renderLists() {
 	systemList.appendChild(newEntry);
   });
 
-
   var keys = Object.keys(entityHandler.entities);
   keys.forEach(function (key) {
     var entity = entityHandler.entities[key];
@@ -45,6 +44,15 @@ function pauseSystem(ID) {
 
 function resetSim() {
   restoreState();
+  for (var i = 0; i < resetButtons.length; i++) {
+	resetButtons[i].classList.add('active');
+  }
+
+  window.setTimeout(function () {
+	for (var i = 0; i < resetButtons.length; i++) {
+	  resetButtons[i].classList.remove('active');
+	}
+  }, 100);
 }
 
 for (var i = 0; i < resetButtons.length; i++) {

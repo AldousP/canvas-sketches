@@ -32,21 +32,11 @@ var ComponentType = {
 setup();
 
 function copyState() {
-  storedState = entityHandler.entities;
-}
-
-function copyObject(obj) {
-  var newObj = {};
-
+  storedState = JSON.stringify(entityHandler.entities);
 }
 
 function restoreState() {
-  entityHandler.entities = storedState;
-  console.log("State Restored");
-  console.log("Prior State:");
-  console.log(entityHandler.entities);
-  console.log("Current State:");
-  console.log(storedState);
+  entityHandler.entities = JSON.parse(storedState);
 }
 
 function setup() {
@@ -99,8 +89,7 @@ function PhysicsSystem(ID) {
   this.processEntity = function (entity) {
     if (!paused) {
 	  var vel = entity.components[ComponentType.velocity].velocity;
-	  entity.components[ComponentType.position].position
-		  .addVec(vel.copy().scl(delta));
+	  addVecVec(entity.components[ComponentType.position].position, sclVec(cpyVec(vel), delta));
     }
   };
 
@@ -406,7 +395,7 @@ function View(canvWidth, canvHeight) {
         canvas.width / 2 + this.canvPos.x,
         canvas.height / 2 + this.canvPos.y
     );
-    var worldFlip = pos.copy();
+    var worldFlip = cpyVec(pos);
     worldFlip.y = -worldFlip.y;
     drawPolygon(poly, worldFlip);
   }
@@ -424,40 +413,39 @@ function Vector(x, y) {
   this.x = x ? x : 0;
   this.y = y ? y : 0;
   this.len = Math.sqrt((x * x) + (y * y));
-
-  this.set = function (x, y) {
-    this.x = x;
-    this.y = y;
-    this.len = Math.sqrt((x * x) + (y * y));
-    return this;
-  };
-
-  this.add = function (x, y) {
-    this.x += x;
-    this.y += y;
-    this.len = Math.sqrt((x * x) + (y * y));
-    return this;
-  };
-
-  this.addVec = function (vector) {
-    this.x += vector.x;
-    this.y += vector.y;
-    this.len = Math.sqrt((x * x) + (y * y));
-    return this;
-  };
-
-  this.copy = function () {
-    return new Vector(this.x, this.y);
-  };
-  
-  this.scl = function (scalar) {
-    this.x *= scalar;
-    this.y *= scalar;
-    this.len = Math.sqrt((x * x) + (y * y));
-    return this;
-  };
 }
 
+function setVec(vec, x, y) {
+  vec.x = x;
+  vec.y = y;
+  return vec;
+}
+
+function cpyVec(vec) {
+  return new Vector(vec.x, vec.y);
+}
+
+function sclVec(vec, scalar) {
+  vec.x *= scalar;
+  vec.y *= scalar;
+  return vec;
+}
+
+function multVec(vec1, vec2) {
+  vec1.x *= vec2.x;
+  vec1.y += vec2.y;
+  return vec1;
+}
+
+function addVecConst(vec, x, y) {
+  vec.x += x;
+  vec.y += y;
+  return vec;
+}
+
+function addVecVec(vec, vec2) {
+  return addVecConst(vec, vec2.x, vec2.y);
+}
 
 function hashForInt(integer) {
   integer = integer * 10 + 100;

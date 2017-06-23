@@ -8,17 +8,13 @@ var delta;
 var frameRate;
 var frameHistory = [];
 var historyCap = 30;
-
 var worldCam = new Camera();
 var padding = .95;
 var view;
 var backgroundColor = "#545454";
-
 var entityHandler = new EntityHandler();
 var systemHandler = new SystemHandler();
-
 var storedState = {};
-
 var paused = false;
 
 setup();
@@ -42,7 +38,6 @@ function setup() {
   sampleEntity.addComponent(new PositionComponent());
   sampleEntity.addComponent(new VelocityComponent(0, -.25));
   entityHandler.addEntity(sampleEntity);
-
   systemHandler.addSystem(new PhysicsSystem("A"));
   systemHandler.addSystem(new RenderingSystem("B"));
   copyState();

@@ -60,46 +60,6 @@
     margin-top: 8px;
 }
 
-@media (max-width : 450px) {
-    body {
-        background: #2a2a2a url('../img/dark-triangles.png');
-    }
-
-    .hide-mobile{
-        display: none;
-    }
-
-    .show-mobile {
-        display: inherit;
-    }
-
-    .canvas {
-        width: 75vw;
-        height: 75vw;
-        border-radius: 8px 8px 0 0;
-    }
-
-    .content-container {
-        top: 0;
-        justify-content: flex-start;
-        flex-direction: column;
-        align-items: center;
-        padding-bottom: 8px;
-        background-color: rebeccapurple;
-        border-radius: 17px;
-    }
-}
-
-@media (min-width : 450px) {
-    .hide-mobile{
-        display: initial;
-    }
-
-    .show-mobile {
-        display: none;
-    }
-}
-
 #web-boy {
     background-color: black;
     width: 75vw;
@@ -198,3 +158,42 @@
     margin-top: -1px;
 }
 
+@media (max-width : 450px) {
+    body {
+        background: #2a2a2a url('../img/dark-triangles.png');
+    }
+
+    .hide-mobile{
+        display: none;
+    }
+
+    .show-mobile {
+        display: inherit;
+    }
+
+    .canvas {
+        width: 75vw;
+        height: 75vw;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .content-container {
+        top: 0;
+        justify-content: flex-start;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 8px;
+        background-color: rebeccapurple;
+        border-radius: 17px;
+    }
+}
+
+@media (min-width : 450px) {
+    .hide-mobile{
+        display: initial;
+    }
+
+    .show-mobile {
+        display: none;
+    }
+}

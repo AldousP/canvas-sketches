@@ -1,0 +1,198 @@
+.header {
+    font-family: 'Arial', sans-serif !important;
+}
+
+.sim-container {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 400px;
+    width: 174px;
+    overflow-y: scroll;
+}
+
+.list-item {
+    width: 74%;
+    display: flex;
+    padding: 18px;
+    margin-top: 4px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    border: thin solid gainsboro;
+}
+
+.canvas {
+    border-radius: 10px;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 32px;
+    margin-right: 32px;
+    display: block;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    border: 8px solid;
+}
+
+.mob-footer {
+    margin: auto;
+    opacity: .45;
+}
+
+.controls {
+    overflow: visible;
+    padding: 8px;
+}
+
+.systems-list.list-item {
+    width: 64px;
+    height: 32px;
+    margin-bottom: 8px;
+    margin-top: 8px;
+}
+
+@media (max-width : 450px) {
+    body {
+        background: #2a2a2a url('../img/dark-triangles.png');
+    }
+
+    .hide-mobile{
+        display: none;
+    }
+
+    .show-mobile {
+        display: inherit;
+    }
+
+    .canvas {
+        width: 75vw;
+        height: 75vw;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .content-container {
+        top: 0;
+        height: 95vh;
+        justify-content: flex-start;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 8px;
+        background-color: rebeccapurple;
+        border-radius: 17px;
+    }
+}
+
+@media (min-width : 450px) {
+    .hide-mobile{
+        display: initial;
+    }
+
+    .show-mobile {
+        display: none;
+    }
+}
+
+#web-boy {
+    background-color: black;
+    width: 75vw;
+    color: white;
+    height: 15px;
+    margin: auto;
+    font-family: inherit;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 0 0 8px 8px;
+    padding: 10px 8px 15px;
+}
+
+.mobile-controls {
+    height: 128px;
+    justify-content: space-between;
+    margin-top: 25px;
+    opacity: .35;
+    flex-wrap: nowrap;
+}
+
+.mobile-pause {
+    width: 32px;
+    height: 8px;
+    border-radius: 8px;
+    margin: 8px;
+    background-color: #2c2c2c;
+}
+
+.mobile-pause.active {
+    background-color: #2c2c2c;
+    box-shadow: none;
+}
+
+.system-buttons {
+    justify-content: center;
+}
+
+.action-buttons {
+    display: flex;
+}
+
+.action-buttons :first-child {
+    margin-top: 32px;
+}
+
+.action-button {
+    width: 42px;
+    height: 42px;
+    background-color: black;
+    border-radius: 36px;
+    color: white;
+    border-style: none;
+}
+
+.arrow-button {
+    width: 32px;
+    height: 32px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.d-pad {
+    display: flex;
+}
+
+.d-pad :first-child {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.d-pad :last-child {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.middle-button {
+    width: 32px;
+    height: 32px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.device-title {
+    margin-top: -1px;
+}
+

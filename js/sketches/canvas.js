@@ -1,6 +1,6 @@
 "use strict";
 
-var canvas = document.getElementById("canvas-pong");
+var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 var last = new Date().getTime();
 var current = new Date().getTime();
@@ -10,12 +10,15 @@ var frameHistory = [];
 var historyCap = 30;
 
 var worldCam = new Camera();
-var padding = .85;
+var padding = .95;
 var view;
 var backgroundColor = "#545454";
 
 var entityHandler = new EntityHandler();
 var systemHandler = new SystemHandler();
+
+
+var paused = false;
 
 var ComponentType = {
   polygon : "poly",
@@ -30,8 +33,8 @@ setup();
 function setup() {
   window.requestAnimationFrame(renderLoop);
   view = new View(canvas.width * padding, canvas.height * padding);
-  view.worldWidth = 8;
-  view.worldHeight = 4.5;
+  view.worldWidth = 3;
+  view.worldHeight = 3;
 
   var sampleEntity = new Entity();
   sampleEntity.addComponent(new PolygonComponent(generatePolygon(8, .25)));
@@ -63,6 +66,7 @@ function update() {
 
 function PhysicsSystem(ID) {
   this.ID = ID;
+  this.name = "Physics";
   this.componentFilter = [
     ComponentType.position,
     ComponentType.velocity
@@ -73,9 +77,11 @@ function PhysicsSystem(ID) {
   };
 
   this.processEntity = function (entity) {
-    var vel = entity.components[ComponentType.velocity].velocity;
-    entity.components[ComponentType.position].position
-        .addVec(vel.copy().scl(delta));
+    if (!paused) {
+	  var vel = entity.components[ComponentType.velocity].velocity;
+	  entity.components[ComponentType.position].position
+		  .addVec(vel.copy().scl(delta));
+    }
   };
 
   this.post = function () {
@@ -85,6 +91,7 @@ function PhysicsSystem(ID) {
 
 function RenderingSystem(ID) {
   this.ID = ID;
+  this.name = "Rendering";
   this.componentFilter = [
     ComponentType.polygon,
     ComponentType.position
@@ -113,7 +120,6 @@ function RenderingSystem(ID) {
         entity.components[ComponentType.position].position,
         worldCam
     );
-    // ctx.fill();
     ctx.stroke();
   };
 
@@ -229,9 +235,10 @@ function EntityHandler() {
     keys.forEach(function (key) {
       that.mapEntity(entity.components[key].name, entity)
     });
-    return entity.ID;
+	renderLists();
+	return entity.ID;
   };
-  
+
   this.mapEntity = function (componentName, entity) {
     if (this.entityMap[componentName]) {
       if (this.entityMap[componentName].indexOf(entity.ID) < 0) {
@@ -250,10 +257,12 @@ function EntityHandler() {
       this.mapEntity(component.name, entity);
     }
     entity.components[component.name] = component;
+	renderLists();
   };
-  
+
   this.removeEntity = function (ID) {
     delete this.entities[ID];
+	renderLists();
   };
 }
 
@@ -264,10 +273,14 @@ function SystemHandler() {
     this.systems.sort(function (a, b) {
       return a.ID.localeCompare(b.ID);
     });
+	renderLists();
   };
-  
+
   this.updateSystems = function (delta, entityHandler) {
-    this.systems.forEach(function (system) {
+	this.systems.forEach(function (system) {
+	  if (system.paused) {
+	    return;
+      }
       var filters = system.componentFilter;
       if (filters) {
         var sets = {};
@@ -319,8 +332,9 @@ function SystemHandler() {
       }
     })
   };
-  
+
   this.addSystem = function (system) {
+    renderLists();
     this.systems.push(system);
     this.sortSystems();
   }
@@ -328,6 +342,7 @@ function SystemHandler() {
 
 function System(ID) {
   this.ID = ID;
+  this.name = "";
 
   this.componentFilter = [
 
@@ -345,8 +360,6 @@ function System(ID) {
     
   };
 }
-
-
 
 function View(canvWidth, canvHeight) {
   this.canvPos = new Vector(0 , 0);

@@ -1,20 +1,19 @@
 <html>
   <head>
     <title>Canvas Sketches</title>
-    <meta name="theme-color" content="#0d7da2">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0" >
     <link rel='shortcut icon' type='image/x-icon' href='favicon.ico'/>
     <link rel="stylesheet" href="css/app_layout.css" />
     <link rel="stylesheet" href="css/app_themes.css" />
     <link rel="stylesheet" href="css/element_styles.css" />
+    <link rel="stylesheet" href="css/app.css" />
     <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css" />
-    <!--<link href="https://fonts.googleapis.com/css?family=Questrial" rel="stylesheet">-->
-    <!--<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">-->
+    <link href="https://fonts.googleapis.com/css?family=Pathway+Gothic+One" rel="stylesheet">
   </head>
   <body class="moderno">
-    <div class="letterhead">
+    <div class="letterhead hide-mobile">
       <div class="letterhead-content">
-        <div>HTML Canvas Sketches</div>
+        <div>Sketch Gallery</div>
         <div class="subtext">
           <a href="https://github.com/aldousp/canvas-sketches" style="color: white" target="_blank">
             <i class="fa fa-github fa-3x" aria-hidden="true"></i>
@@ -23,19 +22,101 @@
       </div>
     </div>
     <div class="content-container">
-      <div class="row">
+      <div class="row hide-mobile">
         <div style="width: 100%">
-          <h1 class="center">Gallery</h1>
-          <hr/>
+          <h1 class="center  header">ECS Engine</h1>
         </div>
       </div>
-      <div class="row">
+      <div class="row no-pad-mobile">
         <div class="column" style="width: 100%;" >
-          <canvas id="canvas-pong" class="canvas" width="640" height="360"></canvas>
+          <div class="sim-container">
+            <div class="systems-pane hide-mobile">
+              <h3 class="center">Systems</h3>
+              <hr />
+              <div id="systems-list" class="list">
+                <div class="list-item">
+                  <div>Gravity</div>
+                  <button class="toggle-button sm">
+                    <i class="fa fa-pause" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <canvas id="canvas" class="canvas" width="400" height="400"></canvas>
+            <div class="entities-pane hide-mobile">
+              <h3 class="center">Entities</h3>
+              <hr />
+              <div id="entities-list" class="list">
+                <div class="list-item">
+                  <div>Gravity</div>
+                  <button class="toggle-button sm">
+                    <i class="fa fa-pause" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="footer">Made with <i class="fa fa-heart" aria-hidden="true"></i> <a href="https://github.com/aldousp" target="_blank">by Aldous</a>.</div>
+      <div class="row show-mobile device-title">
+        <div id="web-boy" class="center">
+          <div>WebBoy</div>
+        </div>
+      </div>
+      <div class="row controls hide-mobile">
+        <div class="column" style="width: 100%;" >
+          <button class="pause-sim toggle-button">
+            <i class="fa fa-pause" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <div class="row show-mobile input-row">
+        <div style="width: 80%" class="column center mobile-controls">
+          <div class="row">
+            <div class="d-pad">
+              <div style="width: 33%">
+                <div class="arrow-button left">
+                  <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div style="width: 33%">
+                <div class="arrow-button up">
+                  <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                </div>
+                <div class="middle-button"></div>
+                <div class="arrow-button down">
+                  <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div style="width: 33%">
+                <div class="arrow-button  right">
+                  <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+            <div class="action-buttons">
+              <button class="action-button">B</button>
+              <button class="action-button">A</button>
+            </div>
+          </div>
+          <div class="row system-buttons">
+            <button class="toggle-button mobile-pause"></button>
+            <button class="pause-sim toggle-button mobile-pause"></button>
+          </div>
+        </div>
+      </div>
+      <div class="footer hide-mobile">Made with <i class="fa fa-heart" aria-hidden="true"></i> <a href="https://github.com/aldousp" target="_blank">by Aldous</a>.</div>
+      <div class="mob-footer show-mobile"><a href="https://github.com/aldousp" target="_blank"><i class="fa fa-heart" aria-hidden="true"></i> </a></div>
     </div>
+    <div class="templates" style="display: none">
+      <div id="list-item-template" class="list-item">
+        <div> </div>
+        <button class="toggle-button sm" >
+          <i class="fa fa-pause" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <script src="js/app.js"></script>
     <script src="js/sketches/canvas.js"></script>
   </body>
 </html>

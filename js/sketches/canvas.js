@@ -17,6 +17,7 @@ var backgroundColor = "#545454";
 var entityHandler = new EntityHandler();
 var systemHandler = new SystemHandler();
 
+var storedState = {};
 
 var paused = false;
 
@@ -29,6 +30,24 @@ var ComponentType = {
 };
 
 setup();
+
+function copyState() {
+  storedState = entityHandler.entities;
+}
+
+function copyObject(obj) {
+  var newObj = {};
+
+}
+
+function restoreState() {
+  entityHandler.entities = storedState;
+  console.log("State Restored");
+  console.log("Prior State:");
+  console.log(entityHandler.entities);
+  console.log("Current State:");
+  console.log(storedState);
+}
 
 function setup() {
   window.requestAnimationFrame(renderLoop);
@@ -44,6 +63,7 @@ function setup() {
 
   systemHandler.addSystem(new PhysicsSystem("A"));
   systemHandler.addSystem(new RenderingSystem("B"));
+  copyState();
 }
 
 function renderLoop() {
@@ -438,6 +458,7 @@ function Vector(x, y) {
   };
 }
 
+
 function hashForInt(integer) {
   integer = integer * 10 + 100;
   return '' +
@@ -448,3 +469,5 @@ function hashForInt(integer) {
           Math.abs(integer - integer / 5)
       )
 }
+
+

@@ -45,6 +45,11 @@
     opacity: .45;
 }
 
+.button-row {
+    display: flex;
+    justify-content: center;
+}
+
 .controls {
     overflow: visible;
     padding: 8px;

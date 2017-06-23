@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="css/element_styles.css" />
     <link rel="stylesheet" href="css/app.css" />
     <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css" />
-    <link href="https://fonts.googleapis.com/css?family=Pathway+Gothic+One" rel="stylesheet">
   </head>
   <body class="moderno">
     <div class="letterhead hide-mobile">
@@ -64,9 +63,12 @@
         </div>
       </div>
       <div class="row controls hide-mobile">
-        <div class="column" style="width: 100%;" >
+        <div class="button-row">
           <button class="pause-sim toggle-button">
             <i class="fa fa-pause" aria-hidden="true"></i>
+          </button>
+          <button class="reset-sim toggle-button">
+            <i class="fa fa-undo" aria-hidden="true"></i>
           </button>
         </div>
       </div>
@@ -113,6 +115,12 @@
         <div> </div>
         <button class="toggle-button sm" >
           <i class="fa fa-pause" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div id="entity-list-item-template" class="list-item">
+        <div> </div>
+        <button class="toggle-button sm" >
+          <i class="fa fa-angle-right" aria-hidden="true"></i>
         </button>
       </div>
     </div>

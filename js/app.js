@@ -42,7 +42,12 @@ function pauseSystem(ID) {
   })
 }
 
+function toggleFullScreen() {
+  
+}
+
 function resetSim() {
+  vibrate();
   restoreState();
   for (var i = 0; i < resetButtons.length; i++) {
 	resetButtons[i].classList.add('active');
@@ -65,6 +70,7 @@ for (i = 0; i < pauseButtons.length; i++) {
 
 function togglePause() {
   paused = !paused;
+  vibrate();
   for (var i = 0; i < pauseButtons.length; i++) {
 	if (paused) {
 	  pauseButtons[i].classList.add("active");
@@ -72,6 +78,10 @@ function togglePause() {
 	  pauseButtons[i].classList.remove("active");
 	}
   }
+}
+
+function vibrate() {
+  // navigator.vibrate([50, 30, 10]);  paused = !paused;
 }
 
 

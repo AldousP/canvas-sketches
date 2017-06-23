@@ -72,6 +72,7 @@
     background-color: #f3f3f3;
     color: #8e8e8e;
     display: flex;
+    display: -webkit-box;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -84,7 +85,7 @@
     width: 24px;
     height: 24px;
     font-size: 12px;
-    /*box-shadow: 0 0 1px #8e8e8e;*/
+    box-shadow: 0 0 1px #8e8e8e;
 }
 
 .toggle-button.active {

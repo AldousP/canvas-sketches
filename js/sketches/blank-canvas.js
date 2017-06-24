@@ -32,6 +32,27 @@ function setup() {
     (new AccelerationComponent(0, -.25))
   ]));
 
+  entityHandler.addEntity(buildEntity("Square", [
+    (new PolygonComponent(generatePolygon(4, .55))),
+    (new PositionComponent(0, .5)),
+    (new VelocityComponent(0, -.15)),
+    (new AccelerationComponent(0, -.55))
+  ]));
+
+  entityHandler.addEntity(buildEntity("Circle", [
+    (new PolygonComponent(generatePolygon(32, .15))),
+    (new PositionComponent(.15, .5)),
+    (new VelocityComponent(0, -.25)),
+    (new AccelerationComponent(0, -.25))
+  ]));
+
+  entityHandler.addEntity(buildEntity("Dodecagon", [
+    (new PolygonComponent(generatePolygon(12, .2))),
+    (new PositionComponent(.15, -.15)),
+    (new VelocityComponent(0, -.25)),
+    (new AccelerationComponent(0, -.25))
+  ]));
+
   systemHandler.addSystems([
     new PhysicsSystem("A"),
     new RenderingSystem("B")

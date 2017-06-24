@@ -9,9 +9,9 @@ var ComponentType = {
 };
 
 
-function PositionComponent() {
+function PositionComponent(x, y) {
   this.name = ComponentType.position;
-  this.position = new Vector();
+  this.position = new Vector(x, y);
 }
 
 function PolygonComponent(polygon) {

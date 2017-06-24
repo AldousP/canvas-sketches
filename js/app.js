@@ -4,6 +4,7 @@ var systemList = document.getElementById("systems-list");
 var entityList = document.getElementById("entities-list");
 var pauseButtons = document.getElementsByClassName("pause-sim");
 var resetButtons = document.getElementsByClassName("reset-sim");
+var fullscreenButtons = document.getElementsByClassName("fullscreen-toggle");
 var listItemTemplate = document.getElementById("list-item-template");
 var entityListItemTemplate = document.getElementById("entity-list-item-template");
 
@@ -66,6 +67,25 @@ for (var i = 0; i < resetButtons.length; i++) {
 
 for (i = 0; i < pauseButtons.length; i++) {
   pauseButtons[i].onclick = togglePause;
+}
+
+for (i = 0; i < fullscreenButtons.length; i++) {
+	fullscreenButtons[i].onclick = function (e) {
+		console.log(e);
+
+		document.body.classList.toggle('full-screen');
+
+		for (var j = 0; j < fullscreenButtons.length; j++) {
+			fullscreenButtons[j].classList.add('active');
+		}
+
+		window.setTimeout(function () {
+			for (var i = 0; i < fullscreenButtons.length; i++) {
+				fullscreenButtons[i].classList.remove('active');
+			}
+		}, 100);
+
+	}
 }
 
 function togglePause() {

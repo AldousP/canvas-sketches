@@ -17,9 +17,9 @@ function PhysicsSystem(ID) {
 	  var vel = entity.components[ComponentType.velocity].velocity;
 	  addVecVec(entity.components[ComponentType.position].position, sclVec(cpyVec(vel), delta));
 	  if (entity.components[ComponentType.acceleration]) {
-			var accl = entity.components[ComponentType.velocity].velocity;
-			addVecVec(entity.components[ComponentType.velocity].position, sclVec(cpyVec(accl), delta));
-		}
+        var accl = entity.components[ComponentType.acceleration].acceleration;
+        addVecVec(vel, sclVec(cpyVec(accl), delta));
+	  }
 	}
   };
 

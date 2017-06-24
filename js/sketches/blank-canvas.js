@@ -28,7 +28,8 @@ function setup() {
   entityHandler.addEntity(buildEntity("Octagon", [
     (new PolygonComponent(generatePolygon(8, .25))),
     (new PositionComponent()),
-    (new VelocityComponent(0, -.25))
+    (new VelocityComponent(0, -.25)),
+    (new AccelerationComponent(0, -.25))
   ]));
 
   systemHandler.addSystems([

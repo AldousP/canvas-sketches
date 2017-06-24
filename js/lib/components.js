@@ -24,7 +24,7 @@ function VelocityComponent(x, y) {
   this.velocity = new Vector(x, y);
 }
 
-function AccelerationComponent() {
+function AccelerationComponent(x, y) {
   this.name = ComponentType.acceleration;
-  this.acceleration = new Vector();
+  this.acceleration = new Vector(x, y);
 }

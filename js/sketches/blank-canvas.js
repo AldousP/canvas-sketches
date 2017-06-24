@@ -19,28 +19,32 @@ var paused = false;
 
 setup();
 
-function copyState() {
-  storedState = JSON.stringify(entityHandler.entities);
-}
-
-function restoreState() {
-  entityHandler.entities = JSON.parse(storedState);
-}
-
 function setup() {
   window.requestAnimationFrame(renderLoop);
   view = new View(canvas.width * padding, canvas.height * padding);
   view.worldWidth = 3;
   view.worldHeight = 3;
 
-  var sampleEntity = new Entity();
-  sampleEntity.addComponent(new PolygonComponent(generatePolygon(8, .25)));
-  sampleEntity.addComponent(new PositionComponent());
-  sampleEntity.addComponent(new VelocityComponent(0, -.25));
-  entityHandler.addEntity(sampleEntity);
-  systemHandler.addSystem(new PhysicsSystem("A"));
-  systemHandler.addSystem(new RenderingSystem("B"));
+  entityHandler.addEntity(buildEntity("Octagon", [
+    (new PolygonComponent(generatePolygon(8, .25))),
+    (new PositionComponent()),
+    (new VelocityComponent(0, -.25))
+  ]));
+
+  systemHandler.addSystems([
+    new PhysicsSystem("A"),
+    new RenderingSystem("B")
+  ]);
+
   copyState();
+}
+
+function copyState() {
+  storedState = JSON.stringify(entityHandler.entities);
+}
+
+function restoreState() {
+  entityHandler.entities = JSON.parse(storedState);
 }
 
 function renderLoop() {

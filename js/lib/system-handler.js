@@ -71,5 +71,15 @@ function SystemHandler() {
 	renderLists();
 	this.systems.push(system);
 	this.sortSystems();
+  };
+
+  this.addSystems = function (newSystems) {
+  	var that = this;
+  	newSystems.forEach(function (system) {
+  		that.systems.push(system);
+	});
+
+    this.sortSystems();
+    renderLists();
   }
 }

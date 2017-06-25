@@ -1,4 +1,9 @@
 "use strict";
+
+/*
+* Stupid Monolithic object for managing app context
+*/
+
 (function () {
   window.sm = {
     conf : {
@@ -65,7 +70,6 @@
             ")";
 			}
     },
-
     gfx : {
       clear : function () {
         sm.ctx.fillStyle = "#000000";
@@ -161,7 +165,25 @@
         sm.ctx.closePath();
       }
     },
-
+		sfx : {
+    	ctx : new(window.AudioContext || window.webkitAudioContext)(),
+			beep : function() {
+				var oscillator = this.ctx.createOscillator();
+				var gainNode = this.ctx.createGain();
+				oscillator.connect(gainNode);
+				gainNode.connect(this.ctx.destination);
+				gainNode.gain.value = .025;
+				oscillator.frequency.value = 440;
+				oscillator.type = "square";
+				oscillator.start();
+				setTimeout(
+						function() {
+							oscillator.stop();
+						},
+						500
+				);
+			}
+		},
     appLoop : function () {
       sm.gfx.preDraw();
       sm.gfx.setFillColor(Color.white);

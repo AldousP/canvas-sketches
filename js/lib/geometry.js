@@ -25,3 +25,12 @@ function generatePolygon(vertCount, radius, startingDegree) {
 function Polygon() {
   this.pts = [];
 }
+
+var Align = {
+	center : function (x, y, w, h) {
+		return {
+			x : x - w / 2,
+			y : y - h / 2
+		}
+	}
+};

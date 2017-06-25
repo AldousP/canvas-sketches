@@ -26,25 +26,6 @@ function ProgramBase() {
     entityHandler.entities = JSON.parse(storedState);
   };
 
-  this.unload = function () {
-    console.log("Unloading " + name)
-  };
-
-  this.preDraw = function(smContext) {
-    this.current = new Date().getTime();
-    this.delta = (this.current - this.last) / 1000;
-    // ctx.save();
-    // ctx.translate(canvas.width / 2, canvas.height / 2);
-    smContext.gfx.preDraw();
-    this.updateFrameCount();
-    // systemHandler.updateSystems(delta, entityHandler);
-    // ctx.restore();
-  };
-
-  this.postDraw = function (smContext) {
-    smContext.gfx.postDraw();
-  };
-
   this.updateFrameCount = function() {
     this.frameRate = (1000 / this.delta) / 1000;
     this.last = this.current;

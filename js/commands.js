@@ -13,38 +13,14 @@ var Commands = {
   axis1 : InputType.axis
 };
 
-var InputSource = {
-
-};
-
-var Mapper = {
-  sourceMap : virtual_input_enum,
-  inputState : {}
-};
-
-var RawInput = {
-  name : "input",
-  type : InputType.button
-};
-
-function controllerInput(button) {
-  console.log(button);
-}
-
-// Controller Mappings
 var virtual_input_enum = {
-  virtualButton1 : InputType.button,
-  virtualButton2 : InputType.button,
-  virtualButtonUp : InputType.button,
-  virtualButtonDown : InputType.button,
-  virtualButtonLeft : InputType.button,
-  virtualButtonRight : InputType.button
+	name : "Virtual Input A",
+	virtualButton1 : InputType.button,
+	virtualButton2 : InputType.button,
+	virtualButtonUp : InputType.button,
+	virtualButtonDown : InputType.button,
+	virtualButtonLeft : InputType.button,
+	virtualButtonRight : InputType.button,
+	virtualButtonStart : InputType.button,
+	virtualButtonSelect : InputType.button
 };
-
-function Controller() {
-  this.inputSet = {};
-  this.connected = true;
-  this.slot = null;
-}
-
-var controllers = [];

@@ -257,10 +257,10 @@ body.full-screen {
 
 .full-screen canvas {
     visibility: visible;
-    position: absolute;
-    width: 90vw;
+    position: static;
+    width: 75vw;
     padding: 0;
     margin: 0;
-    height: 90vh;
+    height: 75vh;
     top: 0;
 }

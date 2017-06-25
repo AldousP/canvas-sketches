@@ -26,6 +26,10 @@ function RenderTestSystem(ID, camera, view) {
 		sm.gfx.drawCircle(0, 0, 50);
 		sm.gfx.drawLine(viewPortW / 2, viewPortH / 4, -viewPortW / 2, viewPortH / 4);
 		sm.gfx.drawLine(-viewPortW / 3, -viewPortH / 2, -viewPortW / 3, viewPortH / 2);
+
+		if (sm.input.state.virtualButton1) {
+			sm.notify("VirtualButton1 Pressed!", "input");
+		}
 	};
 
 	this.processEntity = function (entity) {

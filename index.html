@@ -68,33 +68,33 @@
           <div class="row no-pad-mobile">
             <div class="d-pad">
               <div style="width: 33%">
-                <div class="arrow-button left" onclick="controllerInput('virtualButtonLeft')">
+                <div class="arrow-button left" onclick="sm.input.fire('virtualButtonLeft')">
                   <i class="fa fa-arrow-left" aria-hidden="true"></i>
                 </div>
               </div>
               <div style="width: 33%">
-                <div class="arrow-button up" onclick="controllerInput('virtualButtonUp')">
+                <div class="arrow-button up" onclick="sm.input.fire('virtualButtonUp')">
                   <i class="fa fa-arrow-up" aria-hidden="true"></i>
                 </div>
                 <div class="middle-button"></div>
-                <div class="arrow-button down" onclick="controllerInput('virtualButtonDown')">
+                <div class="arrow-button down" onclick="sm.input.fire('virtualButtonDown')">
                   <i class="fa fa-arrow-down" aria-hidden="true"></i>
                 </div>
               </div>
               <div style="width: 33%">
-                <div class="arrow-button right" onclick="controllerInput('virtualButtonRight')">
+                <div class="arrow-button right" onclick="sm.input.fire('virtualButtonRight')">
                   <i class="fa fa-arrow-right" aria-hidden="true"></i>
                 </div>
               </div>
             </div>
             <div class="action-buttons">
-              <button class="action-button" onclick="controllerInput('virtualButton1')" >B</button>
-              <button class="action-button" onclick="controllerInput('virtualButton2')">A</button>
+              <button class="action-button" onclick="sm.input.fire('virtualButton1')">B</button>
+              <button class="action-button" onclick="sm.input.fire('virtualButton2')">A</button>
             </div>
           </div>
           <div class="row system-buttons">
-            <button class="toggle-button reset-sim mobile-pause"></button>
-            <button class="pause-sim toggle-button mobile-pause"></button>
+            <button class="toggle-button reset-sim mobile-pause" onclick="sm.input.fire('virtualButtonSelect')"></button>
+            <button class="pause-sim toggle-button mobile-pause" onclick="sm.input.fire('virtualButtonStart')"></button>
           </div>
         </div>
       </div>

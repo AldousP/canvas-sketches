@@ -42,6 +42,24 @@
         this.log.error(console.error("Specified Mount Point: " + canvasMountId + " is not a canvas."), "init");
       }
     },
+		input : {
+    	addController : function (mapping) {
+				sm.log.notify("Adding controller of type: " + mapping.name, "input");
+
+			},
+
+			fire : function(button) {
+    		sm.log.notify("firing! " + button, "input");
+				this.state[button] = true;
+				sm.sfx.beep();
+			},
+    	update : function () {
+				this.state = {};
+			},
+			state : {
+
+			}
+		},
     log : {
       notify : function (msg, context) {
         var date = new Date();
@@ -180,11 +198,12 @@
 						function() {
 							oscillator.stop();
 						},
-						500
+						200
 				);
 			}
 		},
     appLoop : function () {
+    	sm.input.update();
       sm.gfx.preDraw();
       sm.gfx.setFillColor(Color.white);
 
@@ -193,7 +212,6 @@
       var padding = sm.conf.debug.logConsole.padding;
       var offsetW = viewPortW * padding;
       var offsetH = viewPortH * padding;
-
 			if (sm.conf.debug.logConsole.logToScreen) {
 				for (var i = 0; i < sm.logs.length; i++) {
 					sm.gfx.text(

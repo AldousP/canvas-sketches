@@ -53,6 +53,7 @@
     display: block;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     border: 8px solid;
+    background-color: #0c0c0c;
 }
 
 .canvas.full-screen {
@@ -126,6 +127,16 @@
     color: white;
     border-style: none;
     box-shadow: 0 0 5px black;
+    transition: box-shadow 100ms;
+}
+
+.action-button:active {
+    box-shadow: none;
+    outline: none;
+}
+
+.action-button:focus {
+    outline: none;
 }
 
 .d-pad {
@@ -165,12 +176,16 @@
     justify-content: center;
     align-items: center;
     box-shadow: 0 0 5px black;
+    transition: box-shadow 100ms;
+}
+
+.arrow-button:active {
+    box-shadow: none;
 }
 
 .device-title {
     margin-top: -1px;
 }
-
 
 body.full-screen {
     background-color: black;

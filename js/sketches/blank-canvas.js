@@ -20,7 +20,6 @@ var paused = false;
 setup();
 
 function setup() {
-  window.requestAnimationFrame(renderLoop);
   view = new View(canvas.width * padding, canvas.height * padding);
   view.worldWidth = 3;
   view.worldHeight = 3;

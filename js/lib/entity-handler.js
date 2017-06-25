@@ -16,7 +16,6 @@ function EntityHandler() {
 	keys.forEach(function (key) {
 	  that.mapEntity(entity.components[key].name, entity)
 	});
-	renderLists();
 	return entity.ID;
   };
 
@@ -38,11 +37,9 @@ function EntityHandler() {
 	  this.mapEntity(component.name, entity);
 	}
 	entity.components[component.name] = component;
-	renderLists();
   };
 
   this.removeEntity = function (ID) {
 	delete this.entities[ID];
-	renderLists();
   };
 }

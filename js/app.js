@@ -106,5 +106,7 @@ function attachHandlers() {
   }
 }
 
+sm.init('canvas', new programs.mountExample());
+
 
 

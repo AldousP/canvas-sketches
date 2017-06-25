@@ -1,0 +1,3 @@
+var Color = {
+  white : "#FFFFFF"
+};

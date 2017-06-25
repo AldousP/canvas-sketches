@@ -7,7 +7,6 @@ function SystemHandler() {
 	this.systems.sort(function (a, b) {
 	  return a.ID.localeCompare(b.ID);
 	});
-	renderLists();
   };
 
   this.updateSystems = function (delta, entityHandler) {
@@ -52,7 +51,7 @@ function SystemHandler() {
 		  });
 		  system.pre();
 		  finalEntities.forEach (function (entity) {
-			system.processEntity(entityHandler.entities[entity]);
+			system.processEntity(entityHandler.entities[entity], delta);
 		  });
 		  system.post();
 		}
@@ -80,6 +79,5 @@ function SystemHandler() {
 	});
 
     this.sortSystems();
-    renderLists();
   }
 }

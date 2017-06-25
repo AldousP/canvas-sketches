@@ -26,6 +26,11 @@ window.programs.mountExample = function () {
     this.systemHandler.addSystems([
       new RenderTestSystem("A", this.camera, this.view)
     ]);
+
+    var that = this;
+    sm.gfx.loadImage("sawtooth.png", function (e) {
+			that.state.sawTooth = e.path[0];
+		});
 	};
 
   this.update = function (sm) {

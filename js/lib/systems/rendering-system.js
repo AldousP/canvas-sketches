@@ -27,6 +27,7 @@ function RenderingSystem(ID, camera, view) {
 	};
 
 	this.processEntity = function (entity) {
+		sm.log.notify(entity.ID, "rendering");
 		// ctx.strokeStyle = "#FFFFFF";
 		// view.renderPoly(
 		// 	entity.components[ComponentType.polygon].polygon,

@@ -6,7 +6,7 @@ function RenderTestSystem(ID, camera, view) {
 	this.view = view;
 	this.camera = camera;
 
-	this.pre = function () {
+	this.pre = function (state) {
 		var viewPortW = sm.canvas.width;
 		var viewPortH = sm.canvas.height;
 		sm.gfx.setFillColor("#FFFFFF");
@@ -26,10 +26,7 @@ function RenderTestSystem(ID, camera, view) {
 		sm.gfx.drawCircle(0, 0, 50);
 		sm.gfx.drawLine(viewPortW / 2, viewPortH / 4, -viewPortW / 2, viewPortH / 4);
 		sm.gfx.drawLine(-viewPortW / 3, -viewPortH / 2, -viewPortW / 3, viewPortH / 2);
-
-		if (sm.input.state.virtualButton1) {
-			sm.notify("VirtualButton1 Pressed!", "input");
-		}
+		sm.gfx.drawImage(state.sawTooth, 0 , 0, 64, 64, Align.center);
 	};
 
 	this.processEntity = function (entity) {

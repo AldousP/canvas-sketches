@@ -34,8 +34,9 @@
         this.log.notify("Mounted @ canvas!", "init");
         this.log.notify("Loading Program: " + program.name + "...", "init");
 				program.__proto__ = new ProgramBase();
-				program.setup();
 				this.activeProgram = program;
+
+				program.setup();
 				this.log.notify("Loaded. Resource DIR is: " + program.resourceDir +  " Starting...", "init");
         window.requestAnimationFrame(this.appLoop);
       } else {
@@ -103,10 +104,20 @@
         sm.ctx.save();
         sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
       },
-      
+
+			drawImage : function (image, x, y, w, h, align) {
+      	if (image) {
+      		if (align) {
+      			var adj = align(x, y, w, h);
+						sm.ctx.drawImage(image, adj.x, adj.y, w, h);
+					} else {
+						sm.ctx.drawImage(image, x, y, w, h);
+					}
+				}
+			},
+
       loadImage : function (handle, callback) {
         var img = new Image();
-        console.log(sm.activeProgram);
         if (sm.activeProgram) {
           img.src = sm.activeProgram.resourceDir + "/" + handle;
         } else {
@@ -207,26 +218,33 @@
       sm.gfx.preDraw();
       sm.gfx.setFillColor(Color.white);
 
-      var viewPortW = sm.canvas.width;
+
+			if (sm.activeProgram) {
+				sm.activeProgram.update(sm);
+			}
+
+
+
+			var viewPortW = sm.canvas.width;
       var viewPortH = sm.canvas.height;
       var padding = sm.conf.debug.logConsole.padding;
       var offsetW = viewPortW * padding;
       var offsetH = viewPortH * padding;
+
 			if (sm.conf.debug.logConsole.logToScreen) {
 				for (var i = 0; i < sm.logs.length; i++) {
 					sm.gfx.text(
 							false,
 							sm.logs[i],
 							(-viewPortW / 2) + offsetW,
-							(-(viewPortH / 2) + offsetH) + (offsetH * ( sm.logs.length - i))
+							(-(viewPortH / 2) + offsetH) + (offsetH * ( sm.logs.length - i)),
+							10,
+							'Ubuntu Mono'
 					);
 				}
 			}
 
-      if (sm.activeProgram) {
-        sm.activeProgram.update(sm);
-      }
-      sm.gfx.postDraw();
+			sm.gfx.postDraw();
       window.requestAnimationFrame(sm.appLoop);
     }
   };

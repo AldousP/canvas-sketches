@@ -12,32 +12,27 @@ function RenderingSystem(ID, camera, view) {
 	];
 
 	this.pre = function () {
-		// sm.ctx.save();
-		// ctx.save();
-		// sm.ctx.beginPath();
-		// sm.ctx.rect(
-		// this.view.canvPos.x - this.view.canvWidth / 2,
-		// this.view.canvPos.y - this.view.canvHeight / 2,
-		// this.view.canvWidth,
-		// this.view.canvHeight);
-		// sm.ctx.clip();
-		// sm.gfx.clear();
-		// sm.ctx.lineWidth = ".025";
-		// sm.gfx.setStrokeColor("#005500");
+		sm.ctx.save();
+		sm.ctx.beginPath();
+		sm.ctx.rect(
+		this.view.canvPos.x - this.view.canvWidth / 2,
+		this.view.canvPos.y - this.view.canvHeight / 2,
+		this.view.canvWidth,
+		this.view.canvHeight);
+		sm.ctx.clip();
+		sm.gfx.clear();
 	};
 
 	this.processEntity = function (entity) {
-		sm.log.notify(entity.ID, "rendering");
+		// sm.log.notify(entity.ID, "rendering");
+		sm.gfx.setStrokeColor(Color.white);
 		// ctx.strokeStyle = "#FFFFFF";
-		// view.renderPoly(
-		// 	entity.components[ComponentType.polygon].polygon,
-		// 	entity.components[ComponentType.position].position,
-		// 	worldCam
-		// );
-		// ctx.setStrokeColor();
+		var poly = entity.components[ComponentType.polygon].polygon;
+		var pos = entity.components[ComponentType.position].position;
+		this.view.renderPoly(poly, pos, this.worldCam);
 	};
 
 	this.post = function () {
-		// sm.ctx.restore();
+		sm.ctx.restore();
 	};
 }

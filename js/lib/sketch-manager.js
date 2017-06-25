@@ -6,6 +6,7 @@
 
 (function () {
   window.sm = {
+  	poly : generatePolygon(8, 100, 0),
     conf : {
       resourceDir : "/img",
       debug: {
@@ -91,13 +92,27 @@
     },
     gfx : {
       clear : function () {
-        sm.ctx.fillStyle = "#000000";
+        sm.ctx.fillStyle = "#001436";
         sm.ctx.fillRect(0, 0, sm.canvas.width, sm.canvas.height);
       },
 
-      polygon : function (polygon, position) {
-        
-      },
+      drawPolygon : function (polygon, pos) {
+				sm.ctx.beginPath();
+				if (!polygon.pts) {
+					console.error('No property of name [pts] found on polygon parameter.');
+				} else {
+					var firstPt = polygon.pts[0];
+					sm.ctx.moveTo(firstPt.x + pos.x, firstPt.y + pos.y);
+					polygon.pts.forEach(function (pt) {
+						if (pt !== firstPt) {
+							sm.ctx.lineTo(pt.x + pos.x, pt.y + pos.y);
+						}
+					});
+					sm.ctx.lineTo(firstPt.x + pos.x, firstPt.y + pos.y);
+				}
+				sm.ctx.closePath();
+				sm.ctx.stroke();
+			},
 
       preDraw : function () {
         sm.gfx.clear();
@@ -217,20 +232,18 @@
     	sm.input.update();
       sm.gfx.preDraw();
       sm.gfx.setFillColor(Color.white);
-
-
 			if (sm.activeProgram) {
 				sm.activeProgram.update(sm);
 			}
 
-
+			sm.gfx.setStrokeColor(Color.white);
+			sm.gfx.drawPolygon(sm.poly, new Vector(0, 0));
 
 			var viewPortW = sm.canvas.width;
       var viewPortH = sm.canvas.height;
       var padding = sm.conf.debug.logConsole.padding;
       var offsetW = viewPortW * padding;
       var offsetH = viewPortH * padding;
-
 			if (sm.conf.debug.logConsole.logToScreen) {
 				for (var i = 0; i < sm.logs.length; i++) {
 					sm.gfx.text(
@@ -243,7 +256,6 @@
 					);
 				}
 			}
-
 			sm.gfx.postDraw();
       window.requestAnimationFrame(sm.appLoop);
     }

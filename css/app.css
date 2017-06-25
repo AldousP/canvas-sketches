@@ -125,9 +125,9 @@
     background-color: black;
     border-radius: 36px;
     color: white;
-    border-style: none;
     box-shadow: 0 0 5px black;
     transition: box-shadow 100ms;
+    border: thick solid rgba(0, 0, 0, 0.14);
 }
 
 .action-button:active {
@@ -141,6 +141,9 @@
 
 .d-pad {
     display: flex;
+    background-color: #592c86;
+    border-radius: 64px;
+    border: solid rgba(0, 0, 0, 0.14);
 }
 
 .d-pad :first-child {
@@ -177,6 +180,7 @@
     align-items: center;
     box-shadow: 0 0 5px black;
     transition: box-shadow 100ms;
+    border-radius: 3px;
 }
 
 .arrow-button:active {

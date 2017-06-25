@@ -24,7 +24,7 @@ window.programs.mountExample = function () {
 
 
     this.systemHandler.addSystems([
-      new RenderTestSystem("A", this.camera, this.view)
+      new RenderingSystem("A", this.camera, this.view)
     ]);
 
     var that = this;
@@ -34,12 +34,12 @@ window.programs.mountExample = function () {
 	};
 
   this.update = function (sm) {
-    // sm.log.notify("Sketch Running", this.name);
-    /* From within this ctx, the program may access sm's various modules
+    /*
+    *  From within this ctx, the program may access sm's various modules
     *  as well as use the systemHandler and entityHandlers declared on this
-    *  object's prototype to create a simulation.
+    *  object's new prototype to create programs.
     *
-    * */
+    */
 
     this.systemHandler.updateSystems(this.delta, this.entityHandler, this.state);
   }

@@ -8,25 +8,27 @@ function View(canvWidth, canvHeight) {
   this.canvHeight = canvHeight;
 
   this.renderPoly = function (poly, pos, cam) {
-	var viewAspectRatio = this.canvHeight / this.canvWidth;
-	var canvasAspectRatio = canvas.height / canvas.width;
+		var viewAspectRatio = this.canvHeight / this.canvWidth;
+		var canvasAspectRatio = sm.canvas.height / sm.canvas.width;
 
-	var hDiff = this.canvWidth / canvas.width;
-	var vDiff = this.canvHeight / canvas.height;
+		var hDiff = this.canvWidth / sm.canvas.width;
+		var vDiff = this.canvHeight / sm.canvas.height;
 
-	var canHDiff = canvas.width/ this.worldWidth;
-	var canVDiff = canvas.height / this.worldHeight;
+		var canHDiff = sm.canvas.width/ this.worldWidth;
+		var canVDiff = sm.canvas.height / this.worldHeight;
 
-	ctx.setTransform(
-		hDiff * canHDiff,
-		0,
-		0,
-		vDiff * canVDiff,
-		canvas.width / 2 + this.canvPos.x,
-		canvas.height / 2 + this.canvPos.y
-	);
-	var worldFlip = cpyVec(pos);
-	worldFlip.y = -worldFlip.y;
-	drawPolygon(poly, worldFlip);
+		sm.ctx.setTransform(
+			hDiff * canHDiff,
+			0,
+			0,
+			vDiff * canVDiff,
+			canvas.width / 2 + this.canvPos.x,
+			canvas.height / 2 + this.canvPos.y
+		);
+
+		var worldFlip = cpyVec(pos);
+		worldFlip.y = -worldFlip.y;
+		sm.gfx.setStrokeColor(Color.white);
+		sm.gfx.drawPolygon(poly, worldFlip);
   }
 }

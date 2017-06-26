@@ -48,7 +48,7 @@ function RenderingSystem(ID, camera, view) {
     // ctx.strokeStyle = "#FFFFFF";
     var poly = entity.components[ComponentType.polygon].polygon;
     var pos = entity.components[ComponentType.position].position;
-    this.view.renderPoly(poly, pos, this.worldCam, false);
+    this.view.renderPoly(poly, pos, this.camera, false);
   };
 
   this.post = function () {

@@ -8,7 +8,7 @@
   window.sm = {
     poly: generatePolygon(8, 100, 0),
     debug: {
-      active: true,
+      active: false,
       logConsole: {
         logToScreen: true,
         logToBrowserConsole: false,
@@ -45,18 +45,15 @@
       }
     },
     input: {
-      addController: function (mapping) {
-        sm.log.notify("Adding controller of type: " + mapping.name, "input");
-
-      },
-
       fire: function (button) {
-        sm.log.notify("firing! " + button, "input");
-        this.state[button] = true;
-        sm.sfx.beep();
+        if (sm.debug.active) {
+          sm.log.notify("firing! " + button, "input");
+          sm.sfx.beep();
+        }
+        sm.input.state[button] = true;
       },
       update: function () {
-        this.state = {};
+
       },
       state: {}
     },
@@ -237,7 +234,7 @@
       var padding = sm.debug.logConsole.padding;
       var offsetW = viewPortW * padding;
       var offsetH = viewPortH * padding;
-      if (sm.debug.logConsole.logToScreen) {
+      if (sm.debug.active && sm.debug.logConsole.logToScreen) {
         for (var i = 0; i < sm.logs.length; i++) {
           sm.gfx.text(
               false,
@@ -251,6 +248,7 @@
       }
       sm.gfx.postDraw();
       window.requestAnimationFrame(sm.appLoop);
+      sm.input.state = {};
     }
   };
 })();

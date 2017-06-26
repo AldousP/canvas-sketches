@@ -7,12 +7,9 @@ window.programs.mountExample = function () {
   this.date = "06.24.2017";
   this.padding = .95;
   this.camera = new Camera();
-  this.view = new View(sm.canvas.width * this.padding, sm.canvas.height * this.padding);
-	this.view.worldWidth = 3;
-	this.view.worldHeight = 3;
-	this.state = {};
 
-	this.resourceDir = "/img/";
+  this.state = {};
+  this.resourceDir = "/img/";
 
   this.setup = function () {
     this.entityHandler.addEntity(buildEntity("Octagon", [
@@ -22,6 +19,9 @@ window.programs.mountExample = function () {
       (new AccelerationComponent(0, -.25))
     ]));
 
+    this.view = new View(sm.canvas.width * this.padding, sm.canvas.height * this.padding);
+    this.view.worldWidth = 3;
+    this.view.worldHeight = 3;
 
     this.systemHandler.addSystems([
       new RenderingSystem("A", this.camera, this.view)

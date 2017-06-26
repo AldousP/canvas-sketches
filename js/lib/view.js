@@ -7,7 +7,7 @@ function View(canvWidth, canvHeight) {
   this.canvWidth = canvWidth;
   this.canvHeight = canvHeight;
 
-  this.renderPoly = function (poly, pos, cam) {
+  this.renderPoly = function (poly, pos, cam, fill) {
 		var viewAspectRatio = this.canvHeight / this.canvWidth;
 		var canvasAspectRatio = sm.canvas.height / sm.canvas.width;
 
@@ -17,6 +17,7 @@ function View(canvWidth, canvHeight) {
 		var canHDiff = sm.canvas.width/ this.worldWidth;
 		var canVDiff = sm.canvas.height / this.worldHeight;
 
+		sm.gfx.setStrokeWidth(0.0025);
 		sm.ctx.setTransform(
 			hDiff * canHDiff,
 			0,
@@ -29,6 +30,6 @@ function View(canvWidth, canvHeight) {
 		var worldFlip = cpyVec(pos);
 		worldFlip.y = -worldFlip.y;
 		sm.gfx.setStrokeColor(Color.white);
-		sm.gfx.drawPolygon(poly, worldFlip);
+		sm.gfx.drawPolygon(poly, worldFlip, fill);
   }
 }

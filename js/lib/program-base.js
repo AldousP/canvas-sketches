@@ -27,6 +27,10 @@ function ProgramBase() {
   };
 
   this.updateFrameCount = function() {
+    this.current = new Date().getTime();
+    this.delta = (this.current - this.last) / 1000;
+
+
     this.frameRate = (1000 / this.delta) / 1000;
     this.last = this.current;
     this.frameHistory.push(this.frameRate);

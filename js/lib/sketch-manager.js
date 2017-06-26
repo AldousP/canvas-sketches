@@ -108,8 +108,8 @@
           });
           sm.ctx.lineTo(firstPt.x + pos.x, firstPt.y + pos.y);
         }
-        sm.ctx.closePath();
         sm.ctx.stroke();
+        sm.ctx.closePath();
       },
 
       preDraw: function () {
@@ -232,10 +232,6 @@
       if (sm.activeProgram) {
         sm.activeProgram.update(sm);
       }
-
-      // sm.gfx.setStrokeColor(Color.white);
-      // sm.gfx.drawPolygon(sm.poly, new Vector(0, 0));
-
       var viewPortW = sm.canvas.width;
       var viewPortH = sm.canvas.height;
       var padding = sm.debug.logConsole.padding;

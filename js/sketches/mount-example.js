@@ -20,11 +20,12 @@ window.programs.mountExample = function () {
     ]));
 
     this.view = new View(sm.canvas.width * this.padding, sm.canvas.height * this.padding);
-    this.view.worldWidth = 3;
-    this.view.worldHeight = 3;
+    this.view.worldWidth = 5.5;
+    this.view.worldHeight = 5.5;
 
     this.systemHandler.addSystems([
-      new RenderingSystem("A", this.camera, this.view)
+      new PhysicsSystem("A"),
+      new RenderingSystem("B", this.camera, this.view)
     ]);
 
     var that = this;
@@ -41,6 +42,7 @@ window.programs.mountExample = function () {
     *
     */
 
+    this.updateFrameCount();
     this.systemHandler.updateSystems(this.delta, this.entityHandler, this.state);
   }
 };

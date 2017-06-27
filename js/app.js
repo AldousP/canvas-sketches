@@ -67,5 +67,8 @@ function loadMountExample() {
   sm.loadProgram(new MountExample());
 }
 
+function loadCameraTests() {
+  sm.loadProgram(new CameraTests());
+}
 
-sm.init("canvas", new MountExample());
+sm.init("canvas", new CameraTests());

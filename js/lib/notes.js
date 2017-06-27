@@ -1,5 +1,4 @@
 "use strict";
-var notes = {
+var Notes = {
   C4 : 261.626
-
 };

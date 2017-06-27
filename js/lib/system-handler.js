@@ -75,8 +75,7 @@ function SystemHandler() {
   this.addSystems = function (newSystems) {
   	var that = this;
   	newSystems.forEach(function (system) {
-			sm.log.notify("Adding System '" + system.name + "'", "system-handler");
-  		that.systems.push(system);
+	  that.systems.push(system);
 	});
 
     this.sortSystems();

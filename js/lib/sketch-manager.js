@@ -21,16 +21,26 @@
         }
       }
     },
-
+    breakOnNextLoop : false,
+    break: function () {
+      sm.breakOnNextLoop = true;
+    },
+    loop : {},
     logs: [],
     ctx: {},
     canvas: {},
-
+    utils : {
+      formatters : {
+        float_two_pt : function (val) {
+          return parseFloat((Math.round(val * 100) / 100).toFixed(2));
+        }
+      }
+    },
     input: {
       fire: function (button) {
         sm.log.notify("firing! " + button, "input");
         this.state[button] = true;
-        sm.sfx.beep();
+        sm.sfx.beep(Notes.C4);
       },
       update: function () {
         this.state = {};
@@ -69,14 +79,14 @@
 
     gfx: {
       clear: function (color) {
-        sm.ctx.translate(-canvas.width / 2, -canvas.height / 2);
+        sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2);
         if (color) {
           sm.ctx.fillStyle = color;
         } else {
           sm.ctx.fillStyle = sm.conf.debug.logConsole.bgColor;
         }
-        sm.ctx.fillRect(0, 0, sm.canvas.width, sm.canvas.height);
-        sm.ctx.translate(canvas.width / 2, canvas.height / 2);
+        sm.ctx.fillRect(0, 0, sm.canvas.width * 100, sm.canvas.height * 100);
+        sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
       },
 
       drawPolygon: function (polygon, pos) {
@@ -119,6 +129,8 @@
       },
 
       preDraw: function () {
+        sm.gfx.width = sm.canvas.width;
+        sm.gfx.height = sm.canvas.height;
         sm.ctx.save();
       },
 
@@ -193,13 +205,13 @@
 
     sfx: {
       ctx: new (window.AudioContext || window.webkitAudioContext)(),
-      beep: function () {
+      beep: function (note) {
         var oscillator = this.ctx.createOscillator();
         var gainNode = this.ctx.createGain();
         oscillator.connect(gainNode);
         gainNode.connect(this.ctx.destination);
         gainNode.gain.value = .025;
-        oscillator.frequency.value = 440;
+        oscillator.frequency.value = note ? note : 440;
         oscillator.type = "square";
         oscillator.start();
         setTimeout(
@@ -215,7 +227,7 @@
       this.log.notify("Sketch Manager initializing...", sm.context);
       this.log.notify("Mounting @ " + canvasMountId + "...", sm.context);
       var mountPoint = document.getElementById(canvasMountId);
-      if (mountPoint.tagName.toLowerCase() === "canvas") {
+      if (mountPoint && mountPoint.tagName.toLowerCase() === "canvas") {
         this.ctx = mountPoint.getContext("2d");
         this.canvas = mountPoint;
         this.log.notify("Mounted @ canvas.", sm.context);
@@ -227,6 +239,29 @@
       if (program) {
         sm.loadProgram(program);
       }
+    },
+
+    loadProgram: function (program) {
+      sm.log.notify("Loading Program: " + program.name + "...", sm.context);
+      program.__proto__ = new ProgramBase();
+      program.setup();
+      sm.log.notify("Loaded Program. Resource DIR is: " + program.resourceDir, sm.context);
+      sm.log.notify("Starting...", program.name);
+      sm.activeProgram = program;
+      document.body.dispatchEvent(new CustomEvent("smProgramLoaded", {"detail": {"programName": program.name}}));
+    },
+
+    unloadProgram: function () {
+      var name = "";
+      if (!sm.activeProgram) {
+        sm.log.notify("Nothing to unload. Did you load a program?", sm.context);
+      } else {
+        sm.log.notify("Unloading: " + name + "...", sm.context);
+      }
+      sm.activeProgram = undefined;
+      document.body.dispatchEvent(
+          new CustomEvent("smProgramUnloaded", {"detail": {"programName": name}})
+      );
     },
 
     appLoop: function () {
@@ -260,36 +295,41 @@
           );
         }
       }
+
       sm.gfx.postDraw();
-      if (sm.activeProgram) {
-        sm.gfx.setFillColor(Color.white);
-        sm.gfx.text(false, sm.activeProgram.name, -sm.canvas.width / 2.05, -sm.canvas.height / 2.2, 14);
+      if (sm.conf.debug.active) {
+        if (sm.activeProgram) {
+          sm.gfx.setFillColor(Color.white);
+          sm.gfx.text(
+              false,
+              sm.activeProgram.name,
+              -sm.canvas.width / 2.05,
+              -sm.canvas.height / 2.2,
+              14,
+              'Ubuntu Mono');
+
+          sm.gfx.text(
+              false,
+              sm.utils.formatters.float_two_pt(sm.activeProgram.frameRate),
+              -sm.canvas.width / 2.05,
+              -sm.canvas.height / 2.35,
+              14,
+              'Ubuntu Mono');
+
+        }
       }
       sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2);
-      window.requestAnimationFrame(sm.appLoop);
-    },
 
-    loadProgram: function (program) {
-      sm.log.notify("Loading Program: " + program.name + "...", sm.context);
-      program.__proto__ = new ProgramBase();
-      program.setup();
-      sm.log.notify("Loaded Program. Resource DIR is: " + program.resourceDir, sm.context);
-      sm.log.notify("Starting...", program.name);
-      sm.activeProgram = program;
-      document.body.dispatchEvent(new CustomEvent("smProgramLoaded", {"detail": {"programName": program.name}}));
-    },
-
-    unloadProgram: function () {
-      var name = "";
-      if (!sm.activeProgram) {
-        sm.log.notify("Nothing to unload. Did you load a program?", sm.context);
+      if (!sm.breakOnNextLoop) {
+        window.requestAnimationFrame(sm.appLoop);
       } else {
-        sm.log.notify("Unloading: " + name + "...", sm.context);
+        sm.breakOnNextLoop = false;
+        sm.unloadProgram();
+        console.log("Shutting Down SM. Logs can be found at sm.logs. Goodbye!");
+        sm.ctx.save();
+        sm.ctx.fillStyle = "#FFFFFF";
+        sm.ctx.fillRect(0, 0, sm.canvas.width, sm.canvas.height);
       }
-      sm.activeProgram = undefined;
-      document.body.dispatchEvent(
-          new CustomEvent("smProgramUnloaded", {"detail": {"programName": name}})
-      );
     }
   };
 })();

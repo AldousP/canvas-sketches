@@ -5,7 +5,9 @@ var ComponentType = {
   position : "pos",
   tagged : "tags",
   velocity : "vel",
-  acceleration : "accl"
+  acceleration : "accl",
+  camera : "cam",
+  viewport : "viewport"
 };
 
 
@@ -30,5 +32,15 @@ function AccelerationComponent(x, y) {
 }
 
 function CameraComponent() {
+  this.pos = new Vector(0, 0);
+  this.width = 1;
+  this.height = 1;
+  this.zoom = 1;
+  this.rotation = 0;
+}
 
+function ViewComponent(pos, w, h) {
+  this.position = pos;
+  this.width = w;
+  this.height = h;
 }

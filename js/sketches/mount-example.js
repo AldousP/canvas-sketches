@@ -1,4 +1,4 @@
-MountExample = function () {
+var MountExample = function () {
   this.name = "Mount Example";
   this.date = "06.24.2017";
 
@@ -16,6 +16,7 @@ MountExample = function () {
       (new AccelerationComponent(0, -.25))
     ]));
 
+    sm.log.notify("Adding Rendering System", "system-handler");
     this.systemHandler.addSystems([
       new RenderTestSystem("A", this.camera, this.view)
     ]);
@@ -31,5 +32,6 @@ MountExample = function () {
      *
      */
     this.systemHandler.updateSystems(this.delta, this.entityHandler, this.state);
+
   }
 };

@@ -12,7 +12,6 @@ function RenderTestSystem(ID, camera, view) {
     sm.gfx.preDraw();
     sm.gfx.clear(state.bgColor);
     sm.gfx.postDraw();
-    // sm.gfx.preDraw();
   };
 
   this.processEntity = function (entity) {
@@ -32,6 +31,6 @@ function RenderTestSystem(ID, camera, view) {
     sm.gfx.setStrokeWidth(1);
     sm.gfx.drawCircle(0, 0, 50);
     sm.gfx.drawPolygon(this.polygon, this.polygonPos)
-    // sm.gfx.postDraw();
+    sm.gfx.postDraw();
   };
 }

@@ -59,7 +59,7 @@ function SystemHandler() {
 				var keys = Object.keys(entityHandler.entities);
 				system.pre(state);
 				keys.forEach(function (key) {
-					system.processEntity(entityHandler.entities[key], state);
+					system.processEntity(entityHandler.entities[key], delta, state);
 				});
 				system.post(state);
 			}

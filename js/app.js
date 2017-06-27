@@ -20,22 +20,22 @@ function renderLists() {
     newEntry.removeAttribute("id");
     newEntry.childNodes[1].innerHTML = system.name;
     var button = newEntry.getElementsByTagName('button')[0];
-	button.setAttribute( "onclick", "javascript: pauseSystem('" + system.ID + "');");
-	if (system.paused) {
-	  newEntry.getElementsByTagName('button')[0].classList.add('active');
-	}
-	systemList.appendChild(newEntry);
+    button.setAttribute("onclick", "javascript: pauseSystem('" + system.ID + "');");
+    if (system.paused) {
+      newEntry.getElementsByTagName('button')[0].classList.add('active');
+    }
+    systemList.appendChild(newEntry);
   });
 
   var keys = Object.keys(entityHandler.entities);
   keys.forEach(function (key) {
     var entity = entityHandler.entities[key];
-	var newEntry = entityListItemTemplate.cloneNode(true);
-	newEntry.removeAttribute("id");
+    var newEntry = entityListItemTemplate.cloneNode(true);
+    newEntry.removeAttribute("id");
     newEntry.childNodes[1].innerHTML = entity.name ? entity.name : entity.ID;
     var button = newEntry.getElementsByTagName('button')[0];
-    button.setAttribute( "onclick", "javascript: logEntity('" + entity.ID + "');");
-	entityList.appendChild(newEntry);
+    button.setAttribute("onclick", "javascript: logEntity('" + entity.ID + "');");
+    entityList.appendChild(newEntry);
   });
 }
 
@@ -55,16 +55,16 @@ function attachHandlers() {
   }
 }
 
-sm.init("canvas");
+sm.init("canvas", new MountExample());
 
 document.body.addEventListener("smProgramLoaded", function (event) {
-	appTitle.innerText = event.detail.programName;
+  appTitle.innerText = event.detail.programName;
 });
 
 document.body.addEventListener("smProgramUnloaded", function (event) {
-	appTitle.innerText = "No Program Loaded";
+  appTitle.innerText = "No Program Loaded";
 });
 
-function loadMountExample () {
-	sm.loadProgram(new MountExample());
+function loadMountExample() {
+  sm.loadProgram(new MountExample());
 }

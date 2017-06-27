@@ -1,4 +1,5 @@
 #web-boy {
+    display: block;
     background-color: black;
     color: white;
     font-family: inherit;
@@ -247,6 +248,13 @@ body.full-screen {
         margin-bottom: 0;
     }
 
+    .sim-container {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center
+    ;
+    }
+
     .content-container {
         top: 0;
         justify-content: flex-start;
@@ -265,7 +273,7 @@ body.full-screen {
     }
 
     .show-mobile {
-        display: none;
+        display: none !important;
     }
 }
 

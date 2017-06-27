@@ -12,7 +12,6 @@ function ProgramBase() {
   this.worldCam = new Camera();
   this.padding = .95;
   this.view = 0;
-  this.backgroundColor = "#545454";
   this.entityHandler = new EntityHandler();
   this.systemHandler = new SystemHandler();
   this.storedState = {};
@@ -29,8 +28,6 @@ function ProgramBase() {
   this.updateFrameCount = function() {
     this.current = new Date().getTime();
     this.delta = (this.current - this.last) / 1000;
-
-
     this.frameRate = (1000 / this.delta) / 1000;
     this.last = this.current;
     this.frameHistory.push(this.frameRate);

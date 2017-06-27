@@ -5,8 +5,21 @@ function RenderTestSystem(ID, camera, view) {
   this.name = "Rendering";
   this.view = view;
   this.camera = camera;
+  this.polygon = generatePolygon(12, sm.canvas.width / 4, 0);
+  this.polygonPos = new Vector(0, 0);
 
   this.pre = function (state) {
+    sm.gfx.preDraw();
+    sm.gfx.clear(state.bgColor);
+    sm.gfx.postDraw();
+    // sm.gfx.preDraw();
+  };
+
+  this.processEntity = function (entity) {
+
+  };
+
+  this.post = function () {
     sm.gfx.setFillColor(Color.white);
     sm.gfx.setStrokeColor(Color.white);
     sm.gfx.drawRect(0, 0, 25, 25, false);
@@ -18,13 +31,7 @@ function RenderTestSystem(ID, camera, view) {
     sm.gfx.drawCircle(0, 0, 75);
     sm.gfx.setStrokeWidth(1);
     sm.gfx.drawCircle(0, 0, 50);
-  };
-
-  this.processEntity = function (entity) {
-
-  };
-
-  this.post = function () {
-
+    sm.gfx.drawPolygon(this.polygon, this.polygonPos)
+    // sm.gfx.postDraw();
   };
 }

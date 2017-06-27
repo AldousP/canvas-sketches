@@ -55,8 +55,6 @@ function attachHandlers() {
   }
 }
 
-sm.init("canvas", new MountExample());
-
 document.body.addEventListener("smProgramLoaded", function (event) {
   appTitle.innerText = event.detail.programName;
 });
@@ -68,3 +66,6 @@ document.body.addEventListener("smProgramUnloaded", function (event) {
 function loadMountExample() {
   sm.loadProgram(new MountExample());
 }
+
+
+sm.init("canvas", new MountExample());

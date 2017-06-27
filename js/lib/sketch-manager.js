@@ -69,12 +69,14 @@
 
     gfx: {
       clear: function (color) {
+        sm.ctx.translate(-canvas.width / 2, -canvas.height / 2);
         if (color) {
           sm.ctx.fillStyle = color;
         } else {
           sm.ctx.fillStyle = sm.conf.debug.logConsole.bgColor;
         }
         sm.ctx.fillRect(0, 0, sm.canvas.width, sm.canvas.height);
+        sm.ctx.translate(canvas.width / 2, canvas.height / 2);
       },
 
       drawPolygon: function (polygon, pos) {
@@ -93,12 +95,6 @@
         }
         sm.ctx.closePath();
         sm.ctx.stroke();
-      },
-
-      preDraw: function () {
-        sm.gfx.clear();
-        sm.ctx.save();
-        sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
       },
 
       drawImage: function (image, x, y, w, h, align) {
@@ -120,6 +116,10 @@
           img.src = sm.conf.resourceDir + "/" + handle;
         }
         img.onload = callback;
+      },
+
+      preDraw: function () {
+        sm.ctx.save();
       },
 
       postDraw: function () {
@@ -230,7 +230,12 @@
     },
 
     appLoop: function () {
+      if (sm.input.state.virtualButtonSelect) {
+        sm.unloadProgram();
+      }
       sm.input.update();
+      sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
+      sm.gfx.clear();
       sm.gfx.preDraw();
 
       if (sm.activeProgram) {
@@ -256,6 +261,11 @@
         }
       }
       sm.gfx.postDraw();
+      if (sm.activeProgram) {
+        sm.gfx.setFillColor(Color.white);
+        sm.gfx.text(false, sm.activeProgram.name, -sm.canvas.width / 2.05, -sm.canvas.height / 2.2, 14);
+      }
+      sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2);
       window.requestAnimationFrame(sm.appLoop);
     },
 

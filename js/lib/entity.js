@@ -15,6 +15,7 @@ function addComponentToEntity(entity, component) {
 function buildEntity(name, components) {
   var entity = new Entity();
   entity.name = name;
+  console.log(components);
   components.forEach(function (component) {
     entity.components[component.name] = component;
   });

@@ -78,6 +78,8 @@
     },
 
     gfx: {
+      width: 0,
+      height: 0,
       clear: function (color) {
         sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2);
         if (color) {
@@ -235,6 +237,9 @@
       } else {
         this.log.error(console.error("Specified Mount Point: " + canvasMountId + " is not a canvas."), sm.context);
       }
+
+      sm.gfx.width = sm.canvas.width;
+      sm.gfx.height = sm.canvas.height;
 
       if (program) {
         sm.loadProgram(program);

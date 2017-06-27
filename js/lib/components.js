@@ -32,6 +32,7 @@ function AccelerationComponent(x, y) {
 }
 
 function CameraComponent() {
+  this.name = ComponentType.camera;
   this.pos = new Vector(0, 0);
   this.width = 1;
   this.height = 1;
@@ -39,7 +40,8 @@ function CameraComponent() {
   this.rotation = 0;
 }
 
-function ViewComponent(pos, w, h) {
+function ViewportComponent(pos, w, h) {
+  this.name = ComponentType.viewport;
   this.position = pos;
   this.width = w;
   this.height = h;

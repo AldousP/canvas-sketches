@@ -9,13 +9,13 @@ function ProgramBase() {
   this.frameRate = 0;
   this.frameHistory = [];
   this.historyCap = 30;
-  this.worldCam = new Camera();
   this.padding = .95;
   this.view = 0;
   this.entityHandler = new EntityHandler();
   this.systemHandler = new SystemHandler();
   this.storedState = {};
   this.paused = false;
+
 
   this.copyState = function() {
     this.storedState = JSON.stringify(this.entityHandler.entities);

@@ -37,6 +37,9 @@ function SystemHandler() {
 					var finalEntities = [];
 					rootList.forEach(function (value) {
 						var valuePresent = false;
+						// console.log("Comparing : " + rootList);
+						// console.log(setsKeys);
+
 						for (var j = 1; j < setsKeys.length; j++) {
 							var comparisonSet = sets[setsKeys[j]];
 							valuePresent = comparisonSet.indexOf(value) > -1;
@@ -45,12 +48,17 @@ function SystemHandler() {
 							}
 						}
 
+						// console.log( "system: " + system.name);
+						// console.log( value);
+						// console.log( valuePresent);
 						if (valuePresent) {
 							finalEntities.push(value);
 						}
 					});
 					system.pre(state);
+
 					finalEntities.forEach (function (entity) {
+
 						system.processEntity(entityHandler.entities[entity], delta, state);
 					});
 					system.post(state);

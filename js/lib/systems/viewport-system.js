@@ -5,24 +5,23 @@ function ViewportSystem(ID) {
   this.name = "Viewport";
   this.componentFilter = [
     ComponentType.position,
-    ComponentType.viewport,
-    ComponentType.camera
+    ComponentType.camera,
+    ComponentType.viewport
   ];
 
   this.pre = function () {
 
+
   };
 
   this.processEntity = function (entity, delta) {
-
-    var pos = entity[ComponentType.viewport].position;
-    var w = entity[ComponentType.viewport].width;
-    var h = entity[ComponentType.viewport].height;
-    // sm.gfx.setStrokeColor(Color.red);
-    // sm.gfx.drawRect(pos.x, pos.y, w, h);
+    var pos = entity.components[ComponentType.viewport].position;
+    var w = entity.components[ComponentType.viewport].width;
+    var h = entity.components[ComponentType.viewport].height;
+    sm.gfx.setStrokeColor(Color.red);
+    sm.gfx.drawRect(pos.x, pos.y, w, h, false, Align.center);
   };
 
   this.post = function () {
-
   }
 }

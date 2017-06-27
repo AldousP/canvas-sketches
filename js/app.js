@@ -7,6 +7,8 @@ var fullscreenButtons = document.getElementsByClassName("fullscreen-toggle");
 var listItemTemplate = document.getElementById("list-item-template");
 var entityListItemTemplate = document.getElementById("entity-list-item-template");
 
+var appTitle = document.getElementById("app-title");
+
 attachHandlers();
 
 /* Render the UI lists in the DOM */
@@ -56,7 +58,11 @@ function attachHandlers() {
 sm.init("canvas");
 
 document.body.addEventListener("smProgramLoaded", function (event) {
-	console.log(event.detail);
+	appTitle.innerText = event.detail.programName;
+});
+
+document.body.addEventListener("smProgramUnloaded", function (event) {
+	appTitle.innerText = "No Program Loaded";
 });
 
 function loadMountExample () {

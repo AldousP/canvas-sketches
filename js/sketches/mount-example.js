@@ -1,11 +1,7 @@
 MountExample = function () {
   this.name = "Mount Example";
   this.date = "06.24.2017";
-  this.padding = .95;
-  this.camera = new Camera();
-  this.view = new View(sm.canvas.width * this.padding, sm.canvas.height * this.padding);
-	this.view.worldWidth = 3;
-	this.view.worldHeight = 3;
+
 	this.state = {
 		bgColor : Color.blue
 	};
@@ -21,17 +17,12 @@ MountExample = function () {
 		]));
 
     this.systemHandler.addSystems([
-      new RenderingSystem("A", this.camera, this.view)
+      new RenderTestSystem("A", this.camera, this.view)
     ]);
-
-		// var that = this;
-		// sm.gfx.loadImage("sawtooth.png", function (e) {
-		// 	that.state.sawTooth = e.path[0];
-		// });
 	};
 
   this.update = function () {
-    /*
+	 /*
     *  From within this ctx, the program may access sm's various modules
     *  as well as use the systemHandler and entityHandlers declared on this
     *  object's new prototype to create programs.

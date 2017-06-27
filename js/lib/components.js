@@ -28,3 +28,7 @@ function AccelerationComponent(x, y) {
   this.name = ComponentType.acceleration;
   this.acceleration = new Vector(x, y);
 }
+
+function CameraComponent() {
+
+}

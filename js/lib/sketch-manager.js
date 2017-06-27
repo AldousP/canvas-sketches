@@ -6,7 +6,7 @@
 
 (function () {
   window.sm = {
-		context : "root", //Used by logging
+		context : "root", // Used for logging context.
     conf : {
       resourceDir : "img",
       debug: {
@@ -21,25 +21,12 @@
         }
       }
     },
+
     logs : [],
     ctx: {},
     canvas: {},
-    startTime : 0,
-		loadProgram : function (program) {
-			this.log.notify("Loading Program: " + program.name + "...", sm.context);
-			program.__proto__ = new ProgramBase();
-			this.activeProgram = program;
-			program.setup();
-			this.log.notify("Loaded Program. Resource DIR is: " + program.resourceDir +  " Starting...", sm.context);
-			document.body.dispatchEvent(new Event('smProgramLoaded', { "programName" : program.name } ));
-		},
-    programs: [],
+
 		input : {
-    	addController : function (mapping) {
-				sm.log.notify("Adding controller of type: " + mapping.name, "input");
-
-			},
-
 			fire : function(button) {
     		sm.log.notify("firing! " + button, "input");
 				this.state[button] = true;
@@ -52,6 +39,7 @@
 
 			}
 		},
+
     log : {
       notify : function (msg, context) {
         var date = new Date();
@@ -80,6 +68,7 @@
             ")";
 			}
     },
+
     gfx : {
       clear : function (color) {
       	if (color) {
@@ -203,6 +192,7 @@
         sm.ctx.closePath();
       }
     },
+
 		sfx : {
     	ctx : new(window.AudioContext || window.webkitAudioContext)(),
 			beep : function() {
@@ -222,14 +212,15 @@
 				);
 			}
 		},
+
 		init : function (canvasMountId, program) {
-			this.log.notify("Sketch Manager Initializing!", sm.context);
+			this.log.notify("Sketch Manager initializing...", sm.context);
 			this.log.notify("Mounting @ " + canvasMountId + "...", sm.context);
 			var mountPoint = document.getElementById(canvasMountId);
 			if (mountPoint.tagName.toLowerCase() === "canvas") {
 				this.ctx = mountPoint.getContext("2d");
 				this.canvas = mountPoint;
-				this.log.notify("Mounted @ canvas!", sm.context);
+				this.log.notify("Mounted @ canvas.", sm.context);
 				window.requestAnimationFrame(this.appLoop);
 			} else {
 				this.log.error(console.error("Specified Mount Point: " + canvasMountId + " is not a canvas."), sm.context);
@@ -239,15 +230,17 @@
 				sm.loadProgram(program);
 			}
 		},
+
     appLoop : function () {
     	sm.input.update();
       sm.gfx.preDraw();
-      sm.gfx.setFillColor(Color.white);
+
 			if (sm.activeProgram) {
 				sm.activeProgram.update(sm);
 			}
 
 			if (!sm.activeProgram) {
+				sm.gfx.setFillColor(Color.white);
 				var viewPortW = sm.canvas.width;
 				var viewPortH = sm.canvas.height;
 				var padding = sm.conf.debug.logConsole.padding;
@@ -266,7 +259,30 @@
 			}
 			sm.gfx.postDraw();
       window.requestAnimationFrame(sm.appLoop);
-    }
-  };
+    },
+
+		loadProgram : function (program) {
+			sm.log.notify("Loading Program: " + program.name + "...", sm.context);
+			program.__proto__ = new ProgramBase();
+			program.setup();
+			sm.log.notify("Loaded Program. Resource DIR is: " + program.resourceDir, sm.context);
+			sm.log.notify("Starting...", program.name);
+			sm.activeProgram = program;
+			document.body.dispatchEvent(new CustomEvent("smProgramLoaded", { "detail" : {"programName" : program.name } } ));
+		},
+
+		unloadProgram : function () {
+			var name = "";
+			if (!sm.activeProgram) {
+				sm.log.notify("Nothing to unload. Did you load a program?" , sm.context);
+			} else {
+				sm.log.notify("Unloading: " + name + "...", sm.context);
+			}
+			sm.activeProgram = undefined;
+			document.body.dispatchEvent(
+					new CustomEvent("smProgramUnloaded", { "detail" : {"programName" : name } })
+			);
+		}
+	};
 })();
 

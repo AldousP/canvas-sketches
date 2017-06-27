@@ -6,9 +6,9 @@
 
 (function () {
   window.sm = {
-  	poly : generatePolygon(8, 100, 0),
+		context : "root", //Used by logging
     conf : {
-      resourceDir : "/img",
+      resourceDir : "img",
       debug: {
         active : true,
         logConsole : {
@@ -16,7 +16,8 @@
           logToBrowserConsole : false,
           style : "12px Ubuntu Mono",
           color : Color.white,
-          padding : 0.025
+          padding : 0.025,
+					bgColor : "#001436"
         }
       }
     },
@@ -24,26 +25,15 @@
     ctx: {},
     canvas: {},
     startTime : 0,
+		loadProgram : function (program) {
+			this.log.notify("Loading Program: " + program.name + "...", sm.context);
+			program.__proto__ = new ProgramBase();
+			this.activeProgram = program;
+			program.setup();
+			this.log.notify("Loaded Program. Resource DIR is: " + program.resourceDir +  " Starting...", sm.context);
+			document.body.dispatchEvent(new Event('smProgramLoaded', { "programName" : program.name } ));
+		},
     programs: [],
-    init : function (canvasMountId, program) {
-      this.log.notify("Sketch Manager Initializing!", "init");
-      this.log.notify("Mounting @ " + canvasMountId + "...", "init");
-      var mountPoint = document.getElementById(canvasMountId);
-      if (mountPoint.tagName.toLowerCase() === "canvas") {
-        this.ctx = mountPoint.getContext("2d");
-        this.canvas = mountPoint;
-        this.log.notify("Mounted @ canvas!", "init");
-        this.log.notify("Loading Program: " + program.name + "...", "init");
-				program.__proto__ = new ProgramBase();
-				this.activeProgram = program;
-
-				program.setup();
-				this.log.notify("Loaded. Resource DIR is: " + program.resourceDir +  " Starting...", "init");
-        window.requestAnimationFrame(this.appLoop);
-      } else {
-        this.log.error(console.error("Specified Mount Point: " + canvasMountId + " is not a canvas."), "init");
-      }
-    },
 		input : {
     	addController : function (mapping) {
 				sm.log.notify("Adding controller of type: " + mapping.name, "input");
@@ -91,8 +81,12 @@
 			}
     },
     gfx : {
-      clear : function () {
-        sm.ctx.fillStyle = "#001436";
+      clear : function (color) {
+      	if (color) {
+					sm.ctx.fillStyle = color;
+				} else {
+					sm.ctx.fillStyle = sm.conf.debug.logConsole.bgColor;
+				}
         sm.ctx.fillRect(0, 0, sm.canvas.width, sm.canvas.height);
       },
 
@@ -228,6 +222,23 @@
 				);
 			}
 		},
+		init : function (canvasMountId, program) {
+			this.log.notify("Sketch Manager Initializing!", sm.context);
+			this.log.notify("Mounting @ " + canvasMountId + "...", sm.context);
+			var mountPoint = document.getElementById(canvasMountId);
+			if (mountPoint.tagName.toLowerCase() === "canvas") {
+				this.ctx = mountPoint.getContext("2d");
+				this.canvas = mountPoint;
+				this.log.notify("Mounted @ canvas!", sm.context);
+				window.requestAnimationFrame(this.appLoop);
+			} else {
+				this.log.error(console.error("Specified Mount Point: " + canvasMountId + " is not a canvas."), sm.context);
+			}
+
+			if (program) {
+				sm.loadProgram(program);
+			}
+		},
     appLoop : function () {
     	sm.input.update();
       sm.gfx.preDraw();
@@ -236,15 +247,12 @@
 				sm.activeProgram.update(sm);
 			}
 
-			sm.gfx.setStrokeColor(Color.white);
-			sm.gfx.drawPolygon(sm.poly, new Vector(0, 0));
-
-			var viewPortW = sm.canvas.width;
-      var viewPortH = sm.canvas.height;
-      var padding = sm.conf.debug.logConsole.padding;
-      var offsetW = viewPortW * padding;
-      var offsetH = viewPortH * padding;
-			if (sm.conf.debug.logConsole.logToScreen) {
+			if (!sm.activeProgram) {
+				var viewPortW = sm.canvas.width;
+				var viewPortH = sm.canvas.height;
+				var padding = sm.conf.debug.logConsole.padding;
+				var offsetW = viewPortW * padding;
+				var offsetH = viewPortH * padding;
 				for (var i = 0; i < sm.logs.length; i++) {
 					sm.gfx.text(
 							false,

@@ -11,7 +11,7 @@ function RenderingSystem(ID, camera, view) {
 		ComponentType.position
 	];
 
-	this.pre = function () {
+	this.pre = function (state) {
 		sm.ctx.save();
 		sm.ctx.beginPath();
 		sm.ctx.rect(
@@ -20,13 +20,11 @@ function RenderingSystem(ID, camera, view) {
 		this.view.canvWidth,
 		this.view.canvHeight);
 		sm.ctx.clip();
-		sm.gfx.clear();
+		sm.gfx.clear(state.bgColor);
 	};
 
-	this.processEntity = function (entity) {
-		// sm.log.notify(entity.ID, "rendering");
+	this.processEntity = function (entity, state) {
 		sm.gfx.setStrokeColor(Color.white);
-		// ctx.strokeStyle = "#FFFFFF";
 		var poly = entity.components[ComponentType.polygon].polygon;
 		var pos = entity.components[ComponentType.position].position;
 		this.view.renderPoly(poly, pos, this.worldCam);

@@ -37,63 +37,28 @@ function renderLists() {
   });
 }
 
-/* Click handlers for list entities */
-function pauseSystem(ID) {
-  systemHandler.systems.forEach(function (system) {
-    if (system.ID === ID) {
-      system.paused = !system.paused;
-      renderLists();
-	}
-  })
-}
-
-function logEntity(entityID) {
-  console.log(entityHandler.entities[entityID]);
-}
-
-function resetSim() {
-  vibrate();
-  restoreState();
-  for (var i = 0; i < resetButtons.length; i++) {
-	resetButtons[i].classList.add('active');
-  }
-
-  window.setTimeout(function () {
-	for (var i = 0; i < resetButtons.length; i++) {
-	  resetButtons[i].classList.remove('active');
-	}
-  }, 100);
-}
-
-function togglePause() {
-  paused = !paused;
-  vibrate();
-  for (var i = 0; i < pauseButtons.length; i++) {
-	if (paused) {
-	  pauseButtons[i].classList.add("active");
-	} else {
-	  pauseButtons[i].classList.remove("active");
-	}
-  }
-}
-
 function attachHandlers() {
   for (var i = 0; i < fullscreenButtons.length; i++) {
     fullscreenButtons[i].onclick = function (e) {
-      document.body.classList.toggle('full-screen');
+      document.body.classList.toggle("full-screen");
       for (var j = 0; j < fullscreenButtons.length; j++) {
-        fullscreenButtons[j].classList.add('active');
+        fullscreenButtons[j].classList.add("active");
       }
       window.setTimeout(function () {
         for (var i = 0; i < fullscreenButtons.length; i++) {
-          fullscreenButtons[i].classList.remove('active');
+          fullscreenButtons[i].classList.remove("active");
         }
       }, 100);
     }
   }
 }
 
-sm.init('canvas', new programs.mountExample());
+sm.init("canvas");
 
+document.body.addEventListener("smProgramLoaded", function (event) {
+	console.log(event.detail);
+});
 
-
+function loadMountExample () {
+	sm.loadProgram(new MountExample());
+}

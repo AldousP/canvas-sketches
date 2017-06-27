@@ -19,11 +19,11 @@ function ProgramBase() {
   this.paused = false;
 
   this.copyState = function() {
-    storedState = JSON.stringify(entityHandler.entities);
+    this.storedState = JSON.stringify(this.entityHandler.entities);
   };
 
   this.restoreState = function() {
-    entityHandler.entities = JSON.parse(storedState);
+    this.entityHandler.entities = JSON.parse(storedState);
   };
 
   this.updateFrameCount = function() {

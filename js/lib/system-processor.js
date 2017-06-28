@@ -1,6 +1,6 @@
 "use strict";
 
-function SystemHandler() {
+function SystemProcessor() {
   this.entitySystems = [];
   this.staticSystems = [];
 
@@ -12,7 +12,19 @@ function SystemHandler() {
 
   this.processEntities = function (delta, entities, state) {
   	this.staticSystems.forEach(function (system) {
+  		if (system.pre) {
+				system.pre(state);
+			}
+		});
 
+		this.entitySystems.forEach(function (system) {
+
+		});
+
+		this.staticSystems.forEach(function (system) {
+			if (system.post) {
+				system.post(state);
+			}
 		});
 
 
@@ -83,9 +95,9 @@ function SystemHandler() {
   };
 
   this.addSystem = function (system) {
+
   	if (system.type === SystemType.staticSystem) {
 			this.staticSystems.push(system);
-
 		}
 
 		if (system.type === SystemType.entitySystem) {
@@ -96,10 +108,4 @@ function SystemHandler() {
 		// this.systems.push(system);
 		// this.sortSystems();
   };
-
-  this.addSystems = function (newSystems) {
-  	// var that = this;
-  	// newSystems.forEach(function (system) {
-	  // that.systems.push(system);
-	};
 }

@@ -30,7 +30,7 @@ function RenderTestSystem(ID, camera, view) {
     sm.gfx.drawCircle(0, 0, 75);
     sm.gfx.setStrokeWidth(1);
     sm.gfx.drawCircle(0, 0, 50);
-    sm.gfx.drawPolygon(this.polygon, this.polygonPos)
+    sm.gfx.drawPolygon(this.polygon, this.polygonPos);
     sm.gfx.postDraw();
   };
 }

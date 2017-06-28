@@ -9,6 +9,8 @@ var CameraTests = function () {
   this.resourceDir = "img";
 
   this.setup = function () {
+    var backgroundSystem = new BackgroundSystem();
+
 
   };
 

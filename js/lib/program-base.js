@@ -26,7 +26,6 @@ function ProgramBase() {
 
   this.updateBase = function () {
     this.updateFrameCount();
-    this.systemHandler.updateSystems(this.delta, this.entityHandler.entities, this.state);
   };
 
   this.updateFrameCount = function() {

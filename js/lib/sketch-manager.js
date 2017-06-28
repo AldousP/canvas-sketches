@@ -17,7 +17,8 @@
           style: "12px Ubuntu Mono",
           color: Color.white,
           padding: 0.025,
-          bgColor: "#001436"
+          bgColor: "#001436",
+          logInProgram: true
         }
       }
     },
@@ -282,8 +283,12 @@
         sm.activeProgram.update(sm);
       }
 
-      if (!sm.activeProgram) {
-        sm.gfx.setFillColor(Color.white);
+      if (!sm.activeProgram || sm.conf.debug.logConsole.logInProgram) {
+        if (sm.activeProgram) {
+					sm.gfx.setFillColor(Color.green);
+				} else {
+					sm.gfx.setFillColor(Color.white);
+        }
         var viewPortW = sm.canvas.width;
         var viewPortH = sm.canvas.height;
         var padding = sm.conf.debug.logConsole.padding;
@@ -308,7 +313,7 @@
           sm.gfx.text(
               false,
               sm.activeProgram.name,
-              -sm.canvas.width / 2.05,
+              sm.canvas.width / 3,
               -sm.canvas.height / 2.2,
               14,
               'Ubuntu Mono');
@@ -316,7 +321,7 @@
           sm.gfx.text(
               false,
               sm.utils.formatters.float_two_pt(sm.activeProgram.frameRate),
-              -sm.canvas.width / 2.05,
+              sm.canvas.width / 3,
               -sm.canvas.height / 2.35,
               14,
               'Ubuntu Mono');

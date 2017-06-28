@@ -4,6 +4,7 @@ function Entity() {
   this.ID = ''; // Set by a handler
   this.name = 'Entity'; // Set by entity
   this.components = {};
+  this.children = [];
 }
 
 function addComponentToEntity(entity, component) {

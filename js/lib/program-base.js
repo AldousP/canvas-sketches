@@ -16,13 +16,17 @@ function ProgramBase() {
   this.storedState = {};
   this.paused = false;
 
-
   this.copyState = function() {
     this.storedState = JSON.stringify(this.entityHandler.entities);
   };
 
   this.restoreState = function() {
     this.entityHandler.entities = JSON.parse(storedState);
+  };
+
+  this.updateBase = function () {
+    this.updateFrameCount();
+    this.systemHandler.updateSystems(this.delta, this.entityHandler.entities, this.state);
   };
 
   this.updateFrameCount = function() {

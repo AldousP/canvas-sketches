@@ -10,22 +10,10 @@ var CameraTests = function () {
 
   this.setup = function () {
 
-    this.entityHandler.addEntity(buildEntity("ViewA", [
-		  (new PositionComponent(0, 0)),
-		  (new ViewportComponent(new Vector(0, 0), sm.gfx.width * .75, sm.gfx.height * .75)),
-		  (new CameraComponent())
-	  ]));
-
-    sm.log.notify("Adding Rendering System", "system-handler");
-    this.systemHandler.addSystems([
-      new RenderingSystem("A"),
-      new ViewportSystem("B")
-    ]);
   };
 
-  this.update = function () {
 
-    this.updateFrameCount();
-    this.systemHandler.updateSystems(this.delta, this.entityHandler, this.state);
+  this.update = function () {
+    this.updateBase();
   }
 };

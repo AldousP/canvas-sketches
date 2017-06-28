@@ -3,15 +3,7 @@ function System(ID) {
   this.name = "";
   this.type = SystemTypes.staticSystem;
 
-  this.componentFilter = [
-
-  ];
-
   this.pre = function () {
-
-  };
-
-  this.processEntity = function (entity) {
 
   };
 

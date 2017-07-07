@@ -34,9 +34,9 @@
     sm.loadProgram(new MountExample());
   }
 
-  function loadCameraTests() {
+  window.loadCameraTests = function () {
     sm.loadProgram(new CameraTests());
-  }
+  };
 
   sm.init("canvas", new CameraTests());
 }());

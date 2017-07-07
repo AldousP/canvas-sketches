@@ -7,6 +7,9 @@
 (function () {
   window.sm = {
     context: "root", // Used for logging context.
+    state: {
+      paused : false
+    },
     conf: {
       resourceDir: "img",
       debug: {

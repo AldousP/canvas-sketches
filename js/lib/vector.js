@@ -13,6 +13,10 @@ function setVec(vec, x, y) {
   return vec;
 }
 
+function setVecVec(vec1, vec2) {
+  return setVec(vec1, vec2.x, vec2.y);
+}
+
 function cpyVec(vec) {
   return new Vector(vec.x, vec.y);
 }
@@ -37,4 +41,8 @@ function addVecConst(vec, x, y) {
 
 function addVecVec(vec, vec2) {
   return addVecConst(vec, vec2.x, vec2.y);
+}
+
+function subVecVec(vec, vec2) {
+  return addVecConst(vec, -vec2.x, -vec2.y);
 }

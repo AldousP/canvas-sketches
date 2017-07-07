@@ -12,10 +12,9 @@ function ProgramBase() {
   this.padding = .95;
   this.view = 0;
   this.entityHandler = new EntityHandler();
-  this.systemHandler = new SystemHandler();
+  this.systemProcessor = new SystemProcessor(this.entityHandler);
   this.storedState = {};
   this.paused = false;
-
 
   this.copyState = function() {
     this.storedState = JSON.stringify(this.entityHandler.entities);
@@ -24,6 +23,14 @@ function ProgramBase() {
   this.restoreState = function() {
     this.entityHandler.entities = JSON.parse(storedState);
   };
+
+  this.updateBase = function () {
+    this.updateFrameCount();
+  };
+
+  this.sampleFunction = function () {
+    console.log("Works!");
+	};
 
   this.updateFrameCount = function() {
     this.current = new Date().getTime();

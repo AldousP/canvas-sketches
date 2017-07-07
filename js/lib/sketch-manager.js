@@ -14,7 +14,7 @@
         logConsole: {
           logToScreen: true,
           logToBrowserConsole: false,
-          style: "12px Ubuntu Mono",
+          size : 14,
           color: Color.white,
           padding: 0.025,
           bgColor: "#001436",
@@ -31,6 +31,24 @@
     ctx: {},
     canvas: {},
     utils : {
+      dumpActiveComponentTree : function () {
+        if (sm.activeProgram) {
+          sm.utils.logComponentTree(sm.activeProgram.rootEntities);
+        }
+			},
+			logComponentTree : function (root, iteration) {
+          var indent = "";
+          for (var i = 0; i < iteration; i ++) {
+						indent+= "-";
+          }
+
+          console.log(indent + root.ID + "(" + root.name + ")[" + Object.keys(root.components) + "]");
+          if (root.children) {
+            Object.keys(root.children).forEach(function (key) {
+              sm.utils.logComponentTree(root.children[key], iteration ? iteration + 1 : 1);
+            });
+          }
+			},
       formatters : {
         float_two_pt : function (val) {
           return parseFloat((Math.round(val * 100) / 100).toFixed(2));
@@ -92,7 +110,7 @@
         sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
       },
 
-      drawPolygon: function (polygon, pos) {
+      drawPolygon: function (polygon, pos, fill) {
         sm.ctx.beginPath();
         if (!polygon.pts) {
           console.error('No property of name [pts] found on polygon parameter.');
@@ -107,7 +125,7 @@
           sm.ctx.lineTo(firstPt.x + pos.x, firstPt.y + pos.y);
         }
         sm.ctx.closePath();
-        sm.ctx.stroke();
+        fill ? sm.ctx.fill() : sm.ctx.stroke();
       },
 
       drawImage: function (image, x, y, w, h, align) {
@@ -300,7 +318,7 @@
               sm.logs[i],
               (-viewPortW / 2) + offsetW,
               (-(viewPortH / 2) + offsetH) + (offsetH * ( sm.logs.length - i)),
-              10,
+              sm.conf.debug.logConsole.size,
               'Ubuntu Mono'
           );
         }

@@ -12,7 +12,7 @@ function ProgramBase() {
   this.padding = .95;
   this.view = 0;
   this.entityHandler = new EntityHandler();
-  this.systemProcessor = new SystemProcessor();
+  this.systemProcessor = new SystemProcessor(this.entityHandler);
   this.storedState = {};
   this.paused = false;
 

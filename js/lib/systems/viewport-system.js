@@ -14,7 +14,7 @@ function ViewportSystem(ID) {
 
   };
 
-  this.processEntity = function (entity, delta) {
+  this.processEntity = function (entity, state, delta) {
     var pos = entity.components[ComponentType.viewport].position;
     var w = entity.components[ComponentType.viewport].width;
     var h = entity.components[ComponentType.viewport].height;

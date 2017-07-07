@@ -14,7 +14,7 @@ function RenderTestSystem(ID, camera, view) {
     sm.gfx.postDraw();
   };
 
-  this.processEntity = function (entity) {
+  this.processEntity = function (entity, state, delta) {
 
   };
 

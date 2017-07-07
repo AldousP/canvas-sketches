@@ -1,48 +1,41 @@
 function EntityHandler() {
-  var entityCount = 0;
-  this.entities = {};
+  this.entities = [];  // Linear mapping of all entities
+  this.entityMap = {}; // Mapping of entities to component type.
 
-  this.entityMap = {};
-
-  this.addEntity = function (entity) {
-    entity.ID = hashForInt(entityCount);
-    entityCount++;
-    this.entities[entity.ID] = entity;
-    var that = this;
-    var keys = Object.keys(entity.components);
-
-    keys.forEach(function (key) {
-      that.mapEntity(entity.components[key].name, entity)
+	this.createEntity = function (components, name) {
+	  var entity = new Entity();
+	  entity.ID = this.entities.length;
+	  if (name) {
+      entity.name = name;
+    }
+	  var that = this;
+    components.forEach(function (component) {
+      entity.components[component.name] = component;
+      if (!that.entityMap[component.name]) {
+        that.entityMap[component.name] = [];
+      }
+      that.entityMap[component.name].push(entity);
     });
-
-    if (entity.children) {
-      console.log(entity.children);
-    }
-
-    return entity.ID;
+    this.entities.push(entity);
+    return entity;
   };
-
-  this.mapEntity = function (componentName, entity) {
-    if (this.entityMap[componentName]) {
-      if (this.entityMap[componentName].indexOf(entity.ID) < 0) {
-        this.entityMap[componentName].push(entity.ID);
+	
+	this.injectComponents = function (entity, components) {
+    var that = this;
+    components.forEach(function (component) {
+      entity.components[component.name] = component;
+      if (!that.entityMap[component.name]) {
+        that.entityMap[component.name] = [];
       }
-    } else {
-      this.entityMap[componentName] = [];
-      if (this.entityMap[componentName].indexOf(entity.ID) < 0) {
-        this.entityMap[componentName].push(entity.ID);
-      }
-    }
+      that.entityMap[component.name].push(entity);
+    })
   };
-
-  this.injectComponent = function (entity, component) {
-    if (this.entities[entity.ID]) {
-      this.mapEntity(component.name, entity);
-    }
-    entity.components[component.name] = component;
-  };
-
-  this.removeEntity = function (ID) {
-    delete this.entities[ID];
-  };
+	
+	this.bindToParent = function (parent, children) {
+	  var childrenComponent = new ChildrenComponent();
+	  children.forEach(function (child) {
+	    childrenComponent.children.push(child.ID);
+    });
+    this.injectComponents(parent, [childrenComponent]);
+  }
 }

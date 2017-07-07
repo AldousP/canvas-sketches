@@ -7,9 +7,10 @@ var ComponentType = {
   velocity : "vel",
   acceleration : "accl",
   camera : "cam",
-  viewport : "viewport"
+  viewport : "viewport",
+  children : "children",
+  root : "root"
 };
-
 
 function PositionComponent(x, y) {
   this.name = ComponentType.position;
@@ -45,4 +46,13 @@ function ViewportComponent(pos, w, h) {
   this.position = pos;
   this.width = w;
   this.height = h;
+}
+
+function ChildrenComponent() {
+  this.name = ComponentType.children;
+  this.children = [];
+}
+
+function RootComponent() {
+  this.name = ComponentType.root;
 }

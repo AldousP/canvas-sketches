@@ -2,16 +2,28 @@
 
 function RootSystem(ID) {
   this.ID = ID;
-  this.name = 'Roots';
+  this.name = 'RootSystem';
 
-  this.processEntity = function (entity, delta, state) {
-    if (entity.components[ComponentType.children]) {
-      var childrenComp = entity.components[ComponentType.children];
-      if (childrenComp) {
-        this.processor.processEntities(
-            this.processor.entitiesForIDs(childrenComp.children),
-            delta,
-            state);
+  this.processEntity = function (entity, state, delta) {
+    var children = entity.components[ComponentType.children];
+    var pos = entity.components[ComponentType.position];
+    var parentPos = state.parentPos;
+
+    if (children) {
+      if (parentPos && pos) {
+        addVecVec(parentPos, pos.position);
+      } else {
+        state.parentPos = cpyVec(pos.position);
+      }
+
+      this.processor.processEntities(
+          this.processor.entitiesForIDs(children.children),
+          state,
+          delta
+      );
+
+      if (parentPos && pos) {
+        addVecConst(parentPos, -pos.position.x, -pos.position.y);
       }
     }
   };

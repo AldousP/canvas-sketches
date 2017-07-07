@@ -13,28 +13,31 @@ var CameraTests = function () {
   this.setup = function () {
 
     this.root = this.entityHandler.createEntity([
-        new PositionComponent(0, 0),
-        new PolygonComponent(generatePolygon(16, 64)),
-        new RootComponent()
+        new PositionComponent(10, 0),
+        new PolygonComponent(generatePolygon(16, 8)),
+        new RootComponent(),
+        new VelocityComponent(0, 10),
+        new AccelerationComponent(0, 64)
     ], 'root');
 
     this.entityHandler.bindToParent(this.root, [
       this.entityHandler.createEntity([
-        new PositionComponent(16, 0),
-        new PolygonComponent(generatePolygon(3, 32))
+        new PositionComponent(0, 0),
+        new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
       ]),
       this.entityHandler.createEntity([
-        new PositionComponent(0, 16),
-        new PolygonComponent(generatePolygon(3, 32))
+        new PositionComponent(0, -48),
+        new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
       ]),
       this.entityHandler.createEntity([
-        new PositionComponent(-16, 0),
-        new PolygonComponent(generatePolygon(3, 32))
+        new PositionComponent(0, 48),
+        new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
       ])
     ]);
 
-    this.systemProcessor.addSystem(new RootSystem("a"));
-    this.systemProcessor.addSystem(new RenderingSystem("b"));
+    this.systemProcessor.addSystem(new RenderingSystem("a"));
+    this.systemProcessor.addSystem(new RootSystem("b"));
+    this.systemProcessor.addSystem(new PhysicsSystem("c"));
 
     this.systemProcessor.processEntities([this.root], this.state, this.delta);
   };

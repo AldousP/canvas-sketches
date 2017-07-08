@@ -113,7 +113,12 @@
         sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
       },
 
-      drawPolygon: function (polygon, pos, fill) {
+      drawPolygon: function (polygon, pos, fill, rotation) {
+        if (rotation) {
+          sm.gfx.preDraw();
+          sm.ctx.rotate(rotation);
+        }
+
         sm.ctx.beginPath();
         if (!polygon.pts) {
           console.error('No property of name [pts] found on polygon parameter.');
@@ -129,6 +134,9 @@
         }
         sm.ctx.closePath();
         fill ? sm.ctx.fill() : sm.ctx.stroke();
+        if (rotation) {
+          sm.gfx.postDraw();
+        }
       },
 
       drawImage: function (image, x, y, w, h, align) {
@@ -162,7 +170,7 @@
         sm.ctx.restore();
       },
 
-      drawRect: function (x, y, w, h, fill, align) {
+      drawRect: function (x, y, w, h, fill, align, rotation) {
         sm.ctx.beginPath();
         var adj = {
           x: x,

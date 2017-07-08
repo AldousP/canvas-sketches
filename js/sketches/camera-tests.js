@@ -11,10 +11,11 @@ var CameraTests = function () {
   this.resourceDir = 'img';
 
   this.setup = function () {
-
+    sm.state.paused = true;
     this.root = this.entityHandler.createEntity([
         new PositionComponent(10, 0),
         new PolygonComponent(generatePolygon(16, 8)),
+        new RotationComponent(0),
         new RootComponent(),
         new VelocityComponent(0, 10),
         new AccelerationComponent(0, 64)

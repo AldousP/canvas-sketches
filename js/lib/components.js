@@ -3,7 +3,7 @@
 var ComponentType = {
   polygon : "poly",
   position : "pos",
-  tagged : "tags",
+  rotation : "rot",
   velocity : "vel",
   acceleration : "accl",
   camera : "cam",
@@ -12,14 +12,19 @@ var ComponentType = {
   root : "root"
 };
 
+function PolygonComponent(polygon) {
+  this.name = ComponentType.polygon;
+  this.polygon = polygon;
+}
+
 function PositionComponent(x, y) {
   this.name = ComponentType.position;
   this.position = new Vector(x, y);
 }
 
-function PolygonComponent(polygon) {
-  this.name = ComponentType.polygon;
-  this.polygon = polygon;
+function RotationComponent(rotation) {
+  this.name = ComponentType.rotation;
+  this.rotation = rotation ? rotation : 0;
 }
 
 function VelocityComponent(x, y) {

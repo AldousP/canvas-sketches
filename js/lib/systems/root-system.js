@@ -12,10 +12,12 @@ function RootSystem(ID) {
     var parentRot = state.parentRot;
 
     if (children) {
-      if (parentPos && pos) {
-        addVecVec(parentPos, pos.position);
-      } else {
-        state.parentPos = cpyVec(pos.position);
+      if (pos) {
+        if (state.parentPos) {
+          addVecVec(state.parentPos, pos.position);
+        } else {
+          state.parentPos = cpyVec(pos.position);
+        }
       }
 
       var rotMod = rot ? (rot.radians ? rot.rotation : rot.rotation / DEG_RAD) : 0;

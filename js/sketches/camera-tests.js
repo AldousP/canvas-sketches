@@ -38,49 +38,22 @@ var CameraTests = function () {
       new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
     ]);
 
+    this.entityHandler.bindToParent(A,[
+        this.entityHandler.createEntity([
+          new PositionComponent(-32, 0),
+          new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
+        ]),
 
-    // this.entityHandler.bindToParent(A,[
-    //     this.entityHandler.createEntity([
-    //       new PositionComponent(0, 0),
-    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
-    //     ]),
-    //     this.entityHandler.createEntity([
-    //       new PositionComponent(0, -24),
-    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
-    //     ]),
-    //     this.entityHandler.createEntity([
-    //       new PositionComponent(0, 24),
-    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
-    //     ])]);
+      this.entityHandler.createEntity([
+        new PositionComponent(32, 0),
+        new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
+      ]),
 
-    // this.entityHandler.bindToParent(B,
-    //     [
-    //     this.entityHandler.createEntity([
-    //       new PositionComponent(0, 0),
-    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
-    //     ]),
-    //     this.entityHandler.createEntity([
-    //       new PositionComponent(0, -24),
-    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
-    //     ]),
-    //     this.entityHandler.createEntity([
-    //       new PositionComponent(0, 24),
-    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
-    //     ])]);
-    //
-    // this.entityHandler.bindToParent(C, [
-    //     this.entityHandler.createEntity([
-    //       new PositionComponent(0, 0),
-    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
-    //     ]),
-    //     this.entityHandler.createEntity([
-    //       new PositionComponent(0, -24),
-    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
-    //     ]),
-    //     this.entityHandler.createEntity([
-    //       new PositionComponent(0, 24),
-    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
-    //     ])]);
+      this.entityHandler.createEntity([
+        new PositionComponent(0, 0),
+        new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
+      ])
+    ]);
 
     this.entityHandler.bindToParent(this.root, [A, B, C]);
 
@@ -98,5 +71,6 @@ var CameraTests = function () {
 
     sm.gfx.setStrokeColor(Color.pink);
     rotVec(this.state.sampleVec, this.delta * (Math.PI / 16));
+
   }
 };

@@ -29,7 +29,6 @@ function ProgramBase() {
   };
 
   this.sampleFunction = function () {
-    console.log("Works!");
 	};
 
   this.updateFrameCount = function() {

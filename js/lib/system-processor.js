@@ -23,15 +23,12 @@ function SystemProcessor(handler) {
 		});
 
   	var that = this;
-  	entities.forEach(function (entity) {
-			that.entitySystems.forEach(function (system) {
-				system.processEntity(entity, state, delta);
-			});
-		});
 
-		this.entitySystems.forEach(function (system) {
-
-		});
+      that.entitySystems.forEach(function (system) {
+        for (var i = 0; i < entities.length; i ++) {
+          system.processEntity(entities[i], state, delta);
+        }
+      });
 
 		this.staticSystems.forEach(function (system) {
 			if (system.post) {

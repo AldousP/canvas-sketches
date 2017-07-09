@@ -38,6 +38,11 @@ function RenderingSystem(ID) {
       } else {
         sm.gfx.drawPolygon(poly.polygon, this.tmpVecA, false, rotMod);
       }
+
+
+      if (state.parentRot) {
+        rotVec(this.tmpVecA, -state.parentRot);
+      }
     }
   };
 }

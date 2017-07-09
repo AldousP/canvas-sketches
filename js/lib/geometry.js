@@ -1,5 +1,7 @@
 "use strict";
 
+var DEG_RAD = 57.2958;
+
 /**
  * Generate a new Polygon
  * @param vertCount

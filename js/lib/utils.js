@@ -1,4 +1,4 @@
-"use strict";
+'use strict'
 
 function hashForInt(integer) {
   integer = integer * 10 + 100;

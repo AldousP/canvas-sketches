@@ -3,6 +3,7 @@
 function PhysicsSystem(ID) {
 	this.ID = ID;
 	this.name = "Physics";
+	
 	this.componentFilter = [
 		ComponentType.position,
 		ComponentType.velocity

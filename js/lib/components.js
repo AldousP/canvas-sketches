@@ -9,7 +9,8 @@ var ComponentType = {
   camera : "cam",
   viewport : "viewport",
   children : "children",
-  root : "root"
+  root : "root",
+  color: "col"
 };
 
 function PolygonComponent(polygon) {
@@ -22,8 +23,9 @@ function PositionComponent(x, y) {
   this.position = new Vector(x, y);
 }
 
-function RotationComponent(rotation) {
+function RotationComponent(rotation, radians) {
   this.name = ComponentType.rotation;
+  this.radians = radians ? radians : false;
   this.rotation = rotation ? rotation : 0;
 }
 
@@ -60,4 +62,9 @@ function ChildrenComponent() {
 
 function RootComponent() {
   this.name = ComponentType.root;
+}
+
+function ColorComponent(color) {
+  this.name = ComponentType.color;
+  this.color = color;
 }

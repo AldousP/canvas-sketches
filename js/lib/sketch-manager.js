@@ -11,7 +11,7 @@
       paused : false
     },
     conf: {
-      resourceDir: "img",
+      resourceDir: "assets",
       debug: {
         active: true,
         logConsole: {
@@ -115,7 +115,7 @@
 
       drawPolygon: function (polygon, pos, fill, rotation) {
         if (rotation) {
-          sm.gfx.preDraw();
+          // sm.ctx.translate(pos.x + 32, pos.y + 32);
           sm.ctx.rotate(rotation);
         }
 
@@ -135,7 +135,8 @@
         sm.ctx.closePath();
         fill ? sm.ctx.fill() : sm.ctx.stroke();
         if (rotation) {
-          sm.gfx.postDraw();
+          sm.ctx.rotate(-rotation);
+          // sm.ctx.translate(-(pos.x + 32), -(pos.y + 32));
         }
       },
 
@@ -164,28 +165,30 @@
         sm.gfx.width = sm.canvas.width;
         sm.gfx.height = sm.canvas.height;
         sm.ctx.save();
+        sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
       },
 
       postDraw: function () {
         sm.ctx.restore();
       },
 
-      drawRect: function (x, y, w, h, fill, align, rotation) {
+      drawRect: function (x, y, w, h, fill, rotation) {
+        sm.ctx.save();
         sm.ctx.beginPath();
-        var adj = {
-          x: x,
-          y: y
-        };
-        if (align) {
-          adj = align(x, y, w, h);
-        }
+        sm.ctx.fillStyle = 'white';
 
-        sm.ctx.rect(adj.x, adj.y, w, h);
+        var adj = Align.center(x, y, w, h);
+        var transX = adj.x + (w / 2);
+        var transY = adj.y + (h / 2);
+        sm.ctx.translate(transX, transY);
+        sm.ctx.rotate(rotation / DEG_RAD);
+        sm.ctx.rect(-(w / 2), -(h / 2), w, h);
         if (fill) {
           sm.ctx.fill();
         }
         sm.ctx.stroke();
         sm.ctx.closePath();
+        sm.ctx.restore();
       },
 
       drawLine: function (x1, y1, x2, y2) {
@@ -304,9 +307,9 @@
         sm.unloadProgram();
       }
       sm.input.update();
-      sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
       sm.gfx.clear();
       sm.gfx.preDraw();
+
 
       if (sm.activeProgram) {
         sm.activeProgram.update(sm);
@@ -357,14 +360,13 @@
 
         }
       }
-      sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2);
 
       if (!sm.breakOnNextLoop) {
         window.requestAnimationFrame(sm.appLoop);
       } else {
         sm.breakOnNextLoop = false;
         sm.unloadProgram();
-        console.log("Shutting Down SM. Logs can be found at sm.logs. Goodbye!");
+        console.log("Shutting Down SM. Logs can be found at sm.logs.");
         sm.ctx.save();
         sm.ctx.fillStyle = "#FFFFFF";
         sm.ctx.fillRect(0, 0, sm.canvas.width, sm.canvas.height);

@@ -7,9 +7,14 @@ function Vector(x, y) {
   this.len = Math.sqrt((x * x) + (y * y));
 }
 
+function calcLen(vec) {
+  vec.len = Math.sqrt((vec.x * vec.x) + (vec.y * vec.y));
+}
+
 function setVec(vec, x, y) {
   vec.x = x;
   vec.y = y;
+  calcLen(vec);
   return vec;
 }
 
@@ -24,18 +29,29 @@ function cpyVec(vec) {
 function sclVec(vec, scalar) {
   vec.x *= scalar;
   vec.y *= scalar;
+  calcLen(vec);
   return vec;
 }
 
 function multVec(vec1, vec2) {
   vec1.x *= vec2.x;
   vec1.y += vec2.y;
+  calcLen(vec);
   return vec1;
 }
 
 function addVecConst(vec, x, y) {
   vec.x += x;
   vec.y += y;
+  calcLen(vec);
+  return vec;
+}
+
+function rotVec(vec, rot) {
+  var newRot = Math.atan2(vec.y, vec.x) + rot;
+  vec.x = Math.cos(newRot) * vec.len;
+  vec.y = Math.sin(newRot) * vec.len;
+  calcLen(vec);
   return vec;
 }
 

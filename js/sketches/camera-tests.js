@@ -5,7 +5,8 @@ var CameraTests = function () {
   this.root = {};
 
   this.state = {
-    bgColor: '#323232'
+    bgColor: '#323232',
+    sampleVec: new Vector(100, 10)
   };
 
   this.resourceDir = 'assets';
@@ -13,29 +14,75 @@ var CameraTests = function () {
   this.setup = function () {
     sm.state.paused = true;
     this.root = this.entityHandler.createEntity([
-        new PositionComponent(0, 0),
+        new PositionComponent(-64, 0),
         new ColorComponent(Color.pink),
         new PolygonComponent(generatePolygon(8, 32)),
-        new RotationComponent(64),
+        new RotationComponent(15),
         new RootComponent(),
         new VelocityComponent(0, 10),
         new AccelerationComponent(0, 64)
     ], 'root');
 
-    this.entityHandler.bindToParent(this.root, [
-      this.entityHandler.createEntity([
-        new PositionComponent(0, 0),
-        new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
-      ]),
-      this.entityHandler.createEntity([
-        new PositionComponent(0, -48),
-        new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
-      ]),
-      this.entityHandler.createEntity([
-        new PositionComponent(0, 48),
-        new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
-      ])
+    var A = this.entityHandler.createEntity([
+          new PositionComponent(0, 0),
+          new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
+        ]);
+
+    var B = this.entityHandler.createEntity([
+          new PositionComponent(0, -48),
+          new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
+        ]);
+
+    var C = this.entityHandler.createEntity([
+      new PositionComponent(0, 48),
+      new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
     ]);
+
+
+    // this.entityHandler.bindToParent(A,[
+    //     this.entityHandler.createEntity([
+    //       new PositionComponent(0, 0),
+    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
+    //     ]),
+    //     this.entityHandler.createEntity([
+    //       new PositionComponent(0, -24),
+    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
+    //     ]),
+    //     this.entityHandler.createEntity([
+    //       new PositionComponent(0, 24),
+    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
+    //     ])]);
+
+    // this.entityHandler.bindToParent(B,
+    //     [
+    //     this.entityHandler.createEntity([
+    //       new PositionComponent(0, 0),
+    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
+    //     ]),
+    //     this.entityHandler.createEntity([
+    //       new PositionComponent(0, -24),
+    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
+    //     ]),
+    //     this.entityHandler.createEntity([
+    //       new PositionComponent(0, 24),
+    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
+    //     ])]);
+    //
+    // this.entityHandler.bindToParent(C, [
+    //     this.entityHandler.createEntity([
+    //       new PositionComponent(0, 0),
+    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
+    //     ]),
+    //     this.entityHandler.createEntity([
+    //       new PositionComponent(0, -24),
+    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
+    //     ]),
+    //     this.entityHandler.createEntity([
+    //       new PositionComponent(0, 24),
+    //       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
+    //     ])]);
+
+    this.entityHandler.bindToParent(this.root, [A, B, C]);
 
     this.systemProcessor.addSystem(new BackgroundSystem("a"));
     this.systemProcessor.addSystem(new RenderingSystem("b"));
@@ -46,10 +93,10 @@ var CameraTests = function () {
 
   this.update = function () {
     this.updateBase();
-    this.systemProcessor.processEntities([this.root], this.state, this.delta);
+    this.systemProcessor.processEntities([this.root], {}, this.delta);
     this.root.components.rot.rotation += 45 * this.delta;
 
-    sm.gfx.setStrokeColor(Color.yellow);
-    sm.gfx.drawRect(0, 0, 64, 64, true, 45);
+    sm.gfx.setStrokeColor(Color.pink);
+    rotVec(this.state.sampleVec, this.delta * (Math.PI / 16));
   }
 };

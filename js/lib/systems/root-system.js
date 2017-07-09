@@ -18,12 +18,24 @@ function RootSystem(ID) {
         state.parentPos = cpyVec(pos.position);
       }
 
+      var rotMod = rot ? (rot.radians ? rot.rotation : rot.rotation / DEG_RAD) : 0;
+      if (rot) {
+        if (parentRot) {
+          state.parentRot += rotMod
+        } else {
+          state.parentRot = rotMod;
+        }
+      }
 
       this.processor.processEntities(
           this.processor.entitiesForIDs(children.children),
           state,
           delta
       );
+
+      if (rot) {
+        state.parentRot -= rotMod;
+      }
 
       if (parentPos && pos) {
         addVecConst(parentPos, -pos.position.x, -pos.position.y);

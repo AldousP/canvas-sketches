@@ -10,36 +10,34 @@ function RenderingSystem(ID) {
     ComponentType.position
   ];
 
-  this.pre = function (state) {
-    sm.gfx.preDraw();
-  };
-
   this.processEntity = function (entity, state, delta) {
     var poly = entity.components[ComponentType.polygon];
     var pos = entity.components[ComponentType.position];
     var rot = entity.components[ComponentType.rotation];
     var col = entity.components[ComponentType.color];
     var parentPos = state.parentPos;
+    var rotMod = 0;
 
     if (poly && pos) {
       setVecVec(this.tmpVecA, pos.position);
+
+      if (state.parentRot) {
+        rotVec(this.tmpVecA, state.parentRot);
+        rotMod = state.parentRot;
+      }
+
       if (parentPos) {
         addVecVec(this.tmpVecA, parentPos);
-      } else {
-        setVecVec(this.tmpVecA, pos.position);
       }
 
       sm.gfx.setFillColor(col ? col.color : Color.white);
       sm.gfx.setStrokeColor(col ? col.color : Color.white);
+
       if (rot) {
-        sm.gfx.drawPolygon(poly.polygon, this.tmpVecA, false, rot.radians ? rot.rotation : rot.rotation / DEG_RAD);
+        sm.gfx.drawPolygon(poly.polygon, this.tmpVecA, false, (rot.radians ? rot.rotation : rot.rotation / DEG_RAD) + rotMod);
       } else {
-        sm.gfx.drawPolygon(poly.polygon, this.tmpVecA, false);
+        sm.gfx.drawPolygon(poly.polygon, this.tmpVecA, false, rotMod);
       }
     }
-  };
-
-  this.post = function () {
-    sm.gfx.postDraw();
   };
 }

@@ -114,30 +114,25 @@
       },
 
       drawPolygon: function (polygon, pos, fill, rotation) {
-        if (rotation) {
-          // sm.ctx.translate(pos.x + 32, pos.y + 32);
-          sm.ctx.rotate(rotation);
-        }
-
+        sm.ctx.translate(pos.x, pos.y);
+        sm.ctx.rotate(rotation);
         sm.ctx.beginPath();
         if (!polygon.pts) {
           console.error('No property of name [pts] found on polygon parameter.');
         } else {
           var firstPt = polygon.pts[0];
-          sm.ctx.moveTo(firstPt.x + pos.x, firstPt.y + pos.y);
+          sm.ctx.moveTo(firstPt.x, firstPt.y);
           polygon.pts.forEach(function (pt) {
             if (pt !== firstPt) {
-              sm.ctx.lineTo(pt.x + pos.x, pt.y + pos.y);
+              sm.ctx.lineTo(pt.x , pt.y);
             }
           });
-          sm.ctx.lineTo(firstPt.x + pos.x, firstPt.y + pos.y);
+          sm.ctx.lineTo(firstPt.x, firstPt.y);
         }
         sm.ctx.closePath();
         fill ? sm.ctx.fill() : sm.ctx.stroke();
-        if (rotation) {
-          sm.ctx.rotate(-rotation);
-          // sm.ctx.translate(-(pos.x + 32), -(pos.y + 32));
-        }
+        sm.ctx.rotate(-rotation);
+        sm.ctx.translate(-pos.x, -pos.y);
       },
 
       drawImage: function (image, x, y, w, h, align) {
@@ -173,10 +168,8 @@
       },
 
       drawRect: function (x, y, w, h, fill, rotation) {
-        sm.ctx.save();
         sm.ctx.beginPath();
         sm.ctx.fillStyle = 'white';
-
         var adj = Align.center(x, y, w, h);
         var transX = adj.x + (w / 2);
         var transY = adj.y + (h / 2);
@@ -188,13 +181,22 @@
         }
         sm.ctx.stroke();
         sm.ctx.closePath();
-        sm.ctx.restore();
+        sm.ctx.rotate(- (rotation / DEG_RAD));
+        sm.ctx.translate(-transX, -transY);
       },
 
       drawLine: function (x1, y1, x2, y2) {
         sm.ctx.beginPath();
         sm.ctx.moveTo(x1, y1);
         sm.ctx.lineTo(x2, y2);
+        sm.ctx.stroke();
+        sm.ctx.closePath();
+      },
+
+      drawVec: function (vec) {
+        sm.ctx.beginPath();
+        sm.ctx.moveTo(0, 0);
+        sm.ctx.lineTo(vec.x, -vec.y);
         sm.ctx.stroke();
         sm.ctx.closePath();
       },

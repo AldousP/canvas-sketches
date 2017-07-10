@@ -17,7 +17,7 @@
         logConsole: {
           logToScreen: true,
           logToBrowserConsole: false,
-          size : 14,
+          size : 10,
           color: Color.white,
           padding: 0.025,
           bgColor: "#001436",
@@ -35,22 +35,10 @@
     canvas: {},
     utils : {
       dumpActiveComponentTree : function () {
-        if (sm.activeProgram) {
-          sm.utils.logComponentTree(sm.activeProgram.rootEntities);
-        }
+
 			},
 			logComponentTree : function (root, iteration) {
-          var indent = "";
-          for (var i = 0; i < iteration; i ++) {
-						indent+= "-";
-          }
 
-          console.log(indent + root.ID + "(" + root.name + ")[" + Object.keys(root.components) + "]");
-          if (root.children) {
-            Object.keys(root.children).forEach(function (key) {
-              sm.utils.logComponentTree(root.children[key], iteration ? iteration + 1 : 1);
-            });
-          }
 			},
       formatters : {
         float_two_pt : function (val) {
@@ -114,7 +102,7 @@
       },
 
       drawPolygon: function (polygon, pos, fill, rotation) {
-        sm.ctx.translate(pos.x, pos.y);
+        sm.ctx.translate(pos.x, -pos.y);
         sm.ctx.rotate(rotation);
         sm.ctx.beginPath();
         if (!polygon.pts) {
@@ -132,7 +120,7 @@
         sm.ctx.closePath();
         fill ? sm.ctx.fill() : sm.ctx.stroke();
         sm.ctx.rotate(-rotation);
-        sm.ctx.translate(-pos.x, -pos.y);
+        sm.ctx.translate(-pos.x, pos.y);
       },
 
       drawImage: function (image, x, y, w, h, align) {
@@ -197,6 +185,14 @@
         sm.ctx.beginPath();
         sm.ctx.moveTo(0, 0);
         sm.ctx.lineTo(vec.x, -vec.y);
+        sm.ctx.stroke();
+        sm.ctx.closePath();
+      },
+
+      drawPtVec: function (pt, vec) {
+        sm.ctx.beginPath();
+        sm.ctx.moveTo(pt.x, -pt.y);
+        sm.ctx.lineTo(pt.x + vec.x, -pt.y - vec.y);
         sm.ctx.stroke();
         sm.ctx.closePath();
       },

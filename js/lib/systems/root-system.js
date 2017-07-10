@@ -8,24 +8,22 @@ function RootSystem(ID) {
     var children = entity.components[ComponentType.children];
     var pos = entity.components[ComponentType.position];
     var rot = entity.components[ComponentType.rotation];
-    var parentPos = state.parentPos;
     var parentRot = state.parentRot;
 
     if (children) {
       if (pos) {
         if (state.parentPos) {
-          addVecVec(state.parentPos, pos.position);
+          addVecVec(state.parentPos, rotVec(cpyVec(pos.position), parentRot ? parentRot : 0));
         } else {
-          state.parentPos = cpyVec(pos.position);
+          state.parentPos = rotVec(cpyVec(pos.position), parentRot ? parentRot : 0);
         }
       }
 
-      var rotMod = rot ? (rot.radians ? rot.rotation : rot.rotation / DEG_RAD) : 0;
       if (rot) {
         if (parentRot) {
-          state.parentRot += rotMod
+          state.parentRot += rot.radians ? rot.rotation : rot.rotation / DEG_RAD;
         } else {
-          state.parentRot = rotMod;
+          state.parentRot = rot.radians ? rot.rotation : rot.rotation / DEG_RAD;
         }
       }
 
@@ -34,14 +32,6 @@ function RootSystem(ID) {
           state,
           delta
       );
-
-      if (rot) {
-        state.parentRot -= rotMod;
-      }
-
-      if (parentPos && pos) {
-        addVecConst(parentPos, -pos.position.x, -pos.position.y);
-      }
     }
   };
 }

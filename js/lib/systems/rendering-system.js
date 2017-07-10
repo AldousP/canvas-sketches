@@ -20,14 +20,16 @@ function RenderingSystem(ID) {
 
     if (poly && pos) {
       setVecVec(this.tmpVecA, pos.position);
-
       if (state.parentRot) {
         rotVec(this.tmpVecA, state.parentRot);
-        rotMod = state.parentRot;
+      }
+      if (parentPos) {
+        sm.gfx.drawPtVec(parentPos, this.tmpVecA);
+        addVecVec(this.tmpVecA, parentPos);
       }
 
-      if (parentPos) {
-        addVecVec(this.tmpVecA, parentPos);
+      if (state.parentRot) {
+        rotMod = state.parentRot;
       }
 
       sm.gfx.setFillColor(col ? col.color : Color.white);
@@ -38,7 +40,6 @@ function RenderingSystem(ID) {
       } else {
         sm.gfx.drawPolygon(poly.polygon, this.tmpVecA, false, rotMod);
       }
-
 
       if (state.parentRot) {
         rotVec(this.tmpVecA, -state.parentRot);

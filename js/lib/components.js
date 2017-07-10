@@ -1,16 +1,17 @@
-"use strict";
+'use strict';
 
 var ComponentType = {
-  polygon : "poly",
-  position : "pos",
-  rotation : "rot",
-  velocity : "vel",
-  acceleration : "accl",
-  camera : "cam",
-  viewport : "viewport",
-  children : "children",
-  root : "root",
-  color: "col"
+  polygon : 'poly',
+  position : 'pos',
+  rotation : 'rot',
+  velocity : 'vel',
+  acceleration : 'accl',
+  camera : 'cam',
+  viewport : 'viewport',
+  children : 'children',
+  root : 'root',
+  color: 'col',
+  clip : 'clip'
 };
 
 function PolygonComponent(polygon) {
@@ -39,21 +40,6 @@ function AccelerationComponent(x, y) {
   this.acceleration = new Vector(x, y);
 }
 
-function CameraComponent() {
-  this.name = ComponentType.camera;
-  this.pos = new Vector(0, 0);
-  this.width = 1;
-  this.height = 1;
-  this.zoom = 1;
-  this.rotation = 0;
-}
-
-function ViewportComponent(pos, w, h) {
-  this.name = ComponentType.viewport;
-  this.position = pos;
-  this.width = w;
-  this.height = h;
-}
 
 function ChildrenComponent() {
   this.name = ComponentType.children;

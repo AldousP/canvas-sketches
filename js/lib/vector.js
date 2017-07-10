@@ -48,9 +48,9 @@ function addVecConst(vec, x, y) {
 }
 
 function rotVec(vec, rot) {
-  var newRot = Math.atan2(vec.y, vec.x) + rot;
-  vec.x = Math.cos(newRot) * vec.len;
-  vec.y = Math.sin(newRot) * vec.len;
+  var currRot = Math.atan2(vec.y, vec.x);
+  vec.x = Math.cos(currRot + rot * -1) * vec.len;
+  vec.y = Math.sin(currRot + rot * -1) * vec.len;
   calcLen(vec);
   return vec;
 }

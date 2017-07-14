@@ -7,6 +7,7 @@ function RootSystem(ID) {
   this.processEntity = function (entity, state, delta) {
     var children = entity.components[ComponentType.children];
     var pos = entity.components[ComponentType.position];
+    var poly = entity.components[ComponentType.polygon];
     var rot = entity.components[ComponentType.rotation];
     var parentRot = state.parentRot;
 
@@ -19,6 +20,7 @@ function RootSystem(ID) {
         }
       }
 
+      state.parentPoly = poly.polygon;
       if (rot) {
         if (parentRot) {
           state.parentRot += rot.radians ? rot.rotation : rot.rotation / DEG_RAD;

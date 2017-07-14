@@ -1,5 +1,5 @@
 var CameraTests = function () {
-  this.name = 'Camera Tests';
+  this.name = 'Nesting';
   this.date = '06.27.2017';
 
   this.root = {};
@@ -17,19 +17,18 @@ var CameraTests = function () {
     sm.state.paused = true;
     this.root = this.entityHandler.createEntity([
       new RootComponent(),
-      new PositionComponent(64, -64),
+      new PositionComponent(64, 64),
       new ColorComponent(Color.pink),
       new PolygonComponent(generatePolygon(8, 32)),
       new RotationComponent(0),
-      new VelocityComponent(0, 10),
-      new AccelerationComponent(0, 64)
+      new VelocityComponent(0, 0),
+      new AccelerationComponent(0, -32)
     ], 'root');
 
     var A = this.entityHandler.createEntity([
       new PositionComponent(0, 0),
       new ColorComponent(Color.cyan),
-      new PolygonComponent(generatePolygon(4, 32, Math.PI / 4)),
-      { name : 'kid' }
+      new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
     ]);
 
     var B = this.entityHandler.createEntity([
@@ -90,7 +89,6 @@ var CameraTests = function () {
     this.updateBase();
     this.systemProcessor.processEntities([this.root], {}, this.delta);
     this.root.components.rot.rotation += 15 * this.delta;
-    this.state.D.components.rot.rotation += 15 * this.delta;
     rotVec(this.state.sampleVec, 1 * this.delta);
   }
 };

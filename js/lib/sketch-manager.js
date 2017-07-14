@@ -88,6 +88,7 @@
     },
 
     gfx: {
+      clip : { x : 0, y : 0, w : 256, h : 128 },
       width: 0,
       height: 0,
       clear: function (color) {
@@ -102,6 +103,7 @@
       },
 
       drawPolygon: function (polygon, pos, fill, rotation) {
+
         sm.ctx.translate(pos.x, -pos.y);
         sm.ctx.rotate(rotation);
         sm.ctx.beginPath();

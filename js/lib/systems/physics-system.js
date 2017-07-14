@@ -14,7 +14,6 @@ function PhysicsSystem(ID) {
 	};
 
 	this.processEntity = function (entity, state, delta) {
-		if (sm.state.paused) return;
 		var vel = entity.components[ComponentType.velocity];
 		if (vel) {
       vel = entity.components[ComponentType.velocity].velocity;

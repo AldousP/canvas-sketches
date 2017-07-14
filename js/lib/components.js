@@ -54,3 +54,7 @@ function ColorComponent(color) {
   this.name = ComponentType.color;
   this.color = color;
 }
+
+function ClipComponent() {
+  this.name = ComponentType.clip;
+}

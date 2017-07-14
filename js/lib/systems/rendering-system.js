@@ -24,7 +24,7 @@ function RenderingSystem(ID) {
         rotVec(this.tmpVecA, state.parentRot);
       }
       if (parentPos) {
-        sm.gfx.drawPtVec(parentPos, this.tmpVecA);
+        // sm.gfx.drawPtVec(parentPos, this.tmpVecA);
         addVecVec(this.tmpVecA, parentPos);
       }
 

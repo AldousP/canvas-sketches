@@ -12,7 +12,8 @@ var ComponentType = {
   parent : 'parent',
   root : 'root',
   color: 'col',
-  clip : 'clip'
+  clip : 'clip',
+  movement: 'mover'
 };
 
 function PolygonComponent(polygon) {
@@ -47,6 +48,7 @@ function ChildrenComponent() {
 }
 
 function ParentComponent(parentID) {
+  this.name = ComponentType.parent;
   this.parent = ComponentType.parent;
   this.parentID = parentID;
 }
@@ -62,4 +64,11 @@ function ColorComponent(color) {
 
 function ClipComponent() {
   this.name = ComponentType.clip;
+}
+
+function MovementComponent(movementVec, rotSpeed, radians) {
+  this.name = ComponentType.movement;
+  this.movementVec = movementVec ? movementVec : new Vector();
+  this.rotSpeed = rotSpeed ? rotSpeed : 0;
+  this.radians = radians ? radians : false;
 }

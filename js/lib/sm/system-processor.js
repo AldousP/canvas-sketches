@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 function SystemProcessor(handler) {
   this.entitySystems = [];
@@ -15,7 +15,8 @@ function SystemProcessor(handler) {
     return this.tempArr;
   };
 
-  this.processEntities = function (entities, state, delta) {
+  this.processEntities = function (state, delta) {
+    var entities = this.entityHandler.entities;
   	this.staticSystems.forEach(function (system) {
   		if (system.pre) {
 				system.pre(state);
@@ -23,15 +24,22 @@ function SystemProcessor(handler) {
 		});
 
   	var that = this;
+
     that.entitySystems.forEach(function (system) {
       for (var i = 0; i < entities.length; i ++) {
-        system.processEntity(entities[i], state, delta);
+        system.processEntity(
+            entities[i],
+            state,
+            delta,
+            entities,
+            system.extractors ? system.extractors : null
+        );
       }
     });
 
 		this.staticSystems.forEach(function (system) {
 			if (system.post) {
-				system.post(state);
+        system.post(state);
 			}
 		});
   };

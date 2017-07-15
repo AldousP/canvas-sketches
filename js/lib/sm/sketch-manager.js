@@ -187,6 +187,26 @@
         sm.ctx.translate(-transX, -transY);
       },
 
+      drawRectVec: function (vec, w, h, fill, rotation) {
+        sm.ctx.beginPath();
+        sm.ctx.fillStyle = 'white';
+        var x = vec.x;
+        var y = vec.y;
+        var adj = Align.center(x, y, w, h);
+        var transX = adj.x + (w / 2);
+        var transY = adj.y + (h / 2);
+        sm.ctx.translate(transX, transY);
+        sm.ctx.rotate(rotation / DEG_RAD);
+        sm.ctx.rect(-(w / 2), -(h / 2), w, h);
+        if (fill) {
+          sm.ctx.fill();
+        }
+        sm.ctx.stroke();
+        sm.ctx.closePath();
+        sm.ctx.rotate(- (rotation / DEG_RAD));
+        sm.ctx.translate(-transX, -transY);
+      },
+
       drawLine: function (x1, y1, x2, y2) {
         sm.ctx.beginPath();
         sm.ctx.moveTo(x1, y1);
@@ -271,13 +291,11 @@
     },
 
     init: function (canvasMountId, program) {
-      this.log.notify('Sketch Manager initializing...', sm.context);
       this.log.notify('Mounting @ ' + canvasMountId + '...', sm.context);
       var mountPoint = document.getElementById(canvasMountId);
       if (mountPoint && mountPoint.tagName.toLowerCase() === 'canvas') {
         this.ctx = mountPoint.getContext('2d');
         this.canvas = mountPoint;
-        this.log.notify('Mounted @ canvas.', sm.context);
         window.requestAnimationFrame(this.appLoop);
       } else {
         this.log.error(console.error('Specified Mount Point: ' + canvasMountId + ' is not a canvas.'), sm.context);

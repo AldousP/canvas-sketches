@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /*
  * Stupid Monolithic object for managing app context
@@ -6,12 +6,12 @@
 
 (function () {
   window.sm = {
-    context: "root", // Used for logging context.
+    context: 'root', // Used for logging context.
     state: {
       paused : false
     },
     conf: {
-      resourceDir: "assets",
+      resourceDir: 'assets',
       debug: {
         active: true,
         logConsole: {
@@ -20,26 +20,39 @@
           size : 10,
           color: Color.white,
           padding: 0.025,
-          bgColor: "#001436",
+          bgColor: '#000913',
           logInProgram: true
         }
       }
     },
-    breakOnNextLoop : false,
-    break: function () {
-      sm.breakOnNextLoop = true;
+    time: {
+      last : new Date().getTime(),
+      current : new Date().getTime(),
+      delta : 0,
+      frameRate : 0,
+      frameHistory : [],
+      historyCap : 100,
+      update : function () {
+        sm.time.current = new Date().getTime();
+        sm.time.delta = (sm.time.current - sm.time.last) / 1000;
+        sm.time.frameRate = (1000 / sm.time.delta) / 1000;
+        sm.time.last = sm.time.current;
+        sm.time.frameHistory.push(sm.time.frameRate);
+        if (sm.time.frameHistory.length > sm.time.historyCap) {
+          sm.time.frameHistory.splice(0, 1);
+        }
+        var avg = 0;
+        for (var i = 0; i < sm.time.frameHistory.length; i++) {
+          avg += sm.time.frameHistory[i];
+        }
+        avg /= sm.time.frameHistory.length;
+        sm.time.frameRate = avg;
+      }
     },
-    loop : {},
     logs: [],
     ctx: {},
     canvas: {},
     utils : {
-      dumpActiveComponentTree : function () {
-
-			},
-			logComponentTree : function (root, iteration) {
-
-			},
       formatters : {
         float_two_pt : function (val) {
           return parseFloat((Math.round(val * 100) / 100).toFixed(2));
@@ -48,7 +61,7 @@
     },
     input: {
       fire: function (button) {
-        sm.log.notify("firing! " + button, "input");
+        sm.log.notify('firing! ' + button, 'input');
         this.state[button] = true;
         sm.sfx.beep(Notes.C4);
       },
@@ -61,7 +74,7 @@
     log: {
       notify: function (msg, context) {
         var date = new Date();
-        var log = this.timestamp() + "[SM-Notify][" + (context ? context : "root") + "]: " + msg;
+        var log = this.timestamp() + '[SM-Notify][' + (context ? context : 'root') + ']: ' + msg;
         if (sm.conf.debug.logConsole.logToBrowserConsole) {
           console.log(log);
         }
@@ -69,7 +82,7 @@
       },
 
       error: function (msg, context) {
-        var log = this.timestamp() + "[SM-Error][" + (context ? context : "root") + "]: " + msg;
+        var log = this.timestamp() + '[SM-Error][' + (context ? context : 'root') + ']: ' + msg;
         if (sm.conf.debug.logConsole.logToBrowserConsole) {
           console.error(log);
         }
@@ -78,12 +91,12 @@
 
       timestamp: function () {
         var date = new Date();
-        return "(" +
-            date.getHours() + ":" +
-            date.getMinutes() + ":" +
-            date.getSeconds() + ":" +
+        return '(' +
+            date.getHours() + ':' +
+            date.getMinutes() + ':' +
+            date.getSeconds() + ':' +
             date.getMilliseconds() +
-            ")";
+            ')';
       }
     },
 
@@ -103,7 +116,6 @@
       },
 
       drawPolygon: function (polygon, pos, fill, rotation) {
-
         sm.ctx.translate(pos.x, -pos.y);
         sm.ctx.rotate(rotation);
         sm.ctx.beginPath();
@@ -139,9 +151,9 @@
       loadImage: function (handle, callback) {
         var img = new Image();
         if (sm.activeProgram) {
-          img.src = sm.activeProgram.resourceDir + "/" + handle;
+          img.src = sm.activeProgram.resourceDir + '/' + handle;
         } else {
-          img.src = sm.conf.resourceDir + "/" + handle;
+          img.src = sm.conf.resourceDir + '/' + handle;
         }
         img.onload = callback;
       },
@@ -219,17 +231,17 @@
       },
 
       text: function (center, msg, x, y, fontSize, font) {
-        sm.ctx.textAlign = center ? "center" : "left";
+        sm.ctx.textAlign = center ? 'center' : 'left';
         sm.ctx.beginPath();
         if (fontSize) {
           if (font) {
-            sm.ctx.font = fontSize + "px " + font;
+            sm.ctx.font = fontSize + 'px ' + font;
           } else {
-            sm.ctx.font = fontSize + "px Arial";
+            sm.ctx.font = fontSize + 'px Arial';
           }
         } else {
           if (font) {
-            sm.ctx.font = "10px " + font;
+            sm.ctx.font = '10px ' + font;
           }
         }
 
@@ -247,7 +259,7 @@
         gainNode.connect(this.ctx.destination);
         gainNode.gain.value = .025;
         oscillator.frequency.value = note ? note : 440;
-        oscillator.type = "square";
+        oscillator.type = 'square';
         oscillator.start();
         setTimeout(
             function () {
@@ -259,16 +271,16 @@
     },
 
     init: function (canvasMountId, program) {
-      this.log.notify("Sketch Manager initializing...", sm.context);
-      this.log.notify("Mounting @ " + canvasMountId + "...", sm.context);
+      this.log.notify('Sketch Manager initializing...', sm.context);
+      this.log.notify('Mounting @ ' + canvasMountId + '...', sm.context);
       var mountPoint = document.getElementById(canvasMountId);
-      if (mountPoint && mountPoint.tagName.toLowerCase() === "canvas") {
-        this.ctx = mountPoint.getContext("2d");
+      if (mountPoint && mountPoint.tagName.toLowerCase() === 'canvas') {
+        this.ctx = mountPoint.getContext('2d');
         this.canvas = mountPoint;
-        this.log.notify("Mounted @ canvas.", sm.context);
+        this.log.notify('Mounted @ canvas.', sm.context);
         window.requestAnimationFrame(this.appLoop);
       } else {
-        this.log.error(console.error("Specified Mount Point: " + canvasMountId + " is not a canvas."), sm.context);
+        this.log.error(console.error('Specified Mount Point: ' + canvasMountId + ' is not a canvas.'), sm.context);
       }
 
       sm.gfx.width = sm.canvas.width;
@@ -280,25 +292,43 @@
     },
 
     loadProgram: function (program) {
-      sm.log.notify("Loading Program: " + program.name + "...", sm.context);
-      program.__proto__ = new ProgramBase();
-      program.setup();
-      sm.log.notify("Loaded Program. Resource DIR is: " + program.resourceDir, sm.context);
-      sm.log.notify("Starting...", program.name);
+      var state = program.state;
+      var meta = state ? state.meta : null;
+
+      if (!state) {
+        sm.log.error('No state found on provided program.');
+        return -1;
+      }
+
+      if (!meta) {
+        sm.log.error('No meta object found on the provided program');
+        return -1;
+      }
+
+      sm.log.notify('Loading Program: ' + meta.name + '...', sm.context);
+      program.entityHandler = new EntityHandler();
+      program.systemProcessor = new SystemProcessor(program.entityHandler);
+      try {
+        program.setup();
+      } catch (e) {
+        sm.log.error('Error loading program: ' + meta.name);
+      }
+      
       sm.activeProgram = program;
-      document.body.dispatchEvent(new CustomEvent("smProgramLoaded", {"detail": {"programName": program.name}}));
+      sm.log.notify('Starting...', meta.name);
+      document.body.dispatchEvent(new CustomEvent('smProgramLoaded', {'detail': {'programName': meta.name}}));
     },
 
     unloadProgram: function () {
-      var name = "";
+      var name = '';
       if (!sm.activeProgram) {
-        sm.log.notify("Nothing to unload. Did you load a program?", sm.context);
+        sm.log.notify('Nothing to unload. Did you load a program?', sm.context);
       } else {
-        sm.log.notify("Unloading: " + name + "...", sm.context);
+        sm.log.notify('Unloading: ' + name + '...', sm.context);
       }
       sm.activeProgram = undefined;
       document.body.dispatchEvent(
-          new CustomEvent("smProgramUnloaded", {"detail": {"programName": name}})
+          new CustomEvent('smProgramUnloaded', {'detail': {'programName': name}})
       );
     },
 
@@ -306,13 +336,18 @@
       if (sm.input.state.virtualButtonSelect) {
         sm.unloadProgram();
       }
+
+      sm.time.update();
       sm.input.update();
       sm.gfx.clear();
       sm.gfx.preDraw();
 
-
+      var state;
+      var meta;
       if (sm.activeProgram) {
-        sm.activeProgram.update(sm);
+        state = sm.activeProgram.state;
+        meta = state.meta;
+        sm.activeProgram.update(sm.time.delta);
       }
 
       if (!sm.activeProgram || sm.conf.debug.logConsole.logInProgram) {
@@ -338,13 +373,13 @@
         }
       }
 
-      sm.gfx.postDraw();
       if (sm.conf.debug.active) {
         if (sm.activeProgram) {
           sm.gfx.setFillColor(Color.white);
+          sm.gfx.preDraw();
           sm.gfx.text(
               false,
-              sm.activeProgram.name,
+              meta.name,
               sm.canvas.width / 3,
               -sm.canvas.height / 2.2,
               14,
@@ -352,23 +387,25 @@
 
           sm.gfx.text(
               false,
-              sm.utils.formatters.float_two_pt(sm.activeProgram.frameRate),
+              sm.utils.formatters.float_two_pt(sm.time.frameRate),
               sm.canvas.width / 3,
               -sm.canvas.height / 2.35,
               14,
               'Ubuntu Mono');
-
+          sm.gfx.postDraw();
         }
       }
+
+      sm.gfx.postDraw();
 
       if (!sm.breakOnNextLoop) {
         window.requestAnimationFrame(sm.appLoop);
       } else {
         sm.breakOnNextLoop = false;
         sm.unloadProgram();
-        console.log("Shutting Down SM. Logs can be found at sm.logs.");
+        console.log('Logs can be found at sm.logs.');
         sm.ctx.save();
-        sm.ctx.fillStyle = "#FFFFFF";
+        sm.ctx.fillStyle = '#FFFFFF';
         sm.ctx.fillRect(0, 0, sm.canvas.width, sm.canvas.height);
       }
     }

@@ -1,28 +1,23 @@
-var CameraTests = function () {
-  this.name = 'Nesting';
-  this.date = '06.27.2017';
-
-  this.root = {};
+var Nesting = function () {
   this.state = {
-
-  };
-  this.state = {
+    meta : {
+      name : 'Nesting',
+      date : '06.27.2017'
+    },
     bgColor: '#323232',
     sampleVec: new Vector(0, 32)
   };
 
+  this.root = {};
   this.resourceDir = 'assets';
 
   this.setup = function () {
-    sm.state.paused = true;
     this.root = this.entityHandler.createEntity([
       new RootComponent(),
       new PositionComponent(64, 64),
       new ColorComponent(Color.pink),
       new PolygonComponent(generatePolygon(8, 32)),
-      new RotationComponent(0),
-      new VelocityComponent(0, 0),
-      new AccelerationComponent(0, -32)
+      new VelocityComponent(0, 0)
     ], 'root');
 
     var A = this.entityHandler.createEntity([
@@ -62,6 +57,8 @@ var CameraTests = function () {
       ])
     ]);
 
+
+
     this.entityHandler.bindToParent(D,[
       this.entityHandler.createEntity([
         new PositionComponent(32, 0),
@@ -75,20 +72,14 @@ var CameraTests = function () {
     ]);
 
     this.state.D = D;
-
     this.entityHandler.bindToParent(this.root, [A, B, C]);
-
     this.systemProcessor.addSystem(new BackgroundSystem("a"));
     this.systemProcessor.addSystem(new RenderingSystem("b"));
     this.systemProcessor.addSystem(new RootSystem("c"));
     this.systemProcessor.addSystem(new PhysicsSystem("d"));
-    this.systemProcessor.processEntities([this.root], this.state, this.delta);
   };
 
-  this.update = function () {
-    this.updateBase();
-    this.systemProcessor.processEntities([this.root], {}, this.delta);
-    this.root.components.rot.rotation += 15 * this.delta;
-    rotVec(this.state.sampleVec, 1 * this.delta);
+  this.update = function (delta) {
+    this.systemProcessor.processEntities([this.root], this.state, delta);
   }
 };

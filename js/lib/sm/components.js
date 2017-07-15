@@ -9,6 +9,7 @@ var ComponentType = {
   camera : 'cam',
   viewport : 'viewport',
   children : 'children',
+  parent : 'parent',
   root : 'root',
   color: 'col',
   clip : 'clip'
@@ -40,10 +41,14 @@ function AccelerationComponent(x, y) {
   this.acceleration = new Vector(x, y);
 }
 
-
 function ChildrenComponent() {
   this.name = ComponentType.children;
   this.children = [];
+}
+
+function ParentComponent(parentID) {
+  this.parent = ComponentType.parent;
+  this.parentID = parentID;
 }
 
 function RootComponent() {

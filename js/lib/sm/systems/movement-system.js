@@ -8,11 +8,35 @@ function MovementSystem(ID) {
 
 	};
 
-	this.processEntity = function (entity, state, delta, entities) {
+	this.processEntity = function (entity, state, delta, entities, x) {
+    var rotMod = x.movRot(entity);
+    var rotVec = x.movVec(entity);
 
+    if (rotMod) {
+      this.fireAction(Actions.rotate(entity, rotMod * delta));
+    }
 	};
 
 	this.post = function () {
 
-	}
+	};
+
+  this.actions = {
+
+	};
+
+  this.extractors = {
+    movVec : function (entity) {
+      return entity.components[ComponentType.movement] ? (entity.components[ComponentType.movement].movementVec) : null
+    },
+
+    movRot : function (entity) {
+      var mov = entity.components[ComponentType.movement];
+      if (mov) {
+        return mov.rotSpeed ? (mov.radians ? mov.rotSpeed : mov.rotSpeed / DEG_RAD) : null;
+      } else {
+        return null;
+      }
+    }
+  };
 }

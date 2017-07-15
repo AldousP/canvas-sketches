@@ -3,20 +3,24 @@
 function SystemProcessor(handler) {
   this.entitySystems = [];
   this.staticSystems = [];
-  this.entityHandler = handler;
+  this.entityMapper = handler;
   this.tempArr = [];
 
   this.entitiesForIDs = function (IDs) {
     this.tempArr.length = 0;
     var that = this;
     IDs.forEach(function (ID) {
-      that.tempArr.push(that.entityHandler.entities[ID]);
+      that.tempArr.push(that.entityMapper.entities[ID]);
     });
     return this.tempArr;
   };
 
+  this.fire = function (action) {
+    this.entityMapper.fireAction(action);
+  };
+
   this.processEntities = function (state, delta) {
-    var entities = this.entityHandler.entities;
+    var entities = this.entityMapper.entities;
   	this.staticSystems.forEach(function (system) {
   		if (system.pre) {
 				system.pre(state);
@@ -24,8 +28,8 @@ function SystemProcessor(handler) {
 		});
 
   	var that = this;
-
     that.entitySystems.forEach(function (system) {
+      system.fireAction = that.fire.bind(that);
       for (var i = 0; i < entities.length; i ++) {
         system.processEntity(
             entities[i],
@@ -42,6 +46,8 @@ function SystemProcessor(handler) {
         system.post(state);
 			}
 		});
+
+		this.entityMapper.processActions(delta);
   };
 
   this.addSystem = function (system) {

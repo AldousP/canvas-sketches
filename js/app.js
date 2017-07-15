@@ -3,6 +3,14 @@
   var fullscreenButtons = document.getElementsByClassName('fullscreen-toggle');
   var appTitle = document.getElementById('app-title');
 
+
+  var Keys = {
+    W : 87,
+    A : 65,
+    S : 83,
+    D : 68
+  };
+
   attachHandlers();
   function attachHandlers() {
     for (var i = 0; i < fullscreenButtons.length; i++) {
@@ -16,6 +24,24 @@
             fullscreenButtons[i].classList.remove('active');
           }
         }, 100);
+      }
+    }
+
+    document.body.onkeydown = function (e) {
+      var key = e.keyCode;
+      switch (key) {
+        case Keys.W :
+          sm.input.fire('up');
+          break;
+        case Keys.A :
+          sm.input.fire('left');
+          break;
+        case Keys.S :
+          sm.input.fire('down');
+          break;
+        case Keys.D :
+          sm.input.fire('right');
+          break;
       }
     }
   }

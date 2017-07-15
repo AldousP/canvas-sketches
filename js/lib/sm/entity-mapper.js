@@ -1,6 +1,9 @@
-function EntityHandler() {
+function EntityMapper() {
   this.entities = [];  // Linear mapping of all entities
   this.entityMap = {}; // Mapping of entities by component type.
+
+  this.actions = [];
+  this.actionHistory = [];
 
 	this.createEntity = function (components, name) {
 	  var entity = new Entity();
@@ -40,5 +43,35 @@ function EntityHandler() {
       this.injectComponents(child, [parentComponent]);
     }
     this.injectComponents(parent, [childrenComponent]);
+  };
+  
+  this.fireAction = function (action) {
+    this.actions.push(action);
+  };
+
+  this.logEntities = function () {
+    console.log(JSON.stringify(this.entities, null, '\t'));
+  };
+  
+  this.processActions = function (delta) {
+    while (this.actions.length) {
+      var action = this.actions.pop();
+      if (action) {
+        var entity = this.entities[action.entityID];
+        var srcComp = entity.components[action.srcComp];
+        var result = action.exec(srcComp, action.params, delta);
+        var keys = Object.keys(result);
+        keys.forEach(function (key) {
+          srcComp[key] = result[key];
+        });
+
+        this.actionHistory.push({
+          timestamp : new Date().getTime(),
+          name : action.name,
+          target : action.entityID,
+          result : result
+        });
+      }
+    }
   }
 }

@@ -6,6 +6,9 @@
 
 (function () {
   window.sm = {
+    toggleDebug : function () {
+      sm.conf.debug.active = !sm.conf.debug.active;
+    },
     context: 'root', // Used for logging context.
     state: {
       paused : false
@@ -63,7 +66,6 @@
       fire: function (button) {
         sm.log.notify('firing! ' + button, 'input');
         this.state[button] = true;
-        sm.sfx.beep(Notes.C4);
       },
       update: function () {
         this.state = {};
@@ -324,21 +326,22 @@
       }
 
       sm.log.notify('Loading Program: ' + meta.name + '...', sm.context);
-      program.entityHandler = new EntityHandler();
-      program.systemProcessor = new SystemProcessor(program.entityHandler);
+      program.entityMapper = new EntityMapper();
+      program.systemProcessor = new SystemProcessor(program.entityMapper);
       try {
         program.setup();
       } catch (e) {
         sm.log.error('Error loading program: ' + meta.name);
+        sm.log.error(e);
+        return;
       }
-      
       sm.activeProgram = program;
       sm.log.notify('Starting...', meta.name);
       document.body.dispatchEvent(new CustomEvent('smProgramLoaded', {'detail': {'programName': meta.name}}));
     },
 
     unloadProgram: function () {
-      var name = '';
+      var name = sm.activeProgram.state.meta.name;
       if (!sm.activeProgram) {
         sm.log.notify('Nothing to unload. Did you load a program?', sm.context);
       } else {
@@ -351,12 +354,7 @@
     },
 
     appLoop: function () {
-      if (sm.input.state.virtualButtonSelect) {
-        sm.unloadProgram();
-      }
-
       sm.time.update();
-      sm.input.update();
       sm.gfx.clear();
       sm.gfx.preDraw();
 
@@ -368,7 +366,7 @@
         sm.activeProgram.update(sm.time.delta);
       }
 
-      if (!sm.activeProgram || sm.conf.debug.logConsole.logInProgram) {
+      if (!sm.activeProgram || (sm.conf.debug.logConsole.logInProgram && sm.conf.debug.active)) {
         if (sm.activeProgram) {
 					sm.gfx.setFillColor(Color.green);
 				} else {
@@ -394,7 +392,6 @@
       if (sm.conf.debug.active) {
         if (sm.activeProgram) {
           sm.gfx.setFillColor(Color.white);
-          sm.gfx.preDraw();
           sm.gfx.text(
               false,
               meta.name,
@@ -410,11 +407,11 @@
               -sm.canvas.height / 2.35,
               14,
               'Ubuntu Mono');
-          sm.gfx.postDraw();
         }
       }
 
       sm.gfx.postDraw();
+      sm.input.update();
 
       if (!sm.breakOnNextLoop) {
         window.requestAnimationFrame(sm.appLoop);

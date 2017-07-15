@@ -14,33 +14,34 @@ var Nesting = function () {
   this.actions = [];
 
   this.setup = function () {
-    this.root = this.entityHandler.createEntity([
+    this.root = this.entityMapper.createEntity([
       new RootComponent(),
-      new PositionComponent(64, 0),
-      new MovementComponent(new Vector(0, 0), 0),
-      new RotationComponent(35),
+      new PositionComponent(64, 32),
+      new MovementComponent(new Vector(0, 0), 35),
+      new RotationComponent(180),
       new ColorComponent(Color.pink),
       new PolygonComponent(generatePolygon(8, 32))
     ], 'root');
 
-    var A = this.entityHandler.createEntity([
+    var A = this.entityMapper.createEntity([
       new PositionComponent(32, 0),
       new ColorComponent(Color.cyan),
       new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
     ]);
 
-    var B = this.entityHandler.createEntity([
+    var B = this.entityMapper.createEntity([
       new PositionComponent(-32, 0),
       new ColorComponent(Color.cyan),
       new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
     ]);
 
-    this.entityHandler.bindToParent(this.root,[A, B]);
+    this.entityMapper.bindToParent(this.root,[A, B]);
 
     this.systemProcessor.addSystem(new BackgroundSystem("a"));
     this.systemProcessor.addSystem(new MovementSystem("b"));
     this.systemProcessor.addSystem(new PhysicsSystem("c"));
     this.systemProcessor.addSystem(new RenderingSystem("d"));
+    this.systemProcessor.addSystem(new InputSystem("e"));
   };
 
   this.update = function (delta) {

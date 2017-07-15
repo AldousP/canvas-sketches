@@ -11,7 +11,7 @@ var Clipping = function () {
   this.resourceDir = 'assets';
 
   this.setup = function () {
-    this.root = this.entityHandler.createEntity([
+    this.root = this.entityMapper.createEntity([
       new PositionComponent(64, 64),
       new ColorComponent(Color.white),
       new PolygonComponent(generatePolygon(4, 32))
@@ -21,6 +21,6 @@ var Clipping = function () {
   };
 
   this.update = function (delta) {
-    this.systemProcessor.processEntities([this.root], this.state, delta)
+    this.systemProcessor.processEntities(this.state, delta)
   }
 };

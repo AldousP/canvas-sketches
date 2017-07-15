@@ -25,6 +25,19 @@ var Actions = {
   },
   
   move : function (entity, vec) {
-
+    return {
+      entityID: entity.ID,
+      name : 'move',
+      srcComp : ComponentType.position,
+      params : {
+        position : cpyVec(vec)
+      },
+      exec : function (srcComp, params) {
+        var srcPos = cpyVec(srcComp.position);
+        return {
+          position : addVecVec(srcPos, params.position)
+        };
+      }
+    }
   }
 };

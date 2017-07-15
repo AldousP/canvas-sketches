@@ -11,7 +11,6 @@ function MovementSystem(ID) {
 	this.processEntity = function (entity, state, delta, entities, x) {
     var rotMod = x.movRot(entity);
     var rotVec = x.movVec(entity);
-
     if (rotMod) {
       this.fireAction(Actions.rotate(entity, rotMod * delta));
     }
@@ -33,7 +32,7 @@ function MovementSystem(ID) {
     movRot : function (entity) {
       var mov = entity.components[ComponentType.movement];
       if (mov) {
-        return mov.rotSpeed ? (mov.radians ? mov.rotSpeed : mov.rotSpeed / DEG_RAD) : null;
+        return mov.rotSpeed ? mov.rotSpeed : null;
       } else {
         return null;
       }

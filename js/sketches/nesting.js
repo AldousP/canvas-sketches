@@ -4,7 +4,7 @@ var Nesting = function () {
       name : 'Nesting',
       date : '06.27.2017'
     },
-    bgColor: '#323232',
+    bgColor: '#730575',
     sampleVec: new Vector(0, 32)
   };
 
@@ -27,52 +27,12 @@ var Nesting = function () {
     ]);
 
     var B = this.entityHandler.createEntity([
-      new ColorComponent(Color.cyan),
-      new PositionComponent(0, -64),
-      new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
-    ]);
-
-    var C = this.entityHandler.createEntity([
-      new ColorComponent(Color.cyan),
-      new PositionComponent(0, 64),
-      new PolygonComponent(generatePolygon(5, 32, Math.PI / 4))
-    ]);
-
-    var D = this.entityHandler.createEntity([
-      new RotationComponent(45),
-      new PositionComponent(-48, 0),
+      new PositionComponent(48, 0),
       new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
     ]);
 
-    this.entityHandler.bindToParent(B,[
-      D,
-      this.entityHandler.createEntity([
-        new PositionComponent(48, 0),
-        new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
-      ]),
+    this.entityHandler.bindToParent(this.root,[A, B]);
 
-      this.entityHandler.createEntity([
-        new PositionComponent(0, 0),
-        new PolygonComponent(generatePolygon(3, 8, Math.PI / 4))
-      ])
-    ]);
-
-
-
-    this.entityHandler.bindToParent(D,[
-      this.entityHandler.createEntity([
-        new PositionComponent(32, 0),
-        new PolygonComponent(generatePolygon(12, 8, Math.PI / 4))
-      ]),
-
-      this.entityHandler.createEntity([
-        new PositionComponent(-32, 0),
-        new PolygonComponent(generatePolygon(12, 8, Math.PI / 4))
-      ])
-    ]);
-
-    this.state.D = D;
-    this.entityHandler.bindToParent(this.root, [A, B, C]);
     this.systemProcessor.addSystem(new BackgroundSystem("a"));
     this.systemProcessor.addSystem(new RenderingSystem("b"));
     this.systemProcessor.addSystem(new RootSystem("c"));

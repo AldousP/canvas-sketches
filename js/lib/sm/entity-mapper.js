@@ -33,12 +33,12 @@ function EntityHandler() {
 	
 	this.bindToParent = function (parent, children) {
 	  var childrenComponent = new ChildrenComponent();
-	  var parentComponent = new ChildrenComponent(parent.ID);
-	  var that = this;
-	  children.forEach(function (child) {
-	    childrenComponent.children.push(child.ID);
-	    that.injectComponents(child, [parentComponent])
-    });
+	  var parentComponent = new ParentComponent(parent.ID);
+	  for (var i = 0; i < children.length; i ++) {
+      var child = children[i];
+      childrenComponent.children.push(child.ID);
+      this.injectComponents(child, [parentComponent]);
+    }
     this.injectComponents(parent, [childrenComponent]);
   }
 }

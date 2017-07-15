@@ -4,17 +4,13 @@ function PhysicsSystem(ID) {
 	this.ID = ID;
 	this.name = "Physics";
 	
-	this.componentFilter = [
-		ComponentType.position,
-		ComponentType.velocity
-	];
-
 	this.pre = function () {
 
 	};
 
 	this.processEntity = function (entity, state, delta) {
-		var vel = entity.components[ComponentType.velocity];
+
+    var vel = entity.components[ComponentType.velocity];
 		if (vel) {
       vel = entity.components[ComponentType.velocity].velocity;
       addVecVec(entity.components[ComponentType.position].position, sclVec(cpyVec(vel), delta));

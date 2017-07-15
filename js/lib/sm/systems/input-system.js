@@ -26,6 +26,15 @@ function InputSystem(ID) {
         addVecConst(this.tmpVecA, this.movementSpeed * delta, 0);
       }
 
+      if (sm.input.state.left_bump) {
+        this.fireAction(Actions.rotate(entity, -32 * delta))
+
+      }
+
+      if (sm.input.state.right_bump) {
+        this.fireAction(Actions.rotate(entity, 32 * delta))
+      }
+
       if (this.tmpVecA.len) {
         this.fireAction(Actions.move(entity, this.tmpVecA))
       }

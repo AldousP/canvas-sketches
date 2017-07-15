@@ -8,7 +8,11 @@
     W : 87,
     A : 65,
     S : 83,
-    D : 68
+    D : 68,
+    UP : 38,
+    DOWN: 40,
+    LEFT : 37,
+    RIGHT : 39
   };
 
   attachHandlers();
@@ -41,6 +45,19 @@
           break;
         case Keys.D :
           sm.input.fire('right');
+          break;
+
+        case Keys.UP :
+          // sm.input.fire('up');
+          break;
+        case Keys.DOWN :
+          // sm.input.fire('left');
+          break;
+        case Keys.LEFT :
+          sm.input.fire('left_bump');
+          break;
+        case Keys.RIGHT :
+          sm.input.fire('right_bump');
           break;
       }
     }

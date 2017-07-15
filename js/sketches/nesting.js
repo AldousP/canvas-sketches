@@ -17,22 +17,21 @@ var Nesting = function () {
     this.root = this.entityMapper.createEntity([
       new RootComponent(),
       new PositionComponent(64, 32),
-      new MovementComponent(new Vector(0, 0), 90),
       new RotationComponent(180),
       new ColorComponent(Color.pink),
       new PolygonComponent(generatePolygon(8, 32))
     ], 'root');
 
     var A = this.entityMapper.createEntity([
-      new PositionComponent(32, 0),
+      new PositionComponent(128, 0),
       new ColorComponent(Color.cyan),
-      new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
+      new PolygonComponent(generatePolygon(4, 32, Math.PI / 4, 3, 1))
     ]);
 
     var B = this.entityMapper.createEntity([
-      new PositionComponent(-32, 0),
+      new PositionComponent(-128, 0),
       new ColorComponent(Color.cyan),
-      new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
+      new PolygonComponent(generatePolygon(4, 32, Math.PI / 4, 3, 1))
     ]);
 
     this.entityMapper.bindToParent(this.root,[A, B]);

@@ -10,6 +10,7 @@ function InputSystem(ID) {
 
   this.processEntity = function (entity, state, delta, entities, x) {
     var hasListener = x.input(entity);
+    if (!state.inputTargets) return;
     setVec(this.tmpVecA, 0, 0);
     if (hasListener && (entity.name === state.inputTargets[state.activeTarget])) {
       if (sm.input.state.up) {

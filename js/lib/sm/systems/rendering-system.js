@@ -14,6 +14,10 @@ function RenderingSystem(ID) {
         positionSum : new Vector(),
         rotationSum : 0
       };
+    } else {
+      if (renderRoot) {
+        sm.log.error('Redundant RenderRoot component found on [' + entity.ID + ']' + entity.name + ' expect bugs.')
+      }
     }
 
     var pos = x.pos(entity);
@@ -38,20 +42,26 @@ function RenderingSystem(ID) {
       state.renderData.priorRot = rot;
     }
 
-    if (col && renderRoot) {
-      sm.gfx.setFillColor(col);
-    } else {
-      sm.gfx.setStrokeColor(col ? col : Color.yellow);
+
+    if (col) {
+      sm.gfx.setStrokeColor(col);
     }
 
-    sm.gfx.drawPolygon(poly, state.renderData.positionSum, col && clip, state.renderData.rotationSum);
-    if (clip && poly && pos) {
-      sm.gfx.clipPoly(poly, state.renderData.positionSum, state.renderData.rotationSum);
+    if (poly && pos) {
+      sm.gfx.drawPolygon(poly, state.renderData.positionSum, false, state.renderData.rotationSum);
     }
 
     if (children) {
+      if (clip) {
+        sm.gfx.clipPoly(poly, state.renderData.positionSum, state.renderData.rotationSum);
+        sm.gfx.setFillColor(state.bgColor);
+        sm.gfx.drawPolygon(poly, state.renderData.positionSum, true, state.renderData.rotationSum);
+      }
+
       for (var i = 0; i < children.length; i++) {
+        sm.gfx.preDraw();
         this.processEntity(entities[children[i]], state, delta, entities, x, true);
+        sm.gfx.postDraw();
       }
     }
 

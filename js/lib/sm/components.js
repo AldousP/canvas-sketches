@@ -51,7 +51,6 @@ function ChildrenComponent() {
 
 function ParentComponent(parentID) {
   this.name = ComponentType.parent;
-  this.parent = ComponentType.parent;
   this.parentID = parentID;
 }
 

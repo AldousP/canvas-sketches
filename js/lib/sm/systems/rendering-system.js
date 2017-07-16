@@ -46,7 +46,7 @@ function RenderingSystem(ID) {
 
     sm.gfx.drawPolygon(poly, state.renderData.positionSum, col && clip, state.renderData.rotationSum);
     if (clip && poly && pos) {
-      sm.gfx.clipPoly(poly, pos, rot ? rot : 0);
+      sm.gfx.clipPoly(poly, state.renderData.positionSum, state.renderData.rotationSum);
     }
 
     if (children) {

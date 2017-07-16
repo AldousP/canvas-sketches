@@ -29,9 +29,9 @@
 
     resizeCanvas : function () {
       if (sm.conf.mobile.is_mobile) {
-        // sm.canvas.width = sm.canvas.height;
+        sm.canvas.width = sm.canvas.height;
       } else {
-        // sm.canvas.width = sm.canvas.height * 2;
+        sm.canvas.width = sm.canvas.height * 2;
       }
     },
     stop : function() {
@@ -476,10 +476,8 @@
 
       // Reset State and Input
       sm.input.update();
-      sm.checkIfMobile();
-
-
       sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2 );
+      sm.checkIfMobile();
 
       if (!sm.breakOnNextLoop) {
         window.requestAnimationFrame(sm.appLoop);

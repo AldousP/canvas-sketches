@@ -4,6 +4,8 @@ var Clipping = function () {
       name : 'Clipping',
       date : '07.14.2017'
     },
+    inputTargets : ['triangle', 'root'],
+    activeTarget : 0,
     bgColor: '#1a191b'
   };
 
@@ -21,7 +23,6 @@ var Clipping = function () {
       new PositionComponent(128, 0),
       new RotationComponent(0),
       new ClipComponent(),
-      new InputComponent(),
       new PolygonComponent(generatePolygon(4, 128, Math.PI / 4))
     ], 'right');
 
@@ -30,6 +31,7 @@ var Clipping = function () {
       new RotationComponent(0),
       new ColorComponent(Color.dark_blue),
       new ClipComponent(),
+      new InputComponent(),
       new PolygonComponent((generatePolygon(4, 128, Math.PI / 4, 3.5, 1.5))),
       new RenderRoot()], 'root', [left, right]
     );
@@ -38,9 +40,10 @@ var Clipping = function () {
         this.entityMapper.createEntity([
           new ColorComponent(Color.pink),
           new PositionComponent(32, 0),
-          new RotationComponent(0),
+          new RotationComponent(17),
+          new InputComponent(),
           new PolygonComponent(generatePolygon(3, 32, Math.PI / 4))
-        ])
+        ], 'triangle')
     ]);
 
     this.systemProcessor.addSystem(new BackgroundSystem("a"));

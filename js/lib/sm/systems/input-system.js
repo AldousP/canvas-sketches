@@ -11,7 +11,7 @@ function InputSystem(ID) {
   this.processEntity = function (entity, state, delta, entities, x) {
     var hasListener = x.input(entity);
     setVec(this.tmpVecA, 0, 0);
-    if (hasListener) {
+    if (hasListener && (entity.name === state.inputTargets[state.activeTarget])) {
       if (sm.input.state.up) {
         addVecConst(this.tmpVecA, 0, this.movementSpeed * delta);
       }

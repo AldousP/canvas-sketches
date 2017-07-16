@@ -10,8 +10,10 @@ function RenderingSystem(ID) {
     var pos = x.pos(entity);
     var rot = x.rot(entity);
     var col = x.col(entity);
+    var clip = x.clip(entity);
     var parent = x.par(entity, entities);
     var tree = [];
+
 
     if (poly && pos) {
       if (parent) {
@@ -19,6 +21,8 @@ function RenderingSystem(ID) {
           var currentPos = x.pos(parent);
           var currentRot = x.rot(parent);
           var currentParent = x.par(parent, entities);
+          var currentClip = x.clip(parent);
+          var currentPoly = x.poly(parent);
           var currentParentRot = 0;
 
           if (currentParent) {
@@ -28,7 +32,9 @@ function RenderingSystem(ID) {
           tree.push({
             pos : currentPos ? cpyVec(currentPos) : new Vector(),
             rot : currentRot ? currentRot : 0,
-            parentRot : currentParentRot
+            parentRot : currentParentRot,
+            clip : currentClip,
+            poly : currentPoly
           });
           parent = x.par(parent, entities);
         }
@@ -52,18 +58,27 @@ function RenderingSystem(ID) {
         }
       }
 
+      if (clip) {
+        // sm.gfx.clipPoly(poly, pos, baseRot + rot);
+      }
+
       var posCopy = cpyVec(pos);
       if (baseRot) {
         rotVec(posCopy, baseRot);
       }
       addVecVec(baseVector, posCopy);
+
       sm.gfx.setStrokeColor(col);
       sm.gfx.drawPolygon(poly, baseVector, false, baseRot + rot);
+
     }
   };
 
 
   this.extractors = {
+    clip : function (entity) {
+      return !!entity.components[ComponentType.clip];
+    },
     pos : function (entity) {
       return entity.components[ComponentType.position] ? (entity.components[ComponentType.position].position) : null
     },

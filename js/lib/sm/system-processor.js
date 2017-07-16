@@ -31,6 +31,7 @@ function SystemProcessor(handler) {
     that.entitySystems.forEach(function (system) {
       system.fireAction = that.fire.bind(that);
       for (var i = 0; i < entities.length; i ++) {
+        // sm.gfx.preDraw();
         system.processEntity(
             entities[i],
             state,
@@ -38,6 +39,7 @@ function SystemProcessor(handler) {
             entities,
             system.extractors ? system.extractors : null
         );
+        // sm.gfx.postDraw();
       }
     });
 

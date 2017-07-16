@@ -24,7 +24,6 @@
       if (sm.conf.mobile.last_win_width < sm.conf.mobile.mobile_break && !sm.conf.mobile.is_mobile) {
         sm.resizeCanvas();
       }
-
       sm.conf.mobile.last_win_width = window.innerWidth;
     },
 
@@ -133,7 +132,6 @@
     },
 
     gfx: {
-      clip : { x : 0, y : 0, w : 256, h : 128 },
       width: 0,
       height: 0,
       clear: function (color) {
@@ -165,6 +163,28 @@
         }
         sm.ctx.closePath();
         fill ? sm.ctx.fill() : sm.ctx.stroke();
+        sm.ctx.rotate(-rotation);
+        sm.ctx.translate(-pos.x, pos.y);
+      },
+      
+      clipPoly: function (polygon, pos, rotation) {
+        sm.ctx.translate(pos.x, -pos.y);
+        sm.ctx.rotate(rotation);
+        sm.ctx.beginPath();
+        if (!polygon.pts) {
+          console.error('No property of name [pts] found on polygon parameter.');
+        } else {
+          var firstPt = polygon.pts[0];
+          sm.ctx.moveTo(firstPt.x, firstPt.y);
+          polygon.pts.forEach(function (pt) {
+            if (pt !== firstPt) {
+              sm.ctx.lineTo(pt.x , pt.y);
+            }
+          });
+          sm.ctx.lineTo(firstPt.x, firstPt.y);
+        }
+        sm.ctx.closePath();
+        sm.ctx.clip();
         sm.ctx.rotate(-rotation);
         sm.ctx.translate(-pos.x, pos.y);
       },
@@ -372,23 +392,23 @@
     },
 
     unloadProgram: function () {
-      var name = sm.activeProgram.state.meta.name;
       if (!sm.activeProgram) {
         sm.log.notify('Nothing to unload. Did you load a program?', sm.context);
       } else {
+        var name = sm.activeProgram.state.meta.name;
         sm.log.notify('Unloading: ' + name + '...', sm.context);
+        sm.activeProgram = undefined;
+        document.body.dispatchEvent(
+            new CustomEvent('smProgramUnloaded', {'detail': {'programName': name}})
+        );
       }
-      sm.activeProgram = undefined;
-      document.body.dispatchEvent(
-          new CustomEvent('smProgramUnloaded', {'detail': {'programName': name}})
-      );
     },
 
     appLoop: function () {
       sm.time.update();
       sm.gfx.clear();
-      sm.gfx.preDraw();
 
+      sm.gfx.preDraw();
       var state;
       var meta;
       if (sm.activeProgram) {
@@ -403,8 +423,9 @@
         }
       }
 
-      // Update Program
+      sm.gfx.postDraw();
 
+      sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2 );
 
       // Render Log
       if (!sm.activeProgram || (sm.conf.debug.logConsole.logInProgram && sm.conf.debug.active)) {
@@ -453,9 +474,11 @@
       }
 
       // Reset State and Input
-      sm.gfx.postDraw();
       sm.input.update();
       sm.checkIfMobile();
+
+
+      sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2 );
 
       if (!sm.breakOnNextLoop) {
         window.requestAnimationFrame(sm.appLoop);

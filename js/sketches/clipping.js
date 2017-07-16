@@ -35,6 +35,10 @@ var Clipping = function () {
   };
 
   this.update = function (delta) {
+    sm.ctx.rect(-75, -75, 150, 150);
+    sm.ctx.stroke();
+
+
     this.systemProcessor.processEntities(this.state, delta)
   }
 };

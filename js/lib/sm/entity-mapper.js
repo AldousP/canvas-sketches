@@ -4,8 +4,9 @@ function EntityMapper() {
 
   this.actions = [];
   this.actionHistory = [];
+  this.actionHistoryLength = 1000;
 
-	this.createEntity = function (components, name) {
+	this.createEntity = function (components, name, children) {
 	  var entity = new Entity();
 	  entity.ID = this.entities.length;
 	  if (name) {
@@ -20,6 +21,11 @@ function EntityMapper() {
       that.entityMap[component.name].push(entity);
     });
     this.entities.push(entity);
+
+    if (children) {
+      this.bindToParent(entity, children);
+    }
+
     return entity;
   };
 	
@@ -55,7 +61,7 @@ function EntityMapper() {
   
   this.processActions = function (delta) {
     while (this.actions.length) {
-      var action = this.actions.pop();
+      var action = this.actions.shift();
       if (action) {
         var entity = this.entities[action.entityID];
         var srcComp = entity.components[action.srcComp];
@@ -71,6 +77,10 @@ function EntityMapper() {
           target : action.entityID,
           result : result
         });
+
+        if (this.actionHistory.length > this.actionHistoryLength) {
+          this.actionHistory.shift();
+        }
       }
     }
   }

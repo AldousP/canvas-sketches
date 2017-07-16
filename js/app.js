@@ -51,10 +51,8 @@
           break;
 
         case Keys.UP :
-          // sm.input.fire('up');
           break;
         case Keys.DOWN :
-          // sm.input.fire('left');
           break;
         case Keys.LEFT :
           sm.input.fire('left_bump');
@@ -83,6 +81,6 @@
   };
 
   sm.init('canvas');
-  loadNesting();
+  loadClipping();
 }());
 

@@ -4,20 +4,34 @@ var Clipping = function () {
       name : 'Clipping',
       date : '07.14.2017'
     },
-    bgColor: '#007908'
+    bgColor: '#1a191b'
   };
 
   this.root = {};
   this.resourceDir = 'assets';
 
   this.setup = function () {
-    this.root = this.entityMapper.createEntity([
-      new PositionComponent(64, 64),
-      new ColorComponent(Color.white),
-      new PolygonComponent(generatePolygon(4, 32))
-    ], 'root');
+    this.entityMapper.createEntity([
+      new PositionComponent(0, 0),
+      new RotationComponent(0),
+      new PolygonComponent(generatePolygon(4, 128)),
+      new ClipComponent()
+    ], 'root',
+      [
+      this.entityMapper.createEntity([
+        new PositionComponent(0, 64),
+        new ColorComponent(Color.pink),
+        new PolygonComponent(generatePolygon(8, 64))]),
+      this.entityMapper.createEntity([
+        new PositionComponent(0, -64),
+        new ColorComponent(Color.pink),
+        new PolygonComponent(generatePolygon(8, 64))])
+      ]
+    );
 
     this.systemProcessor.addSystem(new BackgroundSystem("a"));
+    this.systemProcessor.addSystem(new RenderingSystem("b"));
+    this.systemProcessor.addSystem(new InputSystem("c"));
   };
 
   this.update = function (delta) {

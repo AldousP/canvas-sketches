@@ -17,7 +17,7 @@ var Nesting = function () {
     this.root = this.entityMapper.createEntity([
       new RootComponent(),
       new PositionComponent(0, 0),
-      new MovementComponent(new Vector(), -64),
+      new MovementComponent(new Vector(), 0),
       new RotationComponent(0),
       new ColorComponent(Color.pink),
       new PolygonComponent(generatePolygon(8, 32))

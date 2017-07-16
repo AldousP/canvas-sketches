@@ -394,15 +394,17 @@
       if (sm.activeProgram) {
         state = sm.activeProgram.state;
         meta = state.meta;
+
+        if (!sm.conf.paused ) {
+          sm.activeProgram.update(sm.time.delta);
+        } else {
+          sm.gfx.setFillColor(Color.green);
+          sm.gfx.text(true, 'SM-PAUSED', 0, 0);
+        }
       }
 
       // Update Program
-      if (!sm.conf.paused) {
-          sm.activeProgram.update(sm.time.delta);
-      } else {
-        sm.gfx.setFillColor(Color.green);
-        sm.gfx.text(true, 'SM-PAUSED', 0, 0);
-      }
+
 
       // Render Log
       if (!sm.activeProgram || (sm.conf.debug.logConsole.logInProgram && sm.conf.debug.active)) {

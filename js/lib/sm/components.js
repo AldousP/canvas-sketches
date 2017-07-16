@@ -13,7 +13,9 @@ var ComponentType = {
   root : 'root',
   color: 'col',
   clip : 'clip',
-  movement: 'mover'
+  movement: 'mover',
+  input : 'input',
+  renderroot : 'renderroot'
 };
 
 function PolygonComponent(polygon) {
@@ -64,6 +66,14 @@ function ColorComponent(color) {
 
 function ClipComponent() {
   this.name = ComponentType.clip;
+}
+
+function InputComponent() {
+  this.name = ComponentType.input;
+}
+
+function RenderRoot() {
+  this.name = ComponentType.renderroot;
 }
 
 function MovementComponent(movementVec, rotSpeed, radians) {

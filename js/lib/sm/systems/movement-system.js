@@ -11,8 +11,13 @@ function MovementSystem(ID) {
 	this.processEntity = function (entity, state, delta, entities, x) {
     var rotMod = x.movRot(entity);
     var rotVec = x.movVec(entity);
+
     if (rotMod) {
       this.fireAction(Actions.rotate(entity, rotMod * delta));
+    }
+
+    if (rotVec) {
+      this.fireAction(Actions.move(entity, sclVec(cpyVec(rotVec), delta)));
     }
 	};
 

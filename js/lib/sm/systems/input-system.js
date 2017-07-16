@@ -9,8 +9,9 @@ function InputSystem(ID) {
   this.tmpVecA = new Vector(0, 0);
 
   this.processEntity = function (entity, state, delta, entities, x) {
+    var hasListener = x.input(entity);
     setVec(this.tmpVecA, 0, 0);
-    if (entity.name === 'root') {
+    if (hasListener) {
       if (sm.input.state.up) {
         addVecConst(this.tmpVecA, 0, this.movementSpeed * delta);
       }
@@ -39,6 +40,12 @@ function InputSystem(ID) {
       if (this.tmpVecA.len) {
         this.fireAction(Actions.move(entity, this.tmpVecA))
       }
+    }
+  };
+
+  this.extractors = {
+    input : function (entity) {
+      return !!entity.components[ComponentType.input];
     }
   };
 }

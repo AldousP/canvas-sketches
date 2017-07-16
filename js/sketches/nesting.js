@@ -15,8 +15,9 @@ var Nesting = function () {
 
   this.setup = function () {
     this.root = this.entityMapper.createEntity([
-      new RootComponent(),
+      new RenderRoot(),
       new PositionComponent(0, 0),
+      new InputComponent(),
       new MovementComponent(new Vector(), 0),
       new RotationComponent(0),
       new ColorComponent(Color.pink),
@@ -39,7 +40,7 @@ var Nesting = function () {
       new PolygonComponent(generatePolygon(4, 32, Math.PI / 4, 3, 1))
     ]);
 
-    this.entityMapper.bindToParent(this.root,[A, B]);
+    this.entityMapper.bindToParent(this.root, [A, B]);
 
     var C = this.entityMapper.createEntity([
       new PositionComponent(0, 48),

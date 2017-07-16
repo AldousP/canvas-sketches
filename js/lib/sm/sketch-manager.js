@@ -29,9 +29,9 @@
 
     resizeCanvas : function () {
       if (sm.conf.mobile.is_mobile) {
-        sm.canvas.width = sm.canvas.height;
+        // sm.canvas.width = sm.canvas.height;
       } else {
-        sm.canvas.width = sm.canvas.height * 2;
+        // sm.canvas.width = sm.canvas.height * 2;
       }
     },
     stop : function() {
@@ -214,7 +214,6 @@
         sm.gfx.width = sm.canvas.width;
         sm.gfx.height = sm.canvas.height;
         sm.ctx.save();
-        sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
       },
 
       postDraw: function () {
@@ -416,7 +415,9 @@
         meta = state.meta;
 
         if (!sm.conf.paused ) {
+          sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
           sm.activeProgram.update(sm.time.delta);
+          sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2);
         } else {
           sm.gfx.setFillColor(Color.green);
           sm.gfx.text(true, 'SM-PAUSED', 0, 0);

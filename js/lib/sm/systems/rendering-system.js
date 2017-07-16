@@ -5,82 +5,76 @@ function RenderingSystem(ID) {
   this.name = 'Rendering';
   this.tmpVecA = new Vector();
 
-  this.processEntity = function (entity, state, delta, entities, x) {
-    var poly = x.poly(entity);
+  this.processEntity = function (entity, state, delta, entities, x, recursion) {
+    var renderRoot = x.renderRoot(entity);
+    if (!renderRoot && !recursion) return 0;
+
+    if (!recursion) {
+      state.renderData = {
+        positionSum : new Vector(),
+        rotationSum : 0
+      };
+    }
+
     var pos = x.pos(entity);
+    var poly = x.poly(entity);
     var rot = x.rot(entity);
     var col = x.col(entity);
     var clip = x.clip(entity);
-    var parent = x.par(entity, entities);
-    var tree = [];
+    var children = x.children(entity);
 
+    var priorPos = cpyVec(state.renderData.positionSum);
+    var priorRot = state.renderData.rotationSum;
 
-    if (poly && pos) {
-      if (parent) {
-        while (parent) {
-          var currentPos = x.pos(parent);
-          var currentRot = x.rot(parent);
-          var currentParent = x.par(parent, entities);
-          var currentClip = x.clip(parent);
-          var currentPoly = x.poly(parent);
-          var currentParentRot = 0;
+    if (rot) {
+      state.renderData.rotationSum += rot;
+    }
 
-          if (currentParent) {
-            currentParentRot = x.rot(currentParent);
-          }
+    if (pos) {
+      addVecVec(state.renderData.positionSum,  rotVec(cpyVec(pos), priorRot ? priorRot : 0));
+    }
 
-          tree.push({
-            pos : currentPos ? cpyVec(currentPos) : new Vector(),
-            rot : currentRot ? currentRot : 0,
-            parentRot : currentParentRot,
-            clip : currentClip,
-            poly : currentPoly
-          });
-          parent = x.par(parent, entities);
-        }
+    if (rot) {
+      state.renderData.priorRot = rot;
+    }
+
+    if (col && renderRoot) {
+      sm.gfx.setFillColor(col);
+    } else {
+      sm.gfx.setStrokeColor(col ? col : Color.yellow);
+    }
+
+    sm.gfx.drawPolygon(poly, state.renderData.positionSum, col && clip, state.renderData.rotationSum);
+    if (clip && poly && pos) {
+      sm.gfx.clipPoly(poly, pos, rot ? rot : 0);
+    }
+
+    if (children) {
+      for (var i = 0; i < children.length; i++) {
+        this.processEntity(entities[children[i]], state, delta, entities, x, true);
       }
+    }
 
-      var baseVector = new Vector();
-      var baseRot = 0;
-      for (var i = tree.length - 1; i >= 0; i --) {
-        var layer = tree[i];
+    if (pos) {
+      state.renderData.positionSum = priorPos;
+    }
 
-        if (layer.pos) {
-          if (baseRot) {
-            addVecVec(baseVector, rotVec(layer.pos, baseRot));
-          } else {
-            addVecVec(baseVector, layer.pos);
-          }
-        }
-
-        if (layer.rot) {
-          baseRot += layer.rot;
-        }
-      }
-
-      if (clip) {
-        // sm.gfx.clipPoly(poly, pos, baseRot + rot);
-      }
-
-      var posCopy = cpyVec(pos);
-      if (baseRot) {
-        rotVec(posCopy, baseRot);
-      }
-      addVecVec(baseVector, posCopy);
-
-      sm.gfx.setStrokeColor(col);
-      sm.gfx.drawPolygon(poly, baseVector, false, baseRot + rot);
-
+    if (rot) {
+      state.renderData.rotationSum = priorRot;
     }
   };
-
 
   this.extractors = {
     clip : function (entity) {
       return !!entity.components[ComponentType.clip];
     },
+
     pos : function (entity) {
       return entity.components[ComponentType.position] ? (entity.components[ComponentType.position].position) : null
+    },
+
+    children : function (entity) {
+      return entity.components[ComponentType.children] ? (entity.components[ComponentType.children].children) : null
     },
 
     rot : function (entity) {
@@ -93,7 +87,7 @@ function RenderingSystem(ID) {
     },
 
     col : function (entity) {
-      return entity.components[ComponentType.color] ? entity.components[ComponentType.color].color : "#FFFFFF";
+      return entity.components[ComponentType.color] ? entity.components[ComponentType.color].color : null;
     },
 
     poly : function (entity) {
@@ -102,6 +96,10 @@ function RenderingSystem(ID) {
 
     par : function (entity, entities) {
       return entity.components[ComponentType.parent] ? entities[entity.components[ComponentType.parent].parentID] : null
+    },
+
+    renderRoot : function (entity) {
+      return !!entity.components[ComponentType.renderroot];
     }
   };
 }

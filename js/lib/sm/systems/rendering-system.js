@@ -4,7 +4,6 @@ function RenderingSystem(ID) {
   this.ID = ID;
   this.name = 'Rendering';
   this.tmpVecA = new Vector();
-  this.tmpVecB = new Vector();
 
   this.processEntity = function (entity, state, delta, entities, x) {
     var poly = x.poly(entity);
@@ -12,43 +11,54 @@ function RenderingSystem(ID) {
     var rot = x.rot(entity);
     var col = x.col(entity);
     var parent = x.par(entity, entities);
-    
-    setVec(this.tmpVecA, 0, 0);
+    var tree = [];
 
     if (poly && pos) {
-      var rotation = rot ? rot : 0;
-      while (parent) {
-        var currPos = x.pos(parent);
-        var currPar = x.par(parent, entities);
-        var currRot = x.rot(parent);
+      if (parent) {
+        while (parent) {
+          var currentPos = x.pos(parent);
+          var currentRot = x.rot(parent);
+          var currentParent = x.par(parent, entities);
+          var currentParentRot = 0;
 
-        if (currPos) {
-          addVecVec(this.tmpVecA, currPos);
-        }
+          if (currentParent) {
+            currentParentRot = x.rot(currentParent);
+          }
 
-        if (currRot) {
-          rotation += currRot;
-        }
-
-        if (currPar) {
-          parent = currPar;
-        } else {
-          parent = null;
-        }
-      }
-
-      setVecVec(this.tmpVecB, pos);
-      var immediateParent = x.par(entity, entities);
-      if (immediateParent) {
-        var immediateRot = x.rot(immediateParent);
-        if (immediateRot) {
-          rotVec(this.tmpVecB, immediateRot);
+          tree.push({
+            pos : currentPos ? cpyVec(currentPos) : new Vector(),
+            rot : currentRot ? currentRot : 0,
+            parentRot : currentParentRot
+          });
+          parent = x.par(parent, entities);
         }
       }
 
-      addVecVec(this.tmpVecA, this.tmpVecB);
+      var baseVector = new Vector();
+      var baseRot = 0;
+      for (var i = tree.length - 1; i >= 0; i --) {
+        var layer = tree[i];
+
+        if (layer.pos) {
+          if (baseRot) {
+            addVecVec(baseVector, rotVec(layer.pos, baseRot));
+          } else {
+            addVecVec(baseVector, layer.pos);
+          }
+        }
+
+        if (layer.rot) {
+          baseRot += layer.rot;
+        }
+      }
+
+      var posCopy = cpyVec(pos);
+      if (baseRot) {
+        rotVec(posCopy, baseRot);
+      }
+      addVecVec(baseVector, posCopy);
       sm.gfx.setStrokeColor(col);
-      sm.gfx.drawPolygon(poly, this.tmpVecA, false, rotation);
+      sm.gfx.drawPolygon(poly, baseVector, false, baseRot + rot);
     }
   };
 

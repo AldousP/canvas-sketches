@@ -29,7 +29,7 @@
       <div class="row no-pad-mobile">
         <div class="column" style="width: 100%;" >
           <div class="sim-container">
-            <canvas id="canvas" class="canvas" width="640" height="360"></canvas>
+            <canvas id="canvas" class="canvas" width="720" height="360"></canvas>
             <div id="web-boy" class="show-mobile">WebBoy</div>
           </div>
         </div>
@@ -56,33 +56,33 @@
           <div class="row no-pad-mobile">
             <div class="d-pad">
               <div style="width: 33%">
-                <div class="arrow-button left" onclick="sm.input.fire('virtualButtonLeft')">
+                <div class="arrow-button left" onclick="sm.input.fire('left')">
                   <i class="fa fa-arrow-left" aria-hidden="true"></i>
                 </div>
               </div>
               <div style="width: 33%">
-                <div class="arrow-button up" onclick="sm.input.fire('virtualButtonUp')">
+                <div class="arrow-button up" onclick="sm.input.fire('up')">
                   <i class="fa fa-arrow-up" aria-hidden="true"></i>
                 </div>
                 <div class="middle-button"></div>
-                <div class="arrow-button down" onclick="sm.input.fire('virtualButtonDown')">
+                <div class="arrow-button down" onclick="sm.input.fire('down')">
                   <i class="fa fa-arrow-down" aria-hidden="true"></i>
                 </div>
               </div>
               <div style="width: 33%">
-                <div class="arrow-button right" onclick="sm.input.fire('virtualButtonRight')">
+                <div class="arrow-button right" onclick="sm.input.fire('right')">
                   <i class="fa fa-arrow-right" aria-hidden="true"></i>
                 </div>
               </div>
             </div>
             <div class="action-buttons">
-              <button class="action-button" onclick="sm.input.fire('virtualButton1')">B</button>
-              <button class="action-button" onclick="sm.input.fire('virtualButton2')">A</button>
+              <button class="action-button" onclick="sm.input.fire('left_bump')">B</button>
+              <button class="action-button" onclick="sm.input.fire('right_bump')">A</button>
             </div>
           </div>
           <div class="row system-buttons">
-            <button class="toggle-button reset-sim mobile-pause" onclick="sm.input.fire('virtualButtonSelect')"></button>
-            <button class="pause-sim toggle-button mobile-pause" onclick="sm.input.fire('virtualButtonStart')"></button>
+            <button class="toggle-button reset-sim mobile-pause" onclick="sm.toggleDebug()"></button>
+            <button class="pause-sim toggle-button mobile-pause" onclick="sm.togglePause()"></button>
           </div>
         </div>
       </div>

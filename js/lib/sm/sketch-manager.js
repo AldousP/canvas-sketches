@@ -9,12 +9,44 @@
     toggleDebug : function () {
       sm.conf.debug.active = !sm.conf.debug.active;
     },
-    context: 'root', // Used for logging context.
-    state: {
-      paused : false
+    
+    togglePause : function () {
+      sm.conf.paused = !sm.conf.paused;
     },
+    
+    checkIfMobile : function () {
+      sm.conf.mobile.is_mobile = window.innerWidth < sm.conf.mobile.mobile_break;
+
+      if (sm.conf.mobile.last_win_width > sm.conf.mobile.mobile_break && sm.conf.mobile.is_mobile) {
+        sm.resizeCanvas();
+      }
+
+      if (sm.conf.mobile.last_win_width < sm.conf.mobile.mobile_break && !sm.conf.mobile.is_mobile) {
+        sm.resizeCanvas();
+      }
+
+      sm.conf.mobile.last_win_width = window.innerWidth;
+    },
+
+    resizeCanvas : function () {
+      if (sm.conf.mobile.is_mobile) {
+        sm.canvas.width = sm.canvas.height;
+      } else {
+        sm.canvas.width = sm.canvas.height * 2;
+      }
+    },
+    stop : function() {
+      sm.breakOnNextLoop = true;
+    },
+    context: 'root', // Used for logging context.
     conf: {
+      paused : false,
       resourceDir: 'assets',
+      mobile : {
+        is_mobile : true,
+        last_win_width : 451,
+        mobile_break : 450
+      },
       debug: {
         active: true,
         logConsole: {
@@ -64,7 +96,6 @@
     },
     input: {
       fire: function (button) {
-        sm.log.notify('firing! ' + button, 'input');
         this.state[button] = true;
       },
       update: function () {
@@ -72,7 +103,6 @@
       },
       state: {}
     },
-
     log: {
       notify: function (msg, context) {
         var date = new Date();
@@ -295,6 +325,7 @@
     init: function (canvasMountId, program) {
       this.log.notify('Mounting @ ' + canvasMountId + '...', sm.context);
       var mountPoint = document.getElementById(canvasMountId);
+      
       if (mountPoint && mountPoint.tagName.toLowerCase() === 'canvas') {
         this.ctx = mountPoint.getContext('2d');
         this.canvas = mountPoint;
@@ -363,9 +394,17 @@
       if (sm.activeProgram) {
         state = sm.activeProgram.state;
         meta = state.meta;
-        sm.activeProgram.update(sm.time.delta);
       }
 
+      // Update Program
+      if (!sm.conf.paused) {
+          sm.activeProgram.update(sm.time.delta);
+      } else {
+        sm.gfx.setFillColor(Color.green);
+        sm.gfx.text(true, 'SM-PAUSED', 0, 0);
+      }
+
+      // Render Log
       if (!sm.activeProgram || (sm.conf.debug.logConsole.logInProgram && sm.conf.debug.active)) {
         if (sm.activeProgram) {
 					sm.gfx.setFillColor(Color.green);
@@ -389,6 +428,7 @@
         }
       }
 
+      // Render FPS & Title
       if (sm.conf.debug.active) {
         if (sm.activeProgram) {
           sm.gfx.setFillColor(Color.white);
@@ -410,8 +450,10 @@
         }
       }
 
+      // Reset State and Input
       sm.gfx.postDraw();
       sm.input.update();
+      sm.checkIfMobile();
 
       if (!sm.breakOnNextLoop) {
         window.requestAnimationFrame(sm.appLoop);
@@ -420,7 +462,7 @@
         sm.unloadProgram();
         console.log('Logs can be found at sm.logs.');
         sm.ctx.save();
-        sm.ctx.fillStyle = '#FFFFFF';
+        sm.ctx.fillStyle = '#000000';
         sm.ctx.fillRect(0, 0, sm.canvas.width, sm.canvas.height);
       }
     }

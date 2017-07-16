@@ -16,8 +16,9 @@ var Nesting = function () {
   this.setup = function () {
     this.root = this.entityMapper.createEntity([
       new RootComponent(),
-      new PositionComponent(64, 32),
-      new RotationComponent(180),
+      new PositionComponent(0, 0),
+      new MovementComponent(new Vector(), -64),
+      new RotationComponent(0),
       new ColorComponent(Color.pink),
       new PolygonComponent(generatePolygon(8, 32))
     ], 'root');
@@ -25,16 +26,52 @@ var Nesting = function () {
     var A = this.entityMapper.createEntity([
       new PositionComponent(128, 0),
       new ColorComponent(Color.cyan),
+      new RotationComponent(0),
+      new MovementComponent(new Vector(), 0),
       new PolygonComponent(generatePolygon(4, 32, Math.PI / 4, 3, 1))
     ]);
 
     var B = this.entityMapper.createEntity([
       new PositionComponent(-128, 0),
       new ColorComponent(Color.cyan),
+      new RotationComponent(0),
+      new MovementComponent(new Vector(), 0),
       new PolygonComponent(generatePolygon(4, 32, Math.PI / 4, 3, 1))
     ]);
 
     this.entityMapper.bindToParent(this.root,[A, B]);
+
+    var C = this.entityMapper.createEntity([
+      new PositionComponent(0, 48),
+      new ColorComponent(Color.green),
+      new RotationComponent(90),
+      new MovementComponent(new Vector(), -305),
+      new PolygonComponent(generatePolygon(4, 16, Math.PI, 1, 1))
+    ]);
+
+    this.entityMapper.bindToParent(A, [
+      C,
+      this.entityMapper.createEntity([
+        new PositionComponent(0, -48),
+        new ColorComponent(Color.green),
+        new RotationComponent(0),
+        new MovementComponent(new Vector(), 0),
+        new PolygonComponent(generatePolygon(4, 16, Math.PI, 1, 1))
+      ])
+    ]);
+
+    this.entityMapper.bindToParent(C, [
+      this.entityMapper.createEntity([
+        new PositionComponent(0, -32),
+        new ColorComponent(Color.yellow),
+        new PolygonComponent(generatePolygon(4, 12, Math.PI / 2, 1, 1))
+      ]),
+      this.entityMapper.createEntity([
+        new PositionComponent(0, 32),
+        new ColorComponent(Color.yellow),
+        new PolygonComponent(generatePolygon(4, 12, Math.PI / 2, 1, 1))
+      ])
+    ]);
 
     this.systemProcessor.addSystem(new BackgroundSystem("a"));
     this.systemProcessor.addSystem(new MovementSystem("b"));

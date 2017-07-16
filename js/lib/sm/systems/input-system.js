@@ -5,6 +5,7 @@ function InputSystem(ID) {
   this.name = 'Input';
 
   this.movementSpeed = 320;
+  this.rotationSpeed = 256;
   this.tmpVecA = new Vector(0, 0);
 
   this.processEntity = function (entity, state, delta, entities, x) {
@@ -27,12 +28,12 @@ function InputSystem(ID) {
       }
 
       if (sm.input.state.left_bump) {
-        this.fireAction(Actions.rotate(entity, -32 * delta))
+        this.fireAction(Actions.rotate(entity, -this.rotationSpeed * delta))
 
       }
 
       if (sm.input.state.right_bump) {
-        this.fireAction(Actions.rotate(entity, 32 * delta))
+        this.fireAction(Actions.rotate(entity, this.rotationSpeed * delta))
       }
 
       if (this.tmpVecA.len) {

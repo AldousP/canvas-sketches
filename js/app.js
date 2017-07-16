@@ -3,7 +3,6 @@
   var fullscreenButtons = document.getElementsByClassName('fullscreen-toggle');
   var appTitle = document.getElementById('app-title');
 
-
   var Keys = {
     W : 87,
     A : 65,
@@ -12,7 +11,8 @@
     UP : 38,
     DOWN: 40,
     LEFT : 37,
-    RIGHT : 39
+    RIGHT : 39,
+    ESC: 27
   };
 
   attachHandlers();
@@ -34,6 +34,9 @@
     document.body.onkeydown = function (e) {
       var key = e.keyCode;
       switch (key) {
+        case Keys.ESC :
+          sm.toggleDebug();
+          break;
         case Keys.W :
           sm.input.fire('up');
           break;

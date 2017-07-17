@@ -316,7 +316,7 @@
           }
         }
 
-        sm.ctx.fillText(msg, x, y);
+        sm.ctx.fillText(msg, x, -y);
         sm.ctx.closePath();
       }
     },
@@ -431,7 +431,7 @@
       // Render Log
       if (!sm.activeProgram || (sm.conf.debug.logConsole.logInProgram && sm.conf.debug.active)) {
         if (sm.activeProgram) {
-					sm.gfx.setFillColor(Color.green);
+					sm.gfx.setFillColor(sm.conf.debug.logConsole.color);
 				} else {
 					sm.gfx.setFillColor(Color.white);
         }
@@ -445,7 +445,7 @@
               false,
               sm.logs[i],
               (-viewPortW / 2) + offsetW,
-              (-(viewPortH / 2) + offsetH) + (offsetH * ( sm.logs.length - i)),
+              ((viewPortH / 2) - offsetH) + (-offsetH * ( sm.logs.length - i)),
               sm.conf.debug.logConsole.size,
               'Ubuntu Mono'
           );
@@ -459,16 +459,16 @@
           sm.gfx.text(
               false,
               meta.name,
-              sm.canvas.width / 3,
-              -sm.canvas.height / 2.2,
+              sm.canvas.width / 2.75,
+              sm.canvas.height / 2.2,
               14,
               'Ubuntu Mono');
 
           sm.gfx.text(
               false,
               sm.utils.formatters.float_two_pt(sm.time.frameRate),
-              sm.canvas.width / 3,
-              -sm.canvas.height / 2.35,
+              sm.canvas.width / 2.75,
+              sm.canvas.height / 2.45,
               14,
               'Ubuntu Mono');
         }

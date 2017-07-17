@@ -15,7 +15,8 @@ var ComponentType = {
   clip : 'clip',
   movement: 'mover',
   input : 'input',
-  renderroot : 'renderroot'
+  renderroot : 'renderroot',
+  text : 'text'
 };
 
 function PolygonComponent(polygon) {
@@ -80,4 +81,11 @@ function MovementComponent(movementVec, rotSpeed, radians) {
   this.movementVec = movementVec ? movementVec : new Vector();
   this.rotSpeed = rotSpeed ? rotSpeed : 0;
   this.radians = radians ? radians : false;
+}
+
+function TextComponent(string, size, color) {
+  this.name = ComponentType.text;
+  this.string = string;
+  this.size = size;
+  this.color = color;
 }

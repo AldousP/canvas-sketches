@@ -228,8 +228,10 @@ a:visited {
     height: 32px;
     line-height: 32px;
     text-align: center;
-    color: #828282;
-    font-style: italic;
+    color: black;
+    font-weight: 100;
+    font-style: normal;
+    opacity: .25;
 }
 
 /*Mobile Considerations*/

@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Canvas Sketches</title>
+    <title>Canvas Demos</title>
     <meta name="theme-color" content="#000000">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0" >
     <link rel='shortcut icon' type='image/x-icon' href='favicon.ico'/>
@@ -14,23 +14,27 @@
   <body class="moderno">
     <div class="letterhead hide-mobile">
       <div class="letterhead-content">
-        <div>
-          Canvas Programs
-        </div>
-        <div class="subtext">
-          <a href="https://github.com/aldousp/canvas-sketches" style="color: white" target="_blank">
-            <i class="fa fa-github fa-3x" aria-hidden="true"></i>
-          </a>
-        </div>
+          Canvas Demonstrations
       </div>
     </div>
     <div class="content-container">
       <h2 id="app-title" class="center hide-mobile">No Program Loaded</h2>
       <div class="row no-pad-mobile">
         <div class="column" style="width: 100%;" >
+          <h5 class="hide-mobile">Use the esc key to toggle debug</h5>
           <div class="sim-container">
             <canvas id="canvas" class="canvas" width="720" height="360"></canvas>
             <div id="web-boy" class="show-mobile">WebBoy</div>
+            <div id="program-selector" class="hide-mobile">
+              <div class="program-option" onclick="loadClipping()">
+                <img src="assets/program-icons/clipping.png" width="64" height="64">
+                <h5>Clipping</h5>
+              </div>
+              <div class="program-option" onclick="loadNesting()">
+                <img src="assets/program-icons/nesting.png" width="64" height="64">
+                <h5>Nesting</h5>
+              </div>
+            </div>
           </div>
         </div>
       </div>

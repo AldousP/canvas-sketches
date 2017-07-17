@@ -2,8 +2,15 @@ var Nesting = function () {
   this.state = {
     meta : {
       name : 'Nesting',
-      date : '06.27.2017'
+      date : '06.27.2017',
+      description : {
+        a: 'Displayed above is a tree of entities which inherit',
+        b: 'rotation and position properties.',
+        c : 'The rendering system begins at a root entity and visits all children depth-first.'
+      }
     },
+    inputTargets : ['root'],
+    activeTarget : 0,
     bgColor: '#360638',
     sampleVec: new Vector(0, 32)
   };
@@ -83,5 +90,9 @@ var Nesting = function () {
 
   this.update = function (delta) {
     this.systemProcessor.processEntities(this.state, delta);
+    sm.gfx.setFillColor(Color.white);
+    sm.gfx.text(true, this.state.meta.description.a, 0, -sm.gfx.height / 2.5 + 24, 12, 'Arial');
+    sm.gfx.text(true, this.state.meta.description.b, 0, -sm.gfx.height / 2.5 + 12, 12, 'Arial');
+    sm.gfx.text(true, this.state.meta.description.c, 0, -sm.gfx.height / 2.5, 0, 12, 'Arial');
   }
 };

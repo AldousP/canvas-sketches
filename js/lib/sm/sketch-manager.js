@@ -47,7 +47,7 @@
         mobile_break : 450
       },
       debug: {
-        active: true,
+        active: false,
         logConsole: {
           logToScreen: true,
           logToBrowserConsole: false,
@@ -387,7 +387,14 @@
       }
       sm.activeProgram = program;
       sm.log.notify('Starting...', meta.name);
-      document.body.dispatchEvent(new CustomEvent('smProgramLoaded', {'detail': {'programName': meta.name}}));
+      document.body.dispatchEvent(new CustomEvent('smProgramLoaded',
+          {
+            'detail': {
+              'name': meta.name,
+              'description': meta.description
+            }
+          })
+      );
     },
 
     unloadProgram: function () {

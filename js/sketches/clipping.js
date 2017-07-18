@@ -3,7 +3,8 @@ var Clipping = function () {
     meta : {
       name : 'Clipping',
       date : '07.14.2017',
-      description : {
+      description : 'Parent entities clipping the render space of their children.',
+      guide : {
         a: 'Each square entity seen here is a child of a render root.',
         b : 'The same tree of child entities is bound to either square.',
         c : 'Either square can move around the parent plane while ',
@@ -94,10 +95,10 @@ var Clipping = function () {
   this.update = function (delta) {
     this.systemProcessor.processEntities(this.state, delta);
     sm.gfx.setFillColor(Color.white);
-    sm.gfx.text(true, "Use WASD & Arrows to move.", 0, sm.gfx.height / 3, 12, 'Arial');
-    sm.gfx.text(true, this.state.meta.description.a, 0, -sm.gfx.height / 2.5  + 24, 12, 'Arial');
-    sm.gfx.text(true, this.state.meta.description.b, 0, -sm.gfx.height / 2.5 + 12,12, 'Arial');
-    sm.gfx.text(true, this.state.meta.description.c, 0, -sm.gfx.height / 2.5, 12, 'Arial');
-    sm.gfx.text(true, this.state.meta.description.d, 0, -sm.gfx.height / 2.5 - 12, 12, 'Arial');
+    sm.gfx.text(true, "Use WASD to move and left & right to rotate.", 0, sm.gfx.height / 3, 12, 'Arial');
+    sm.gfx.text(true, this.state.meta.guide.a, 0, -sm.gfx.height / 2.5  + 24, 12, 'Arial');
+    sm.gfx.text(true, this.state.meta.guide.b, 0, -sm.gfx.height / 2.5 + 12,12, 'Arial');
+    sm.gfx.text(true, this.state.meta.guide.c, 0, -sm.gfx.height / 2.5, 12, 'Arial');
+    sm.gfx.text(true, this.state.meta.guide.d, 0, -sm.gfx.height / 2.5 - 12, 12, 'Arial');
   }
 };

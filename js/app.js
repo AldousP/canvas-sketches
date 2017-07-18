@@ -1,7 +1,7 @@
 (function () {
   'use strict';
-  var fullscreenButtons = document.getElementsByClassName('fullscreen-toggle');
   var appTitle = document.getElementById('app-title');
+  var appDescription = document.getElementById('app-description');
 
   var Keys = {
     W : 87,
@@ -17,20 +17,6 @@
 
   attachHandlers();
   function attachHandlers() {
-    for (var i = 0; i < fullscreenButtons.length; i++) {
-      fullscreenButtons[i].onclick = function (e) {
-        document.body.classList.toggle('full-screen');
-        for (var j = 0; j < fullscreenButtons.length; j++) {
-          fullscreenButtons[j].classList.add('active');
-        }
-        window.setTimeout(function () {
-          for (var i = 0; i < fullscreenButtons.length; i++) {
-            fullscreenButtons[i].classList.remove('active');
-          }
-        }, 100);
-      }
-    }
-
     document.body.onkeydown = function (e) {
       var key = e.keyCode;
       switch (key) {
@@ -65,7 +51,8 @@
   }
 
   document.body.addEventListener('smProgramLoaded', function (event) {
-    appTitle.innerText = event.detail.programName;
+    appTitle.innerText = event.detail.name;
+    appDescription.innerText = event.detail.description;
   });
 
   document.body.addEventListener('smProgramUnloaded', function () {
@@ -80,7 +67,10 @@
     sm.loadProgram(new Clipping());
   };
 
-  sm.init('canvas');
-  loadClipping();
+  window.loadCameras = function () {
+    sm.loadProgram(new Cameras());
+  };
+
+  sm.init('canvas', new Cameras());
 }());
 

@@ -26,6 +26,7 @@ function RenderingSystem(ID) {
     var col = x.col(entity);
     var clip = x.clip(entity);
     var children = x.children(entity);
+    var cam = x.cam(entity);
 
     var priorPos = cpyVec(state.renderData.positionSum);
     var priorRot = state.renderData.rotationSum;
@@ -42,20 +43,25 @@ function RenderingSystem(ID) {
       state.renderData.priorRot = rot;
     }
 
-
     if (col) {
       sm.gfx.setStrokeColor(col);
     }
 
-    if (poly && pos) {
-      sm.gfx.drawPolygon(poly, state.renderData.positionSum, false, state.renderData.rotationSum);
-    }
 
     if (children) {
       if (clip) {
         sm.gfx.clipPoly(poly, state.renderData.positionSum, state.renderData.rotationSum);
         sm.gfx.setFillColor(state.bgColor);
-        sm.gfx.drawPolygon(poly, state.renderData.positionSum, true, state.renderData.rotationSum);
+        sm.gfx.drawPolygon(poly, state.renderData.positionSum, false, state.renderData.rotationSum);
+      }
+
+
+      if (cam) {
+        sm.gfx.preDraw();
+        sm.ctx.translate(cam.pos.x, cam.pos.y);
+        sm.ctx.scale(cam.zoom, cam.zoom);
+        cam.zoom -= .025 * delta;
+        addVecVec(cam.pos, sclVec(new Vector(5, 0), delta));
       }
 
       for (var i = 0; i < children.length; i++) {
@@ -65,6 +71,14 @@ function RenderingSystem(ID) {
       }
     }
 
+    if (cam) {
+      sm.gfx.postDraw();
+    }
+
+    if (poly && pos) {
+      sm.gfx.drawPolygon(poly, state.renderData.positionSum, false, state.renderData.rotationSum);
+    }
+
     if (pos) {
       state.renderData.positionSum = priorPos;
     }
@@ -72,6 +86,8 @@ function RenderingSystem(ID) {
     if (rot) {
       state.renderData.rotationSum = priorRot;
     }
+
+
   };
 
   this.extractors = {
@@ -94,6 +110,10 @@ function RenderingSystem(ID) {
       } else {
         return null;
       }
+    },
+
+    cam : function (entity) {
+      return entity.components[ComponentType.camera] ? entity.components[ComponentType.camera] : null;
     },
 
     col : function (entity) {

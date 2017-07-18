@@ -6,7 +6,7 @@ var Cameras = function () {
       description : 'Trying out some camera work.'
     },
     bgColor: '#c3667c',
-    entityCount : 264
+    entityCount : 1024
   };
 
   this.setup = function () {
@@ -15,14 +15,14 @@ var Cameras = function () {
     this.systemProcessor.addSystem(new RenderingSystem("c"));
 
     var entities = [];
-    var halfW = sm.gfx.width / 2;
-    var halfH = sm.gfx.height / 2;
+    var halfW = sm.gfx.width * 4;
+    var halfH = sm.gfx.height * 4;
 
     for (var i = 0; i < this.state.entityCount; i++) {
       var child = this.entityMapper.createEntity([
           new ColorComponent(Color.white),
           new RotationComponent(SMath.rand(0, 360)),
-          new MovementComponent(new Vector(SMath.rand(-15, 15), SMath.rand(-15, 15), SMath.rand(-128, 128))),
+          new MovementComponent(new Vector(SMath.rand(-5, 5), SMath.rand(-5, 5), SMath.rand(-128, 128))),
           new PositionComponent(SMath.rand(-halfW, halfW), SMath.rand(-halfH, halfH)),
           new PolygonComponent(generatePolygon(
               SMath.rand(3, 16),                // Vert Count

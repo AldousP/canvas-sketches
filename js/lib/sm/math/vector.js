@@ -7,6 +7,10 @@ function Vector(x, y) {
   this.len = Math.sqrt((x * x) + (y * y));
 }
 
+Vector.prototype.toString = function () {
+  return this.x + ", " + this.y;
+};
+
 function calcLen(vec) {
   vec.len = Math.sqrt((vec.x * vec.x) + (vec.y * vec.y));
 }

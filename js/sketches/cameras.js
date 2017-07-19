@@ -37,7 +37,7 @@ var Cameras = function () {
 
     }
 
-    this.entityMapper.createEntity([
+    var camera = this.entityMapper.createEntity([
       new RenderRoot(),
       new CameraComponent(),
       new PolygonComponent(generatePolygon(4, 128, Math.PI / 4,  3.75, 1.75)),
@@ -47,6 +47,8 @@ var Cameras = function () {
       new InputComponent(),
       new RotationComponent(0)
     ], 'root', entities);
+
+    this.state.camera = camera;
   };
 
   this.update = function (delta) {

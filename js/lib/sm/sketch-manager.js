@@ -301,8 +301,8 @@
         sm.ctx.fillStyle = color;
       },
 
-      text: function (center, msg, x, y, fontSize, font) {
-        sm.ctx.textAlign = center ? 'center' : 'left';
+      text: function (align, msg, x, y, fontSize, font) {
+        sm.ctx.textAlign = align ? align : 'left';
         sm.ctx.beginPath();
         if (fontSize) {
           if (font) {

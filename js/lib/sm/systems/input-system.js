@@ -43,10 +43,4 @@ function InputSystem(ID) {
       }
     }
   };
-
-  this.extractors = {
-    input : function (entity) {
-      return !!entity.components[ComponentType.input];
-    }
-  };
 }

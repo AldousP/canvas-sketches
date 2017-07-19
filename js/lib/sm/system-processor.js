@@ -1,8 +1,7 @@
 'use strict';
 
 function SystemProcessor(handler) {
-  this.entitySystems = [];
-  this.staticSystems = [];
+  this.systems = [];
   this.entityMapper = handler;
   this.tempArr = [];
 
@@ -21,30 +20,30 @@ function SystemProcessor(handler) {
 
   this.processEntities = function (state, delta) {
     var entities = this.entityMapper.entities;
-  	this.staticSystems.forEach(function (system) {
+  	this.systems.forEach(function (system) {
   		if (system.pre) {
+        if (!system.pre) return;
 				system.pre(state);
 			}
 		});
 
   	var that = this;
-    that.entitySystems.forEach(function (system) {
+    that.systems.forEach(function (system) {
       system.fireAction = that.fire.bind(that);
       for (var i = 0; i < entities.length; i ++) {
-        // sm.gfx.preDraw();
+        if (!system.processEntity) return;
         system.processEntity(
             entities[i],
             state,
             delta,
-            entities,
-            system.extractors ? system.extractors : null
+            entities
         );
-        // sm.gfx.postDraw();
       }
     });
 
-		this.staticSystems.forEach(function (system) {
+		this.systems.forEach(function (system) {
 			if (system.post) {
+        if (!system.post) return;
         system.post(state);
 			}
 		});
@@ -55,9 +54,9 @@ function SystemProcessor(handler) {
   this.addSystem = function (system) {
     system.processor = this;
   	if (system.type === SystemType.staticSystem) {
-			this.staticSystems.push(system);
+			this.systems.push(system);
 		} else {
-      this.entitySystems.push(system);
+      this.systems.push(system);
     }
   };
 }

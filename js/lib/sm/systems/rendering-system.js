@@ -5,8 +5,8 @@ function RenderingSystem(ID) {
   this.name = 'Rendering';
   this.tmpVecA = new Vector();
 
-  this.processEntity = function (entity, state, delta, entities, x, recursion) {
-    var renderRoot = x.renderRoot(entity);
+  this.processEntity = function (entity, state, delta, entities, recursion) {
+    var renderRoot = smx.renderRoot(entity);
     if (!renderRoot && !recursion) return 0;
 
     if (!recursion) {
@@ -20,13 +20,13 @@ function RenderingSystem(ID) {
       }
     }
 
-    var pos = x.pos(entity);
-    var poly = x.poly(entity);
-    var rot = x.rot(entity);
-    var col = x.col(entity);
-    var clip = x.clip(entity);
-    var children = x.children(entity);
-    var cam = x.cam(entity);
+    var pos = smx.pos(entity);
+    var poly = smx.poly(entity);
+    var rot = smx.rot(entity);
+    var col = smx.col(entity);
+    var clip = smx.clip(entity);
+    var children = smx.children(entity);
+    var cam = smx.cam(entity);
 
     var priorPos = cpyVec(state.renderData.positionSum);
     var priorRot = state.renderData.rotationSum;
@@ -58,15 +58,15 @@ function RenderingSystem(ID) {
 
       if (cam) {
         sm.gfx.preDraw();
-        sm.ctx.translate(cam.pos.x, cam.pos.y);
-        sm.ctx.scale(cam.zoom, cam.zoom);
-        cam.zoom -= .025 * delta;
-        addVecVec(cam.pos, sclVec(new Vector(5, 0), delta));
+        sm.gfx.setFillColor(Color.green);
+        sm.gfx.text(false, cam.pos, -sm.gfx.width / 3, sm.gfx.height / 3);
+        sm.gfx.text(false, cam.width + "x" + cam.height, -sm.gfx.width / 3, sm.gfx.height / 3 - 35);
+        sm.gfx.text(false, cam.zoom, -sm.gfx.width / 3, sm.gfx.height / 3 - 70);
       }
 
       for (var i = 0; i < children.length; i++) {
         sm.gfx.preDraw();
-        this.processEntity(entities[children[i]], state, delta, entities, x, true);
+        this.processEntity(entities[children[i]], state, delta, entities, true);
         sm.gfx.postDraw();
       }
     }
@@ -85,51 +85,6 @@ function RenderingSystem(ID) {
 
     if (rot) {
       state.renderData.rotationSum = priorRot;
-    }
-
-
-  };
-
-  this.extractors = {
-    clip : function (entity) {
-      return !!entity.components[ComponentType.clip];
-    },
-
-    pos : function (entity) {
-      return entity.components[ComponentType.position] ? (entity.components[ComponentType.position].position) : null
-    },
-
-    children : function (entity) {
-      return entity.components[ComponentType.children] ? (entity.components[ComponentType.children].children) : null
-    },
-
-    rot : function (entity) {
-      var rot = entity.components[ComponentType.rotation];
-      if (rot) {
-        return rot.radians ? rot.rotation : rot.rotation / DEG_RAD;
-      } else {
-        return null;
-      }
-    },
-
-    cam : function (entity) {
-      return entity.components[ComponentType.camera] ? entity.components[ComponentType.camera] : null;
-    },
-
-    col : function (entity) {
-      return entity.components[ComponentType.color] ? entity.components[ComponentType.color].color : null;
-    },
-
-    poly : function (entity) {
-      return entity.components[ComponentType.polygon] ? entity.components[ComponentType.polygon].polygon : null;
-    },
-
-    par : function (entity, entities) {
-      return entity.components[ComponentType.parent] ? entities[entity.components[ComponentType.parent].parentID] : null
-    },
-
-    renderRoot : function (entity) {
-      return !!entity.components[ComponentType.renderroot];
     }
   };
 }

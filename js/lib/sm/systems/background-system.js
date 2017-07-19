@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
 function BackgroundSystem(ID) {
 	this.ID = ID;
-	this.name = "Background";
+	this.name = 'Background';
 	this.type = SystemType.staticSystem;
 
 	this.pre = function (state) {

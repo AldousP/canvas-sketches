@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
 function PhysicsSystem(ID) {
 	this.ID = ID;
-	this.name = "Physics";
+	this.name = 'Physics';
 	
 	this.pre = function () {
 

@@ -45,13 +45,13 @@ function AccelerationComponent(x, y) {
   this.acceleration = new Vector(x, y);
 }
 
-function CameraComponent() {
+function CameraComponent(pos, width, height, zoom, rotation) {
   this.name = ComponentType.camera;
   this.pos = new Vector();
-  this.width = 128;
-  this.height = 128;
-  this.zoom = 1;
-  this.rotation = 0;
+  this.width = width ? width : 128;
+  this.height = height ? height : 128;
+  this.zoom = zoom ? zoom : 1;
+  this.rotation = rotation ? rotation : 0;
 }
 
 function ChildrenComponent() {

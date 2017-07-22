@@ -40,7 +40,7 @@ var smx = {
   },
 
   cam : function (entity) {
-    return entity.components[ComponentType.camera] ? entity.components[ComponentType.camera] : null;
+    return entity.components[ComponentType.camera] ? entity.components[ComponentType.camera].conf : null;
   },
 
   col : function (entity) {
@@ -49,10 +49,6 @@ var smx = {
 
   poly : function (entity) {
     return entity.components[ComponentType.polygon] ? entity.components[ComponentType.polygon].polygon : null;
-  },
-
-  par : function (entity, entities) {
-    return entity.components[ComponentType.parent] ? entities[entity.components[ComponentType.parent].parentID] : null
   },
 
   renderRoot : function (entity) {

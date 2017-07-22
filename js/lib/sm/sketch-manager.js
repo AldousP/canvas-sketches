@@ -492,11 +492,13 @@
         var offsetW = viewPortW * padding;
         var offsetH = viewPortH * padding;
         sm.gfx.setTextConf(sm.conf.debug.logConsole.textConf);
+        sm.logs.reverse();
         sm.gfx.text(
             sm.logs,
             (-viewPortW / 2) + offsetW,
             ((viewPortH / 2) - offsetH)
         );
+        sm.logs.reverse();
       }
 
       // Render FPS & Title

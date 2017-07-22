@@ -3,10 +3,11 @@ var Cameras = function () {
     meta : {
       name : 'Camera Tests',
       date : '07.17.2017',
-      description : 'Trying out some camera work.'
+      description : 'Panning and zoom examples.'
     },
     bgColor: '#c3667c',
-    entityCount : 1024
+    entityCountX : 6,
+    entityCountY : 6
   };
 
   this.setup = function () {
@@ -15,31 +16,29 @@ var Cameras = function () {
     this.systemProcessor.addSystem(new RenderingSystem("c"));
 
     var entities = [];
-    var halfW = sm.gfx.width * 4;
-    var halfH = sm.gfx.height * 4;
+    var offsetX = sm.gfx.width / 6;
+    var offsetY = sm.gfx.height / 3;
 
-    for (var i = 0; i < this.state.entityCount; i++) {
-      var child = this.entityMapper.createEntity([
+    for (var i = 0; i < this.state.entityCountX; i++) {
+      for (var j = 0; j < this.state.entityCountY; j++) {
+        var child = this.entityMapper.createEntity([
           new ColorComponent(Color.white),
-          new RotationComponent(SMath.rand(0, 360)),
-          new MovementComponent(new Vector(SMath.rand(-5, 5), SMath.rand(-5, 5), SMath.rand(-128, 128))),
-          new PositionComponent(SMath.rand(-halfW, halfW), SMath.rand(-halfH, halfH)),
-          new PolygonComponent(generatePolygon(
-              SMath.rand(3, 16),                // Vert Count
-              halfH / SMath.rand(48, 128),      // Radius
-              Math.PI / 6 * SMath.rand(1, 8),   // Rotation
-              SMath.rand(.45, 2.25),            // Scale-X
-              SMath.rand(.45, 3.25)             // Scale-Y
-          ))
-      ], 'random entity #' + i);
-
-      entities.push(child);
-
+          new RotationComponent(0),
+          new PositionComponent(-offsetX + i * 48, -offsetY + j * 48),
+          new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
+        ], 'random entity #' + i);
+        entities.push(child);
+      }
     }
 
-    var camera = this.entityMapper.createEntity([
+    this.state.camera = this.entityMapper.createEntity([
       new RenderRoot(),
-      new CameraComponent(),
+      new CameraComponent({
+        pos: new Vector(0, 128),
+        width: 128,
+        height: 128,
+        zoom: 1
+      }),
       new PolygonComponent(generatePolygon(4, 128, Math.PI / 4,  3.75, 1.75)),
       new ClipComponent(),
       new ColorComponent(Color.white),
@@ -47,8 +46,6 @@ var Cameras = function () {
       new InputComponent(),
       new RotationComponent(0)
     ], 'root', entities);
-
-    this.state.camera = camera;
   };
 
   this.update = function (delta) {

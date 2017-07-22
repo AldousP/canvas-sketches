@@ -45,13 +45,14 @@ function AccelerationComponent(x, y) {
   this.acceleration = new Vector(x, y);
 }
 
-function CameraComponent(pos, width, height, zoom, rotation) {
+function CameraComponent(conf) {
   this.name = ComponentType.camera;
-  this.pos = new Vector();
-  this.width = width ? width : 128;
-  this.height = height ? height : 128;
-  this.zoom = zoom ? zoom : 1;
-  this.rotation = rotation ? rotation : 0;
+  this.conf = conf ? conf :{
+    pos: new Vector(0, 0),
+    width: 128,
+    height: 128,
+    zoom: 1
+  };
 }
 
 function ChildrenComponent() {
@@ -62,10 +63,6 @@ function ChildrenComponent() {
 function ParentComponent(parentID) {
   this.name = ComponentType.parent;
   this.parentID = parentID;
-}
-
-function RootComponent() {
-  this.name = ComponentType.root;
 }
 
 function ColorComponent(color) {

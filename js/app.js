@@ -75,6 +75,6 @@
     sm.loadProgram(new TextTests());
   };
 
-  sm.init('canvas', new TextTests());
+  sm.init('canvas', new Cameras());
 }());
 

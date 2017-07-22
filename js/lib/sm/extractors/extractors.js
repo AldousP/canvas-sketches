@@ -1,15 +1,15 @@
 'use strict';
 
 var smx = {
-  input : function (entity) {
+  input: function (entity) {
     return !!entity.components[ComponentType.input];
   },
 
-  movVec : function (entity) {
+  movVec: function (entity) {
     return entity.components[ComponentType.movement] ? (entity.components[ComponentType.movement].movementVec) : null
   },
 
-  movRot : function (entity) {
+  movRot: function (entity) {
     var mov = entity.components[ComponentType.movement];
     if (mov) {
       return mov.rotSpeed ? mov.rotSpeed : null;
@@ -18,19 +18,19 @@ var smx = {
     }
   },
 
-  clip : function (entity) {
+  clip: function (entity) {
     return !!entity.components[ComponentType.clip];
   },
 
-  pos : function (entity) {
+  pos: function (entity) {
     return entity.components[ComponentType.position] ? (entity.components[ComponentType.position].position) : null
   },
 
-  children : function (entity) {
+  children: function (entity) {
     return entity.components[ComponentType.children] ? (entity.components[ComponentType.children].children) : null
   },
 
-  rot : function (entity) {
+  rot: function (entity) {
     var rot = entity.components[ComponentType.rotation];
     if (rot) {
       return rot.radians ? rot.rotation : rot.rotation / DEG_RAD;
@@ -39,23 +39,27 @@ var smx = {
     }
   },
 
-  cam : function (entity) {
+  cam: function (entity) {
     return entity.components[ComponentType.camera] ? entity.components[ComponentType.camera].conf : null;
   },
 
-  col : function (entity) {
+  col: function (entity) {
     return entity.components[ComponentType.color] ? entity.components[ComponentType.color].color : null;
   },
 
-  poly : function (entity) {
+  poly: function (entity) {
     return entity.components[ComponentType.polygon] ? entity.components[ComponentType.polygon].polygon : null;
   },
 
-  renderRoot : function (entity) {
+  renderRoot: function (entity) {
     return !!entity.components[ComponentType.renderroot];
   },
 
-  text  : function (entity) {
+  text: function (entity) {
     return entity.components[ComponentType.text];
+  },
+  
+  sequence: function (entity) {
+    return entity.components[ComponentType.sequence];
   }
 };

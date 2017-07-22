@@ -16,7 +16,8 @@ var ComponentType = {
   movement: 'mover',
   input : 'input',
   renderroot : 'renderroot',
-  text : 'text'
+  text : 'text',
+  sequence: 'sequence'
 };
 
 function PolygonComponent(polygon) {
@@ -93,4 +94,12 @@ function TextComponent(strings, textConf) {
   this.name = ComponentType.text;
   this.strings = strings;
   this.conf = textConf;
+}
+
+function SequenceComponent(conf) {
+  this.name = ComponentType.sequence;
+  this.conf = {
+    length: 5,
+    val: 0
+  }
 }

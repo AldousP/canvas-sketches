@@ -13,11 +13,14 @@ var Cameras = function () {
   this.setup = function () {
     this.systemProcessor.addSystem(new BackgroundSystem("a"));
     this.systemProcessor.addSystem(new MovementSystem("b"));
-    this.systemProcessor.addSystem(new RenderingSystem("c"));
+    this.systemProcessor.addSystem(new SequenceSystem("c"));
+    this.systemProcessor.addSystem(new RenderingSystem("d"));
 
     var entities = [];
     var offsetX = sm.gfx.width / 6;
     var offsetY = sm.gfx.height / 3;
+
+
 
     for (var i = 0; i < this.state.entityCountX; i++) {
       for (var j = 0; j < this.state.entityCountY; j++) {
@@ -30,6 +33,8 @@ var Cameras = function () {
         entities.push(child);
       }
     }
+
+
 
     this.state.camera = this.entityMapper.createEntity([
       new RenderRoot(),
@@ -46,6 +51,7 @@ var Cameras = function () {
       new InputComponent(),
       new RotationComponent(0)
     ], 'root', entities);
+
   };
 
   this.update = function (delta) {

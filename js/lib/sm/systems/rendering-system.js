@@ -49,15 +49,15 @@ function RenderingSystem(ID) {
     }
 
     if (children) {
-      if (clip) {
-        sm.gfx.clipPoly(poly, state.renderData.positionSum, state.renderData.rotationSum);
-        sm.gfx.setFillColor(state.bgColor);
-        sm.gfx.drawPolygon(poly, state.renderData.positionSum, false, state.renderData.rotationSum);
-      }
-
       if (cam) {
         sm.gfx.preDraw();
         sm.ctx.translate(cam.pos.x, cam.pos.y);
+      }
+
+      if (clip) {
+        sm.gfx.clipPoly(poly, state.renderData.positionSum, state.renderData.rotationSum);
+        sm.gfx.setFillColor(state.bgColor);
+        sm.gfx.drawPolygon(poly, state.renderData.positionSum, true, state.renderData.rotationSum);
       }
 
       for (var i = 0; i < children.length; i++) {

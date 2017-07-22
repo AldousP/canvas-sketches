@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 
 function Vector(x, y) {
@@ -8,7 +8,7 @@ function Vector(x, y) {
 }
 
 Vector.prototype.toString = function () {
-  return this.x + ", " + this.y;
+  return this.x + ', ' + this.y;
 };
 
 function calcLen(vec) {
@@ -60,7 +60,7 @@ function rotVec(vec, rot) {
   return vec;
 }
 
-function lerp(vecA, vecB, alpha) {
+function lerpVec(vecA, vecB, alpha) {
   return {
     x: (vecB.x - vecA.x) * alpha,
     y: (vecB.y - vecA.y) * alpha

@@ -40,7 +40,7 @@ var Cameras = function () {
           new Vector(0, 128)
       ]),
       new CameraComponent({
-        pos: new Vector(0, 128),
+        pos: new Vector(0, 0),
         width: 128,
         height: 128,
         zoom: 1

@@ -15,7 +15,23 @@ function PathSystem(ID) {
     if (path && seq) {
       var ptCt = path.pts.length;
       var alpha = seq.pos;
-      // console.log(Math.floor(ptCt * alpha));
+      var pathIndexA = Math.floor(ptCt * alpha);
+      var pathIndexB = pathIndexA + 1;
+
+      if (pathIndexB > ptCt) {
+        pathIndexB = pathIndexA - 1;
+      }
+
+      if (pathIndexB < 0) {
+        pathIndexB = 0;
+      }
+
+      var ptA = path.pts[pathIndexA];
+      var ptB = path.pts[pathIndexB];
+      if (ptB && ptA) {
+        var lerp = lerpVec(ptA, ptB, alpha);
+        this.actions.updatePath(entity, new Vector(lerp.x, lerp.y))
+      }
     }
 	};
 
@@ -28,9 +44,9 @@ function PathSystem(ID) {
   };
 
   this.actions = {
-    updateSequence: function (entity, position) {
-      var seq = smx.sequence(entity);
-      seq.position = position;
+    updatePath: function (entity, pos) {
+      var path = smx.path(entity);
+      path.pos = pos;
     }
 	};
 }

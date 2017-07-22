@@ -15,7 +15,8 @@ var Cameras = function () {
     this.systemProcessor.addSystem(new MovementSystem("b"));
     this.systemProcessor.addSystem(new PathSystem("c"));
     this.systemProcessor.addSystem(new SequenceSystem("d"));
-    this.systemProcessor.addSystem(new RenderingSystem("e"));
+    this.systemProcessor.addSystem(new CameraSystem("e"));
+    this.systemProcessor.addSystem(new RenderingSystem("f"));
 
     var entities = [];
     var offsetX = sm.gfx.width / 6;

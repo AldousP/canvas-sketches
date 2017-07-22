@@ -13,14 +13,13 @@ var Cameras = function () {
   this.setup = function () {
     this.systemProcessor.addSystem(new BackgroundSystem("a"));
     this.systemProcessor.addSystem(new MovementSystem("b"));
-    this.systemProcessor.addSystem(new SequenceSystem("c"));
-    this.systemProcessor.addSystem(new RenderingSystem("d"));
+    this.systemProcessor.addSystem(new PathSystem("c"));
+    this.systemProcessor.addSystem(new SequenceSystem("d"));
+    this.systemProcessor.addSystem(new RenderingSystem("e"));
 
     var entities = [];
     var offsetX = sm.gfx.width / 6;
     var offsetY = sm.gfx.height / 3;
-
-
 
     for (var i = 0; i < this.state.entityCountX; i++) {
       for (var j = 0; j < this.state.entityCountY; j++) {
@@ -34,10 +33,12 @@ var Cameras = function () {
       }
     }
 
-
-
     this.state.camera = this.entityMapper.createEntity([
       new RenderRoot(),
+      new PathComponent([
+          new Vector(0, 0),
+          new Vector(0, 128)
+      ]),
       new CameraComponent({
         pos: new Vector(0, 128),
         width: 128,
@@ -46,6 +47,10 @@ var Cameras = function () {
       }),
       new PolygonComponent(generatePolygon(4, 128, Math.PI / 4,  3.75, 1.75)),
       new ClipComponent(),
+      new SequenceComponent({
+        length: 5,
+        pos: 0
+      }),
       new ColorComponent(Color.white),
       new PositionComponent(0, 0),
       new InputComponent(),

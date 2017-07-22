@@ -17,7 +17,8 @@ var ComponentType = {
   input : 'input',
   renderroot : 'renderroot',
   text : 'text',
-  sequence: 'sequence'
+  sequence: 'sequence',
+  path: 'path'
 };
 
 function PolygonComponent(polygon) {
@@ -98,8 +99,19 @@ function TextComponent(strings, textConf) {
 
 function SequenceComponent(conf) {
   this.name = ComponentType.sequence;
-  this.conf = {
+  this.conf = conf ? conf : {
     length: 5,
-    val: 0
+    pos: 0,
+    dir : 1
+  };
+
+  if (!conf.dir) {
+    this.conf.dir = 1;
   }
+}
+
+function PathComponent(pts) {
+  this.name = ComponentType.path;
+  this.pts = pts ? pts : [];
+  this.pos = new Vector();
 }

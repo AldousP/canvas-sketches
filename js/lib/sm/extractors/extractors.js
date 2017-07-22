@@ -60,6 +60,10 @@ var smx = {
   },
   
   sequence: function (entity) {
-    return entity.components[ComponentType.sequence];
+    return entity.components[ComponentType.sequence] ? entity.components[ComponentType.sequence].conf : null;
+  },
+
+  path: function (entity) {
+    return entity.components[ComponentType.path];
   }
 };

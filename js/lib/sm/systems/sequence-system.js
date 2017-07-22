@@ -12,7 +12,12 @@ function SequenceSystem(ID) {
     var seq = smx.sequence(entity);
 
     if (seq) {
-      console.log(seq);
+      var newPosition = (seq.pos * seq.length + (delta * seq.dir)) / seq.length;
+      if (newPosition < 0 || newPosition > 1) {
+        newPosition = seq.dir < 0 ? 0 : 1;
+        seq.dir = -1 * (seq.dir);
+      }
+      this.actions.updateSequence(entity, newPosition);
     }
 	};
 
@@ -25,6 +30,9 @@ function SequenceSystem(ID) {
   };
 
   this.actions = {
-
+    updateSequence: function (entity, position) {
+      var seq = smx.sequence(entity);
+      seq.pos = position;
+    }
 	};
 }

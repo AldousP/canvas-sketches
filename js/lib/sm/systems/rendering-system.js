@@ -48,16 +48,22 @@ function RenderingSystem(ID) {
       sm.gfx.setStrokeColor(col);
     }
 
+
+    if (clip) {
+      sm.gfx.clipPoly(poly, state.renderData.positionSum, state.renderData.rotationSum);
+      sm.gfx.setFillColor(state.bgColor);
+      sm.gfx.drawPolygon(poly, state.renderData.positionSum, true, state.renderData.rotationSum);
+      if (sm.conf.debug.active && false) {
+        sm.gfx.setStrokeColor(Color.white);
+        sm.gfx.drawLine(-sm.gfx.width, 0, sm.gfx.width, 0);
+        sm.gfx.drawLine(0, -sm.gfx.height, 0, sm.gfx.height);
+      }
+    }
+
     if (children) {
       if (cam) {
         sm.gfx.preDraw();
         sm.ctx.translate(cam.pos.x, cam.pos.y);
-      }
-
-      if (clip) {
-        sm.gfx.clipPoly(poly, state.renderData.positionSum, state.renderData.rotationSum);
-        sm.gfx.setFillColor(state.bgColor);
-        sm.gfx.drawPolygon(poly, state.renderData.positionSum, true, state.renderData.rotationSum);
       }
 
       for (var i = 0; i < children.length; i++) {

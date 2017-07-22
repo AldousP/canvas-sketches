@@ -39,8 +39,8 @@ function sclVec(vec, scalar) {
 
 function multVec(vec1, vec2) {
   vec1.x *= vec2.x;
-  vec1.y += vec2.y;
-  calcLen(vec);
+  vec1.y *= vec2.y;
+  calcLen(ve1);
   return vec1;
 }
 
@@ -58,6 +58,13 @@ function rotVec(vec, rot) {
   vec.y = Math.sin(currRot + rot * -1) * vec.len;
   calcLen(vec);
   return vec;
+}
+
+function lerp(vecA, vecB, alpha) {
+  return {
+    x: (vecB.x - vecA.x) * alpha,
+    y: (vecB.y - vecA.y) * alpha
+  }
 }
 
 function addVecVec(vec, vec2) {

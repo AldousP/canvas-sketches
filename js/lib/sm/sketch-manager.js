@@ -51,10 +51,14 @@
         logConsole: {
           logToScreen: true,
           logToBrowserConsole: false,
-          size : 10,
-          color: Color.white,
+          textConf : {
+            color: Color.white,
+            size: 12,
+            font: 'Arial',
+            style : 'normal',
+            align: 'left'
+          },
           padding: 0.025,
-          bgColor: '#000913',
           logInProgram: true
         }
       }
@@ -132,6 +136,13 @@
     },
 
     gfx: {
+      textConf : {
+        color: Color.white,
+        size: 12,
+        font: 'Arial',
+        style : 'normal',
+        align: 'left'
+      },
       width: 0,
       height: 0,
       clear: function (color) {
@@ -166,7 +177,7 @@
         sm.ctx.rotate(-rotation);
         sm.ctx.translate(-pos.x, pos.y);
       },
-      
+
       clipPoly: function (polygon, pos, rotation) {
         sm.ctx.translate(pos.x, -pos.y);
         sm.ctx.rotate(rotation);
@@ -301,23 +312,51 @@
         sm.ctx.fillStyle = color;
       },
 
-      text: function (align, msg, x, y, fontSize, font) {
-        sm.ctx.textAlign = align ? align : 'left';
+      setTextConf: function (conf) {
+        this.textConf = conf;
+        var keys = Object.keys(conf);
+        keys.forEach(function (key) {
+          if (conf[key]) {
+            sm.gfx.textConf[key] = conf[key];
+          }
+        });
+        this._processTextConf();
+      },
+
+      _processTextConf : function () {
+        var styleString =
+            sm.gfx.textConf.style + ' ' +
+            'normal ' +                         // Font-Variant
+            sm.gfx.textConf.size + 'px ' +
+            sm.gfx.textConf.font;
+
+        sm.ctx.font = styleString;
+        var align = sm.gfx.textConf.align;
+        sm.ctx.textAlign = align ? align : 'center';
+      },
+
+      text: function (msgs, x, y) {
+        this._processTextConf();
+        var currentColor = sm.ctx.fillStyle;
+        var fontSize = sm.gfx.textConf.size;
+
+        y = y ? -y : 0;
+        x = x ? x : 0;
+
         sm.ctx.beginPath();
-        if (fontSize) {
-          if (font) {
-            sm.ctx.font = fontSize + 'px ' + font;
-          } else {
-            sm.ctx.font = fontSize + 'px Arial';
-          }
+        sm.gfx.setFillColor(this.textConf.color);
+        if (msgs.forEach) {
+          msgs.forEach(function (msg, index) {
+            sm.ctx.fillText(msg, x, y + (index * fontSize))
+          })
         } else {
-          if (font) {
-            sm.ctx.font = '10px ' + font;
-          }
+          sm.ctx.fillText(msgs, x, y)
         }
 
-        sm.ctx.fillText(msg, x, -y);
         sm.ctx.closePath();
+        if (currentColor) {
+          sm.gfx.setFillColor(currentColor);
+        }
       }
     },
 
@@ -344,7 +383,7 @@
     init: function (canvasMountId, program) {
       this.log.notify('Mounting @ ' + canvasMountId + '...', sm.context);
       var mountPoint = document.getElementById(canvasMountId);
-      
+
       if (mountPoint && mountPoint.tagName.toLowerCase() === 'canvas') {
         this.ctx = mountPoint.getContext('2d');
         this.canvas = mountPoint;
@@ -447,37 +486,23 @@
         var padding = sm.conf.debug.logConsole.padding;
         var offsetW = viewPortW * padding;
         var offsetH = viewPortH * padding;
-        for (var i = 0; i < sm.logs.length; i++) {
-          sm.gfx.text(
-              false,
-              sm.logs[i],
-              (-viewPortW / 2) + offsetW,
-              ((viewPortH / 2) - offsetH) + (-offsetH * ( sm.logs.length - i)),
-              sm.conf.debug.logConsole.size,
-              'Ubuntu Mono'
-          );
-        }
+        sm.gfx.setTextConf(sm.conf.debug.logConsole.textConf);
+        sm.gfx.text(
+            sm.logs,
+            (-viewPortW / 2) + offsetW,
+            ((viewPortH / 2) - offsetH)
+        );
       }
 
       // Render FPS & Title
       if (sm.conf.debug.active) {
         if (sm.activeProgram) {
-          sm.gfx.setFillColor(Color.white);
-          sm.gfx.text(
-              false,
-              meta.name,
+          sm.gfx.setTextConf(sm.conf.debug.logConsole.textConf);
+          sm.gfx.text(meta.name, sm.canvas.width / 2.75, sm.canvas.height / 2.2);
+          sm.gfx.text(sm.utils.formatters.float_two_pt(sm.time.frameRate),
               sm.canvas.width / 2.75,
-              sm.canvas.height / 2.2,
-              14,
-              'Ubuntu Mono');
-
-          sm.gfx.text(
-              false,
-              sm.utils.formatters.float_two_pt(sm.time.frameRate),
-              sm.canvas.width / 2.75,
-              sm.canvas.height / 2.45,
-              14,
-              'Ubuntu Mono');
+              sm.canvas.height / 2.45
+          );
         }
       }
 

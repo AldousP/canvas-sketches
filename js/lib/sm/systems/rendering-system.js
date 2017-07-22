@@ -27,6 +27,7 @@ function RenderingSystem(ID) {
     var clip = smx.clip(entity);
     var children = smx.children(entity);
     var cam = smx.cam(entity);
+    var text = smx.text(entity);
 
     var priorPos = cpyVec(state.renderData.positionSum);
     var priorRot = state.renderData.rotationSum;
@@ -47,7 +48,6 @@ function RenderingSystem(ID) {
       sm.gfx.setStrokeColor(col);
     }
 
-
     if (children) {
       if (clip) {
         sm.gfx.clipPoly(poly, state.renderData.positionSum, state.renderData.rotationSum);
@@ -55,13 +55,8 @@ function RenderingSystem(ID) {
         sm.gfx.drawPolygon(poly, state.renderData.positionSum, false, state.renderData.rotationSum);
       }
 
-
       if (cam) {
         sm.gfx.preDraw();
-        sm.gfx.setFillColor(Color.green);
-        sm.gfx.text(false, cam.pos, -sm.gfx.width / 3, sm.gfx.height / 3);
-        sm.gfx.text(false, cam.width + "x" + cam.height, -sm.gfx.width / 3, sm.gfx.height / 3 - 35);
-        sm.gfx.text(false, cam.zoom, -sm.gfx.width / 3, sm.gfx.height / 3 - 70);
       }
 
       for (var i = 0; i < children.length; i++) {
@@ -69,6 +64,13 @@ function RenderingSystem(ID) {
         this.processEntity(entities[children[i]], state, delta, entities, true);
         sm.gfx.postDraw();
       }
+    }
+
+    if (text && pos) {
+      if (text.conf) {
+        sm.gfx.setTextConf(text.conf);
+      }
+      sm.gfx.text(text.strings, pos.x, pos.y);
     }
 
     if (cam) {

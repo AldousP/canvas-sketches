@@ -57,6 +57,9 @@ var smx = {
 
   renderRoot : function (entity) {
     return !!entity.components[ComponentType.renderroot];
-  }
+  },
 
+  text  : function (entity) {
+    return entity.components[ComponentType.text];
+  }
 };

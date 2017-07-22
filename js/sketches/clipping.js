@@ -94,11 +94,18 @@ var Clipping = function () {
 
   this.update = function (delta) {
     this.systemProcessor.processEntities(this.state, delta);
-    sm.gfx.setFillColor(Color.white);
-    sm.gfx.text(true, "Use WASD to move and left & right to rotate.", 0, sm.gfx.height / 3, 12, 'Arial');
-    sm.gfx.text(true, this.state.meta.guide.a, 0, -sm.gfx.height / 2.5  + 24, 12, 'Arial');
-    sm.gfx.text(true, this.state.meta.guide.b, 0, -sm.gfx.height / 2.5 + 12,12, 'Arial');
-    sm.gfx.text(true, this.state.meta.guide.c, 0, -sm.gfx.height / 2.5, 12, 'Arial');
-    sm.gfx.text(true, this.state.meta.guide.d, 0, -sm.gfx.height / 2.5 - 12, 12, 'Arial');
+    sm.gfx.text("Use WASD to move and left & right to rotate.", 0, sm.gfx.height / 3);
+
+    sm.gfx.setTextConf({
+      color: Color.white,
+      size: 12,
+      font: 'Arial',
+      style : 'normal',
+      align: 'center'
+    });
+    sm.gfx.text(this.state.meta.guide.a, 0, -sm.gfx.height / 2.5  + 24);
+    sm.gfx.text(this.state.meta.guide.b, 0, -sm.gfx.height / 2.5 + 12);
+    sm.gfx.text(this.state.meta.guide.c, 0, -sm.gfx.height / 2.5, 12);
+    sm.gfx.text(this.state.meta.guide.d, 0, -sm.gfx.height / 2.5 - 12);
   }
 };

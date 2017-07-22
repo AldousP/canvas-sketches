@@ -71,6 +71,10 @@
     sm.loadProgram(new Cameras());
   };
 
-  sm.init('canvas', new Cameras());
+  window.loadTextTests = function () {
+    sm.loadProgram(new TextTests());
+  };
+
+  sm.init('canvas', new TextTests());
 }());
 

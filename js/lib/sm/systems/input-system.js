@@ -8,8 +8,8 @@ function InputSystem(ID) {
   this.rotationSpeed = 256;
   this.tmpVecA = new Vector(0, 0);
 
-  this.processEntity = function (entity, state, delta, entities, x) {
-    var hasListener = x.input(entity);
+  this.processEntity = function (entity, state, delta, entities) {
+    var hasListener = smx.input(entity);
     if (!state.inputTargets) return;
     setVec(this.tmpVecA, 0, 0);
     if (hasListener && (entity.name === state.inputTargets[state.activeTarget])) {

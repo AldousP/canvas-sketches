@@ -92,9 +92,8 @@ function MovementComponent(movementVec, rotSpeed, radians) {
   this.radians = radians ? radians : false;
 }
 
-function TextComponent(string, size, color) {
+function TextComponent(strings, textConf) {
   this.name = ComponentType.text;
-  this.string = string;
-  this.size = size;
-  this.color = color;
+  this.strings = strings;
+  this.conf = textConf;
 }

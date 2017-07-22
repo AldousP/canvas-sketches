@@ -4,7 +4,7 @@ function EntityMapper() {
 
   this.actions = [];
   this.actionHistory = [];
-  this.actionHistoryLength = 1000;
+  this.actionHistoryLength = 0;
 
 	this.createEntity = function (components, name, children) {
 	  var entity = new Entity();

@@ -53,6 +53,5 @@ var Cameras = function () {
 
   this.update = function (delta) {
     this.systemProcessor.processEntities(this.state, delta);
-    sm.gfx.setFillColor(Color.white);
   }
 };

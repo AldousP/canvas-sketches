@@ -70,7 +70,11 @@ function RenderingSystem(ID) {
       if (text.conf) {
         sm.gfx.setTextConf(text.conf);
       }
-      sm.gfx.text(text.strings, pos.x, pos.y);
+      sm.gfx.text(
+          text.strings,
+          state.renderData.positionSum.x,
+          state.renderData.positionSum.y,
+          state.renderData.rotationSum);
     }
 
     if (cam) {

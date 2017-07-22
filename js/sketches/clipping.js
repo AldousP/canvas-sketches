@@ -105,7 +105,7 @@ var Clipping = function () {
     });
     sm.gfx.text(this.state.meta.guide.a, 0, -sm.gfx.height / 2.5  + 24);
     sm.gfx.text(this.state.meta.guide.b, 0, -sm.gfx.height / 2.5 + 12);
-    sm.gfx.text(this.state.meta.guide.c, 0, -sm.gfx.height / 2.5, 12);
+    sm.gfx.text(this.state.meta.guide.c, 0, -sm.gfx.height / 2.5);
     sm.gfx.text(this.state.meta.guide.d, 0, -sm.gfx.height / 2.5 - 12);
   }
 };

@@ -335,7 +335,7 @@
         sm.ctx.textAlign = align ? align : 'center';
       },
 
-      text: function (msgs, x, y) {
+      text: function (msgs, x, y, rotation) {
         this._processTextConf();
         var currentColor = sm.ctx.fillStyle;
         var fontSize = sm.gfx.textConf.size;
@@ -346,11 +346,19 @@
         sm.ctx.beginPath();
         sm.gfx.setFillColor(this.textConf.color);
         if (msgs.forEach) {
+          sm.ctx.save();
+          sm.ctx.translate(x, y);
+          sm.ctx.rotate(rotation);
           msgs.forEach(function (msg, index) {
-            sm.ctx.fillText(msg, x, y + (index * fontSize))
-          })
+            sm.ctx.fillText(msg, 0, (index * fontSize));
+          });
+          sm.ctx.restore();
         } else {
-          sm.ctx.fillText(msgs, x, y)
+          sm.ctx.save();
+          sm.ctx.translate(x, y);
+          sm.ctx.rotate(rotation);
+          sm.ctx.fillText(msgs, 0, 0);
+          sm.ctx.restore();
         }
 
         sm.ctx.closePath();
@@ -459,7 +467,6 @@
       if (sm.activeProgram) {
         state = sm.activeProgram.state;
         meta = state.meta;
-
         if (!sm.conf.paused ) {
           sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
           sm.activeProgram.update(sm.time.delta);
@@ -469,9 +476,7 @@
           sm.gfx.text(true, 'SM-PAUSED', 0, 0);
         }
       }
-
       sm.gfx.postDraw();
-
       sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2 );
 
       // Render Log

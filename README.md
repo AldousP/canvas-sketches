@@ -19,19 +19,18 @@ Programs contain user-defined code which can render to the canvas via sm.gfx, a 
 for faster drawing, and sm.ctx, which exposes the raw 2D rendering context of the canvas. Programs may leverage
 other modules such as sm.sfx for sound rendering and sm.log for logging to the in-canvas debug console.
 
-A program is required to have, at minimum, a state property with a meta property defined on it. 
-The meta property should describe your program. This data can be leveraged by external DOM elements
-via sm.activeProgram.state.meta. 
+A simple program can be seen below.
 
 ```JavaScript
 var SampleProgram = function () {
+
+
   this.state = {
     meta : {
       name : 'A Simple Program',
       date : '01.01.70',
       description : "A demonstration of a program definition."
-    },
-    bgColor: '#22395e'
+    }
   };
   
   this.update = function (delta) {

@@ -12,7 +12,11 @@ var Nesting = function () {
     },
     inputTargets : ['root'],
     activeTarget : 0,
-    bgColor: '#360638',
+    systemStates : {
+      background : {
+        bgColor: '#360638'
+      }
+    },
     sampleVec: new Vector(0, 32)
   };
 

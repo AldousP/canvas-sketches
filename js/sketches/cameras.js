@@ -5,7 +5,11 @@ var Cameras = function () {
       date : '07.17.2017',
       description : 'Panning and zoom examples.'
     },
-    bgColor: '#c3667c',
+    systemStates : {
+      background : {
+        bgColor: '#c3667c'
+      }
+    },
     entityCountX : 6,
     entityCountY : 6
   };
@@ -45,7 +49,11 @@ var Cameras = function () {
         new Vector(48, 0),
         new Vector(-96, 0),
         new Vector(-96, -96),
-        new Vector(96, -96)
+        new Vector(96, -96),
+        new Vector(96, 48),
+        new Vector(-48, 48),
+        new Vector(-48, 0),
+        new Vector(0, 0)
       ])
     ], 'path'));
 

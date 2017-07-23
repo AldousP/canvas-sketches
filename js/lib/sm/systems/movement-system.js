@@ -2,10 +2,9 @@
 
 function MovementSystem(ID) {
 	this.ID = ID;
-	this.name = 'Movement';
-	
-	this.pre = function () {
+	this.name = 'movement';
 
+	this.pre = function () {
 	};
 
 	this.processEntity = function (entity, state, delta, entities) {
@@ -13,11 +12,11 @@ function MovementSystem(ID) {
     var rotVec = smx.movVec(entity);
 
     if (rotMod) {
-      this.fireAction(Actions.rotate(entity, rotMod * delta));
+      this.act('rotate', entity.ID, { amt: rotMod });
     }
 
-    if (rotVec) {
-      this.fireAction(Actions.move(entity, sclVec(cpyVec(rotVec), delta)));
+    if (rotVec && rotVec.len) {
+      this.act('move', entity.ID, { amt: sclVec(cpyVec(rotVec), delta) });
     }
 	};
 
@@ -25,7 +24,38 @@ function MovementSystem(ID) {
 
 	};
 
-  this.actions = {
+	this.listeners = {
+	  moveEntity : function ( event ) {
+    }
+  };
 
+  this.actions = {
+    /**
+     * @payload:
+     *   @vector amt: The amount the position of the entity will change by.
+     */
+    move : {
+      components: [ComponentType.position],
+      method: function ( components, payload ) {
+        var pos = components[ComponentType.position];
+        if (pos) {
+          addVecVec(pos.position, payload.amt);
+        }
+      }
+    },
+
+    /**
+     * @payload:
+     *   @float amt: The amount the rotation of the entity will change by in degrees.
+     */
+    rotate : {
+      components: [ComponentType.rotation],
+      method: function ( components, payload ) {
+        var rot = components[ComponentType.rotation];
+        if (rot) {
+          rot.rotation += payload.amt;
+        }
+      }
+    }
 	};
 }

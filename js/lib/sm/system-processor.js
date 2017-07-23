@@ -4,6 +4,7 @@ function SystemProcessor(handler) {
   this.systems = [];
   this.entityMapper = handler;
   this.tempArr = [];
+  this.systemNameList = [];
 
   this.entitiesForIDs = function (IDs) {
     this.tempArr.length = 0;
@@ -14,27 +15,35 @@ function SystemProcessor(handler) {
     return this.tempArr;
   };
 
-  this.fire = function (action) {
-    this.entityMapper.fireAction(action);
+  this.fireEvent = function (event) {
+    console.log('!')
   };
 
   this.processEntities = function (state, delta) {
+    if (state && !state.systemStates) {
+      state.systemStates = {};
+    }
+
+    var systemStates = state.systemStates;
     var entities = this.entityMapper.entities;
   	this.systems.forEach(function (system) {
+  	  if (!systemStates[system.name]) {
+  	    systemStates[system.name] = {};
+      }
+
   		if (system.pre) {
-        if (!system.pre) return;
-				system.pre(state);
+				system.pre(systemStates[system.name]);
 			}
 		});
 
   	var that = this;
     that.systems.forEach(function (system) {
-      system.fireAction = that.fire.bind(that);
+      system.fireEvent = that.fireEvent.bind(that);
       for (var i = 0; i < entities.length; i ++) {
         if (!system.processEntity) return;
         system.processEntity(
             entities[i],
-            state,
+            systemStates[system.name],
             delta,
             entities
         );
@@ -43,8 +52,7 @@ function SystemProcessor(handler) {
 
 		this.systems.forEach(function (system) {
 			if (system.post) {
-        if (!system.post) return;
-        system.post(state);
+        system.post(systemStates[system.name]);
 			}
 		});
 
@@ -53,10 +61,30 @@ function SystemProcessor(handler) {
 
   this.addSystem = function (system) {
     system.processor = this;
-  	if (system.type === SystemType.staticSystem) {
-			this.systems.push(system);
-		} else {
-      this.systems.push(system);
+
+    if (this.systemNameList.indexOf(system.name) !== -1) {
+      sm.log.error('Duplicate system name declaration! : ' +  system.name, 'sysproc');
     }
+
+    system.act = function (action, id, payload) {
+      var actions = Object.keys(system.actions);
+      actions.forEach(function ( actionName ) {
+        if (actionName === action) {
+          var actionInstance = system.actions[actionName];
+          var entity = system.processor.entityMapper.entities[id];
+          var components = {};
+          actionInstance.components.forEach(function ( component ) {
+            if (entity.components[component]) {
+              components[component] = entity.components[component];
+            }
+          });
+
+          actionInstance.method(components, payload);
+        }
+      });
+    };
+
+    this.systemNameList.push(system.name);
+    this.systems.push(system);
   };
 }

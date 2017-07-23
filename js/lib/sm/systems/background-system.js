@@ -2,7 +2,7 @@
 
 function BackgroundSystem(ID) {
 	this.ID = ID;
-	this.name = 'Background';
+	this.name = 'background';
 	this.type = SystemType.staticSystem;
 
 	this.pre = function (state) {

@@ -2,7 +2,7 @@
 
 function PhysicsSystem(ID) {
 	this.ID = ID;
-	this.name = 'Physics';
+	this.name = 'physics';
 	
 	this.pre = function () {
 

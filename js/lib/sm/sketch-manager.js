@@ -50,7 +50,7 @@
         active: false,
         logConsole: {
           logToScreen: true,
-          logToBrowserConsole: false,
+          logToBrowserConsole: true,
           textConf : {
             color: Color.white,
             size: 12,

@@ -13,7 +13,11 @@ var Clipping = function () {
     },
     inputTargets : ['triangle', 'top_left'],
     activeTarget : 1,
-    bgColor: '#625b64'
+    systemStates : {
+      background : {
+        bgColor: '#625b64'
+      }
+    }
   };
 
   this.root = {};

@@ -2,7 +2,7 @@
 
 function SequenceSystem(ID) {
 	this.ID = ID;
-	this.name = 'Sequencing';
+	this.name = 'sequencing';
 	
 	this.pre = function () {
 

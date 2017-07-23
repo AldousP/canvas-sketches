@@ -2,7 +2,7 @@
 
 function PathSystem(ID) {
 	this.ID = ID;
-	this.name = 'Path';
+	this.name = 'path';
 
 	this.pre = function () {
 

@@ -12,7 +12,7 @@ var smx = {
   movRot: function (entity) {
     var mov = entity.components[ComponentType.movement];
     if (mov) {
-      return mov.rotSpeed ? mov.rotSpeed : null;
+      return mov.rotSpeed ? (mov.radians ? mov.rotSpeed : mov.rotSpeed / DEG_RAD): null;
     } else {
       return null;
     }

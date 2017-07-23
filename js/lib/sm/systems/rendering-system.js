@@ -2,7 +2,7 @@
 
 function RenderingSystem(ID) {
   this.ID = ID;
-  this.name = 'Rendering';
+  this.name = 'rendering';
   this.tmpVecA = new Vector();
 
   this.processEntity = function (entity, state, delta, entities, recursion) {
@@ -48,7 +48,6 @@ function RenderingSystem(ID) {
     if (col) {
       sm.gfx.setStrokeColor(col);
     }
-
 
     if (clip) {
       sm.gfx.clipPoly(poly, state.renderData.positionSum, state.renderData.rotationSum);

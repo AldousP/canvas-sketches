@@ -6,7 +6,11 @@ var TextTests = function () {
       description : 'Examples of text rendering.'
     },
     inputTargets : ['root'],
-    bgColor: '#dd2a53',
+    systemStates : {
+      background : {
+        bgColor: '#dd2a53'
+      }
+    },
     sampleVec: new Vector(0, 32)
   };
 
@@ -134,7 +138,6 @@ var TextTests = function () {
     var root = this.entityMapper.createEntity([
       new RenderRoot(),
       new PositionComponent(0, 0),
-      new MovementComponent(new Vector(), 0),
       new RotationComponent(0)], 'root', [
           layer1,
           layer2

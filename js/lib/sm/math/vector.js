@@ -62,8 +62,8 @@ function rotVec(vec, rot) {
 
 function lerpVec(vecA, vecB, alpha) {
   return {
-    x: (vecB.x - vecA.x) * alpha,
-    y: (vecB.y - vecA.y) * alpha
+    x: vecA.x + (vecB.x - vecA.x) * alpha,
+    y: vecA.y + (vecB.y - vecA.y) * alpha
   }
 }
 

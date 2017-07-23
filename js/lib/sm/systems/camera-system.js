@@ -11,9 +11,21 @@ function CameraSystem(ID) {
   this.processEntity = function (entity, state, delta, entities) {
     var cam = smx.cam(entity);
     var path = smx.path(entity);
+    var ball = entity.components.ball;
 
-    if (cam && path) {
-      this.actions.updateCam(entity, path.pos)
+    if (ball) {
+      var pos = smx.pos(entity);
+      if (state.lastPathPos) {
+        setVecVec(pos, state.lastPathPos);
+      }
+    }
+
+    if (path) {
+      state.lastPathPos = path.pos;
+    }
+
+    if (cam) {
+      this.actions.updateCam(entity, state.lastPathPos);
     }
   };
 
@@ -28,7 +40,6 @@ function CameraSystem(ID) {
   this.actions = {
     updateCam: function (entity, position) {
       var cam = smx.cam(entity);
-
       cam.pos = cpyVec(position);
     }
   };

@@ -15,20 +15,20 @@ function PathSystem(ID) {
     if (path && seq) {
       var alpha = seq.pos;
       var ptLen = path.pts.length;
-      var adjAlpha = alpha * ptLen;
-      var ptA = path.pts[0];
-      var ptB = path.pts[1];
-      var subDiv = 1 / ptLen;
-      var rawIndex = Math.floor(adjAlpha);
-      var adjIndex = 0;
-
-      for (var i = 0; i < ptLen; i ++) {
-
+      var segmentCt = ptLen - 1;
+      var localAlpha = alpha * segmentCt;
+      var segmentIndex = Math.floor(localAlpha);
+      localAlpha -= segmentIndex;
+      if (segmentIndex > ptLen - 1) {
+        segmentIndex = ptLen - 1;
       }
 
+      var ptA = path.pts[segmentIndex];
+      var ptB = path.pts[segmentIndex + 1];
+
       if (ptA && ptB) {
-        var result = lerpVec(ptA, ptB, alpha);
-        // this.actions.updatePath(entity, new Vector(result.x, result.y));
+        var result = lerpVec(ptA, ptB, localAlpha);
+        this.actions.updatePath(entity, new Vector(result.x, result.y));
       }
     }
 	};

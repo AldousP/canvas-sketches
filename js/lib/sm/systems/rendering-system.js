@@ -64,7 +64,7 @@ function RenderingSystem(ID) {
     if (children) {
       if (cam) {
         sm.gfx.preDraw();
-        sm.ctx.translate(cam.pos.x, cam.pos.y);
+        sm.ctx.translate(-cam.pos.x, cam.pos.y);
       }
 
       for (var i = 0; i < children.length; i++) {

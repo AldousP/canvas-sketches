@@ -26,8 +26,8 @@ function generatePolygon(vertCount, radius, startingDegree, scaleX, scaleY) {
 }
 
 // Geometry Classes
-function Polygon() {
-  this.pts = [];
+function Polygon(pts) {
+  this.pts = pts ? pts : [];
 }
 
 var Align = {

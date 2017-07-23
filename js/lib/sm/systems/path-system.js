@@ -3,7 +3,7 @@
 function PathSystem(ID) {
 	this.ID = ID;
 	this.name = 'Path';
-	
+
 	this.pre = function () {
 
 	};
@@ -13,24 +13,22 @@ function PathSystem(ID) {
     var seq = smx.sequence(entity);
 
     if (path && seq) {
-      var ptCt = path.pts.length;
       var alpha = seq.pos;
-      var pathIndexA = Math.floor(ptCt * alpha);
-      var pathIndexB = pathIndexA + 1;
+      var ptLen = path.pts.length;
+      var adjAlpha = alpha * ptLen;
+      var ptA = path.pts[0];
+      var ptB = path.pts[1];
+      var subDiv = 1 / ptLen;
+      var rawIndex = Math.floor(adjAlpha);
+      var adjIndex = 0;
 
-      if (pathIndexB > ptCt) {
-        pathIndexB = pathIndexA - 1;
+      for (var i = 0; i < ptLen; i ++) {
+
       }
 
-      if (pathIndexB < 0) {
-        pathIndexB = 0;
-      }
-
-      var ptA = path.pts[pathIndexA];
-      var ptB = path.pts[pathIndexB];
-      if (ptB && ptA) {
-        var lerp = lerpVec(ptA, ptB, alpha);
-        this.actions.updatePath(entity, new Vector(lerp.x, lerp.y))
+      if (ptA && ptB) {
+        var result = lerpVec(ptA, ptB, alpha);
+        // this.actions.updatePath(entity, new Vector(result.x, result.y));
       }
     }
 	};

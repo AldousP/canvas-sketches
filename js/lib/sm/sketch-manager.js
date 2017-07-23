@@ -164,13 +164,13 @@
           console.error('No property of name [pts] found on polygon parameter.');
         } else {
           var firstPt = polygon.pts[0];
-          sm.ctx.moveTo(firstPt.x, firstPt.y);
+          sm.ctx.moveTo(firstPt.x, -firstPt.y);
           polygon.pts.forEach(function (pt) {
             if (pt !== firstPt) {
-              sm.ctx.lineTo(pt.x , pt.y);
+              sm.ctx.lineTo(pt.x , -pt.y);
             }
           });
-          sm.ctx.lineTo(firstPt.x, firstPt.y);
+          sm.ctx.lineTo(firstPt.x, -firstPt.y);
         }
         sm.ctx.closePath();
         fill ? sm.ctx.fill() : sm.ctx.stroke();

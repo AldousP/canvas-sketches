@@ -173,7 +173,10 @@
           sm.ctx.lineTo(firstPt.x, -firstPt.y);
         }
         sm.ctx.closePath();
-        fill ? sm.ctx.fill() : sm.ctx.stroke();
+        sm.ctx.stroke();
+        if (fill) {
+          sm.ctx.fill();
+        }
         sm.ctx.rotate(-rotation);
         sm.ctx.translate(-pos.x, pos.y);
       },

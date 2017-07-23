@@ -67,9 +67,10 @@ function ParentComponent(parentID) {
   this.parentID = parentID;
 }
 
-function ColorComponent(color) {
+function ColorComponent(colorA, colorB) {
   this.name = ComponentType.color;
-  this.color = color;
+  this.color = colorA;
+  this.colorB = colorB;
 }
 
 function ClipComponent() {

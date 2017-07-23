@@ -34,28 +34,40 @@ var Cameras = function () {
       }
     }
 
+    entities.push(this.entityMapper.createEntity([
+      new PathComponent([
+        new Vector(0, 0),
+        new Vector(0, 64),
+        new Vector(100, 86),
+        new Vector(100, 200)
+      ]),
+      new PositionComponent(0, 0),
+      new ColorComponent(Color.green, Color.red),
+      new PolygonComponent(new Polygon([
+        new Vector(0, 0),
+        new Vector(0, 96),
+        new Vector(48, 96),
+        new Vector(48, 48)
+      ]))
+    ], 'path'));
+
+    entities.push(this.entityMapper.createEntity([
+      new PositionComponent(0, 0),
+      new ColorComponent(Color.cyan),
+      new PolygonComponent(generatePolygon(32, 0))
+    ], 'path'));
+
+
     this.state.camera = this.entityMapper.createEntity([
       new RenderRoot(),
-      new PathComponent([
-          new Vector(0, 0),
-          new Vector(0, 64),
-          new Vector(100, 86),
-          new Vector(100, 200)
-      ]),
       new CameraComponent({
         pos: new Vector(0, 0),
         width: 128,
         height: 128,
         zoom: 1
       }),
-      new PolygonComponent(new Polygon([
-        new Vector(0, 0),
-        new Vector(0, 64),
-        new Vector(100, 86),
-        new Vector(100, 200)
-      ])),
-      // new PolygonComponent(generatePolygon(4, 128, Math.PI / 4,  3.75, 1.75)),
-      // new ClipComponent(),
+      new PolygonComponent(generatePolygon(4, 128, Math.PI / 4,  3.75, 1.75)),
+      new ClipComponent(),
       new SequenceComponent({
         length: 10,
         pos: 0

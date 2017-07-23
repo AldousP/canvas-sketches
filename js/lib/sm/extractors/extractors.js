@@ -47,6 +47,10 @@ var smx = {
     return entity.components[ComponentType.color] ? entity.components[ComponentType.color].color : null;
   },
 
+  colB: function (entity) {
+    return entity.components[ComponentType.color] && entity.components[ComponentType.color].colorB ? entity.components[ComponentType.color].colorB : null;
+  },
+
   poly: function (entity) {
     return entity.components[ComponentType.polygon] ? entity.components[ComponentType.polygon].polygon : null;
   },

@@ -24,6 +24,7 @@ function RenderingSystem(ID) {
     var poly = smx.poly(entity);
     var rot = smx.rot(entity);
     var col = smx.col(entity);
+    var colB = smx.colB(entity);
     var clip = smx.clip(entity);
     var children = smx.children(entity);
     var cam = smx.cam(entity);
@@ -89,7 +90,9 @@ function RenderingSystem(ID) {
     }
 
     if (poly && pos) {
-      sm.gfx.drawPolygon(poly, state.renderData.positionSum, false, state.renderData.rotationSum);
+      sm.gfx.setStrokeColor(col);
+      sm.gfx.setFillColor(colB);
+      sm.gfx.drawPolygon(poly, state.renderData.positionSum, colB, state.renderData.rotationSum);
     }
 
     if (pos) {

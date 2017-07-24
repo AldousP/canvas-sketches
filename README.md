@@ -1,11 +1,11 @@
 # Sketch-Manager 
-***
 
 ## Overview
 Library for rendering to the canvas with some generally sense-making assumptions. Allows users to declare program files which adhere to a certain API exposing a render loop, input polling, entity component system, event management and various apis for
 math, sound, polygon manipulation, math, projection, easing and clipping.
 
 To initialize sm, run ```sm.init```. sm will bind to the provided canvas target and renders the contents of its idle console or the active program. 
+
 ```JavaScript
 /*
  * Begins sm and renders output to the specified <canvas> element.
@@ -17,6 +17,8 @@ sm.init('canvas-id');
  */
 sm.loadProgram(new SampleProgram());
 ```
+
+For API and further examples, refer to the [WIKI](https://github.com/AldousP/canvas-sketches/wiki)
 ## Bare Bones Program (No ECS usage)
 
 ```JavaScript

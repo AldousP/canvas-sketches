@@ -50,38 +50,9 @@ function EntityMapper() {
     }
     this.injectComponents(parent, [childrenComponent]);
   };
-  
-  this.fireAction = function (action) {
-    this.actions.push(action);
-  };
+
 
   this.logEntities = function () {
     console.log(JSON.stringify(this.entities, null, '\t'));
   };
-  
-  this.processActions = function (delta) {
-    while (this.actions.length) {
-      var action = this.actions.shift();
-      if (action) {
-        var entity = this.entities[action.entityID];
-        var srcComp = entity.components[action.srcComp];
-        var result = action.exec(srcComp, action.params, delta);
-        var keys = Object.keys(result);
-        keys.forEach(function (key) {
-          srcComp[key] = result[key];
-        });
-
-        this.actionHistory.push({
-          timestamp : new Date().getTime(),
-          name : action.name,
-          target : action.entityID,
-          result : result
-        });
-
-        if (this.actionHistory.length > this.actionHistoryLength) {
-          this.actionHistory.shift();
-        }
-      }
-    }
-  }
 }

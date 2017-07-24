@@ -24,12 +24,19 @@ function MovementSystem(ID) {
 
 	};
 
+	var that = this;
 	this.listeners = {
 	  programStarted: function (payload) {
 	    console.log('!');
-      console.log(payload);
     },
-	  moveEntity : function ( event ) {
+    /**
+     *
+     * @param payload
+     *    @int entityID: target entity.
+     *    @Vector amt: amount expressed in vector to move the target entity by.
+     */
+	  moveEntity : function ( payload ) {
+      that.act('move', payload.entityID, { amt: payload.amt });
     }
   };
 

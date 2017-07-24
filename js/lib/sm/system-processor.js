@@ -50,8 +50,6 @@ function SystemProcessor(handler) {
         system.post(systemStates[system.name]);
 			}
 		});
-
-		this.entityMapper.processActions(delta);
   };
 
   this.addSystem = function (system) {
@@ -69,7 +67,7 @@ function SystemProcessor(handler) {
           var entity = system.processor.entityMapper.entities[id];
           var components = {};
           actionInstance.components.forEach(function ( component ) {
-            if (entity.components[component]) {
+            if (entity.components && entity.components[component]) {
               components[component] = entity.components[component];
             }
           });

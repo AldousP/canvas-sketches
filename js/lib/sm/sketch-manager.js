@@ -107,6 +107,7 @@
     input: {
       fire: function (button) {
         this.state[button] = true;
+        sm.activeProgram.fireEvent('input_' + button);
       },
       update: function () {
         this.state = {};
@@ -437,7 +438,7 @@
       program.systemProcessor = new SystemProcessor(program.entityMapper);
 
       program.fireEvent = function (event, payload) {
-        program.systemProcessor.fireEvent()
+        program.systemProcessor.fireEvent(event, payload);
       };
 
       try {

@@ -94,6 +94,26 @@ var Clipping = function () {
     this.systemProcessor.addSystem(new MovementSystem());
     this.systemProcessor.addSystem(new RenderingSystem());
     this.systemProcessor.addSystem(new InputSystem());
+
+    var that = this;
+    this.systemProcessor.addSystem({
+      name: 'app-cameras',
+
+      listeners : {
+        input_left: function () {
+          that.fireEvent('moveEntity', { entityID : that.state.activeTarget, amt : new Vector(-5, 0) });
+        },
+        input_right: function () {
+          that.fireEvent('moveEntity', { entityID : that.state.activeTarget, amt : new Vector(5, 0) });
+        },
+        input_up: function () {
+          that.fireEvent('moveEntity', { entityID : that.state.activeTarget, amt : new Vector(0, 5) });
+        },
+        input_down: function () {
+          that.fireEvent('moveEntity', { entityID : that.state.activeTarget, amt : new Vector(0, -5) });
+        }
+      }
+    });
   };
 
   this.update = function (delta) {

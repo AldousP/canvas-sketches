@@ -1,7 +1,7 @@
 # Sketch-Manager 
 
 ## Overview
-Library for rendering to the canvas with some generally sense-making assumptions. Allows users to declare program files which adhere to a certain API exposing a render loop, input polling, entity component system, event management and various apis for
+Library for rendering to the canvas with some generally sense-making assumptions. Allows users to declare program files which adhere to an API exposing a render loop, input polling, entity component system, event management and other APIs for
 math, sound, polygon manipulation, math, projection, easing and clipping.
 
 To initialize sm, run ```sm.init```. sm will bind to the provided canvas target and renders the contents of its idle console or the active program. 

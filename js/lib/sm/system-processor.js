@@ -3,20 +3,15 @@
 function SystemProcessor(handler) {
   this.systems = [];
   this.entityMapper = handler;
-  this.tempArr = [];
   this.systemNameList = [];
 
-  this.entitiesForIDs = function (IDs) {
-    this.tempArr.length = 0;
-    var that = this;
-    IDs.forEach(function (ID) {
-      that.tempArr.push(that.entityMapper.entities[ID]);
-    });
-    return this.tempArr;
-  };
-
-  this.fireEvent = function (event) {
-    console.log('!')
+  this.fireEvent = function (event, payload) {
+    this.systems.forEach(function (system) {
+      var listeners = system.listeners;
+      if (listeners && listeners[event]) {
+        listeners[event](payload);
+      }
+    })
   };
 
   this.processEntities = function (state, delta) {

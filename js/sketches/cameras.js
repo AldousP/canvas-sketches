@@ -21,6 +21,12 @@ var Cameras = function () {
     this.systemProcessor.addSystem(new SequenceSystem());
     this.systemProcessor.addSystem(new CameraSystem());
     this.systemProcessor.addSystem(new RenderingSystem());
+    this.systemProcessor.addSystem({
+      name: 'app-cameras',
+      processEntity: function (entity, state, delta, entities) {
+
+      }
+    });
 
     var entities = [];
     var offsetX = sm.gfx.width / 6;
@@ -75,13 +81,16 @@ var Cameras = function () {
       new RenderRoot()
     ], 'root', entities);
 
+    this.fireEvent('programStarted', { bullshit: 'data' });
   };
-  
+
   this.onResize = function (isMobile) {
 
   };
 
   this.update = function (delta) {
     this.systemProcessor.processEntities(this.state, delta);
+
+
   }
 };

@@ -116,19 +116,19 @@
     log: {
       notify: function (msg, context) {
         var date = new Date();
-        var log = this.timestamp() + '[SM-Notify][' + (context ? context : 'root') + ']: ' + msg;
+        var log = '[SM-Notify][' + (context ? context : 'root') + ']: ' + msg;
         if (sm.conf.debug.logConsole.logToBrowserConsole) {
           console.log(log);
         }
-        sm.logs.push(log);
+        sm.logs.push(this.timestamp() + log);
       },
 
       error: function (msg, context) {
-        var log = this.timestamp() + '[SM-Error][' + (context ? context : 'root') + ']: ' + msg;
+        var log = '[SM-Error][' + (context ? context : 'root') + ']: ' + msg;
         if (sm.conf.debug.logConsole.logToBrowserConsole) {
           console.error(log);
         }
-        sm.logs.push(log);
+        sm.logs.push(this.timestamp() + log);
       },
 
       timestamp: function () {
@@ -435,6 +435,11 @@
       sm.log.notify('Loading Program: ' + meta.name + '...', sm.context);
       program.entityMapper = new EntityMapper();
       program.systemProcessor = new SystemProcessor(program.entityMapper);
+
+      program.fireEvent = function (event, payload) {
+        program.systemProcessor.fireEvent()
+      };
+
       try {
         program.setup();
       } catch (e) {
@@ -442,6 +447,7 @@
         sm.log.error(e);
         return;
       }
+
       sm.activeProgram = program;
       sm.log.notify('Starting...', meta.name);
       document.body.dispatchEvent(new CustomEvent('smProgramLoaded',

@@ -25,6 +25,10 @@ function MovementSystem(ID) {
 	};
 
 	this.listeners = {
+	  programStarted: function (payload) {
+	    console.log('!');
+      console.log(payload);
+    },
 	  moveEntity : function ( event ) {
     }
   };

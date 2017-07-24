@@ -76,5 +76,7 @@
   };
 
   sm.init('canvas');
+
+  loadCameras();
 }());
 

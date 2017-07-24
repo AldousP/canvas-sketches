@@ -6,6 +6,9 @@
 
 (function () {
   window.sm = {
+    programDescription: function () {
+      return sm.activeProgram ? sm.activeProgram.state.meta.description : 'No Program Loaded';
+    },
     toggleDebug : function () {
       sm.conf.debug.active = !sm.conf.debug.active;
     },
@@ -32,6 +35,10 @@
         sm.canvas.width = sm.canvas.height;
       } else {
         sm.canvas.width = sm.canvas.height * 2;
+      }
+
+      if (sm.activeProgram && sm.activeProgram.onResize) {
+        sm.activeProgram.onResize(sm.conf.mobile.is_mobile);
       }
     },
     stop : function() {
@@ -462,7 +469,7 @@
 
     appLoop: function () {
       sm.time.update();
-      sm.gfx.clear();
+      sm.gfx.clear(Color.dark_blue);
 
       sm.gfx.preDraw();
       var state;
@@ -499,7 +506,7 @@
         sm.gfx.text(
             sm.logs,
             (-viewPortW / 2) + offsetW,
-            ((viewPortH / 2) - offsetH)
+            ((viewPortH / 2) - offsetH * 2)
         );
         sm.logs.reverse();
       }

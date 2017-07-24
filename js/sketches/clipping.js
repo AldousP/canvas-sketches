@@ -90,10 +90,10 @@ var Clipping = function () {
     this.entityMapper.bindToParent(left, children);
     this.entityMapper.bindToParent(right, children);
 
-    this.systemProcessor.addSystem(new BackgroundSystem("a"));
-    this.systemProcessor.addSystem(new MovementSystem("b"));
-    this.systemProcessor.addSystem(new RenderingSystem("c"));
-    this.systemProcessor.addSystem(new InputSystem("d"));
+    this.systemProcessor.addSystem(new BackgroundSystem());
+    this.systemProcessor.addSystem(new MovementSystem());
+    this.systemProcessor.addSystem(new RenderingSystem());
+    this.systemProcessor.addSystem(new InputSystem());
   };
 
   this.update = function (delta) {

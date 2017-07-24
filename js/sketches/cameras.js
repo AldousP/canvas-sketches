@@ -15,12 +15,12 @@ var Cameras = function () {
   };
 
   this.setup = function () {
-    this.systemProcessor.addSystem(new BackgroundSystem("a"));
-    this.systemProcessor.addSystem(new MovementSystem("b"));
-    this.systemProcessor.addSystem(new PathSystem("c"));
-    this.systemProcessor.addSystem(new SequenceSystem("d"));
-    this.systemProcessor.addSystem(new CameraSystem("e"));
-    this.systemProcessor.addSystem(new RenderingSystem("f"));
+    this.systemProcessor.addSystem(new BackgroundSystem());
+    this.systemProcessor.addSystem(new MovementSystem());
+    this.systemProcessor.addSystem(new PathSystem());
+    this.systemProcessor.addSystem(new SequenceSystem());
+    this.systemProcessor.addSystem(new CameraSystem());
+    this.systemProcessor.addSystem(new RenderingSystem());
 
     var entities = [];
     var offsetX = sm.gfx.width / 6;
@@ -74,6 +74,10 @@ var Cameras = function () {
       new InputComponent(),
       new RenderRoot()
     ], 'root', entities);
+
+  };
+  
+  this.onResize = function (isMobile) {
 
   };
 

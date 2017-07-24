@@ -143,10 +143,10 @@ var TextTests = function () {
           layer2
     ]);
 
-    this.systemProcessor.addSystem(new BackgroundSystem("a"));
-    this.systemProcessor.addSystem(new MovementSystem("b"));
-    this.systemProcessor.addSystem(new RenderingSystem("c"));
-    this.systemProcessor.addSystem(new InputSystem("e"));
+    this.systemProcessor.addSystem(new BackgroundSystem());
+    this.systemProcessor.addSystem(new MovementSystem());
+    this.systemProcessor.addSystem(new RenderingSystem());
+    this.systemProcessor.addSystem(new InputSystem());
   };
 
   this.update = function (delta) {

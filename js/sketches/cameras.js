@@ -115,7 +115,13 @@ var Cameras = function () {
   };
 
   this.onResize = function (isMobile) {
-
+    if (isMobile) {
+      this.entityMapper.entities[this.state.rootID].components[ComponentType.polygon]
+          .polygon = generatePolygon(4, 128, Math.PI / 4,  1.75, 1.75);
+    } else {
+      this.entityMapper.entities[this.state.rootID].components[ComponentType.polygon]
+          .polygon = generatePolygon(4, 128, Math.PI / 4,  3.75, 1.75);
+    }
   };
 
   this.update = function (delta) {

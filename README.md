@@ -1,7 +1,11 @@
 # Sketch-Manager 
+***
 
-Demos of rendering to a canvas mounted to a Sketch Manager (SM) context.
+## Overview
+Library for rendering to the canvas with some generally sense-making assumptions. Allows users to declare program files which adhere to a certain API exposing a render loop, input polling, entity component system, event management and various apis for
+math, sound, polygon manipulation, math, projection, easing and clipping.
 
+To initialize sm, run ```sm.init```. sm will bind to the provided canvas target and renders the contents of its idle console or the active program. 
 ```JavaScript
 /*
  * Begins sm and renders output to the specified <canvas> element.
@@ -13,18 +17,10 @@ sm.init('canvas-id');
  */
 sm.loadProgram(new SampleProgram());
 ```
-
-## Programs
-Programs contain user-defined code which can render to the canvas via sm.gfx, a series of utilities
-for faster drawing, and sm.ctx, which exposes the raw 2D rendering context of the canvas. Programs may leverage
-other modules such as sm.sfx for sound rendering and sm.log for logging to the in-canvas debug console.
-
-A simple program can be seen below.
+## Bare Bones Program (No ECS usage)
 
 ```JavaScript
 var SampleProgram = function () {
-
-
   this.state = {
     meta : {
       name : 'A Simple Program',
@@ -44,7 +40,7 @@ var SampleProgram = function () {
 
 ***
 
-## Example Visualized
+## Boxes Program (with output.)
 
 ```javascript
 var Boxes = function () {
@@ -64,11 +60,11 @@ var Boxes = function () {
   };
 
   this.setup = function () {
-    this.systemProcessor.addSystem(new BackgroundSystem());
-    this.systemProcessor.addSystem(new MovementSystem());
-    this.systemProcessor.addSystem(new PathSystem());
-    this.systemProcessor.addSystem(new SequenceSystem());
-    this.systemProcessor.addSystem(new RenderingSystem());
+    this.systemProcessor.addSystem(new BackgroundSystem()); // Render the Background color declared on the state
+    this.systemProcessor.addSystem(new MovementSystem());   // Updates pos of entities with a Movement component.
+    this.systemProcessor.addSystem(new PathSystem());       // Charts progress along line path. Mapped here to sequence.
+    this.systemProcessor.addSystem(new SequenceSystem());   // Updates oscilating sequence components.
+    this.systemProcessor.addSystem(new RenderingSystem());  // Renders scene. Starting with entity with RenderRoot component. 
 
     var entities = [];
     var offsetX = sm.gfx.width / 6;
@@ -124,7 +120,7 @@ var Boxes = function () {
   };
   
   this.onResize = function (isMobile) {
-
+    // Life-cycle method for resizing your top-level entity based on device size. 
   };
 
   this.update = function (delta) {

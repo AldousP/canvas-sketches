@@ -337,12 +337,14 @@
 
       _processTextConf : function () {
         var styleString =
-            sm.gfx.textConf.size + 'px ' +
             sm.gfx.textConf.style + ' ' +
             'normal ' +                         // Font-Variant
+            'normal ' +                         // Font-Variant
+            sm.gfx.textConf.size + 'px ' +
             sm.gfx.textConf.font;
-
         sm.ctx.font = styleString;
+
+        console.log(styleString);
         var align = sm.gfx.textConf.align;
         sm.ctx.textAlign = align ? align : 'center';
       },
@@ -355,7 +357,6 @@
         y = y ? -y : 0;
         x = x ? x : 0;
 
-        sm.ctx.beginPath();
         sm.gfx.setFillColor(this.textConf.color);
         if (msgs.forEach) {
           sm.ctx.save();
@@ -373,7 +374,6 @@
           sm.ctx.restore();
         }
 
-        sm.ctx.closePath();
         if (currentColor) {
           sm.gfx.setFillColor(currentColor);
         }

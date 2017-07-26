@@ -31,11 +31,18 @@ var Animation = function () {
       new ColorComponent(Color.black),
       new PositionComponent(0, 0),
       new RotationComponent(0),
-      new AnimationComponent('blink/blink.json'),
-      new PolygonComponent(generatePolygon(4, 64, Math.PI / 4))
+      new AnimationComponent('blink/blink.json')
+    ], 'root', entities);
+
+    var floor = this.entityMapper.createEntity([
+      new ColorComponent(Color.black, "#444444"),
+      new PositionComponent(0, -90),
+      new RotationComponent(0),
+      new PolygonComponent(generatePolygon(4, 64, Math.PI / 4, 10, 1))
     ], 'root', entities);
 
     entities.push(blink);
+    entities.push(floor);
 
     var root = this.entityMapper.createEntity([
       new ColorComponent(Color.white),

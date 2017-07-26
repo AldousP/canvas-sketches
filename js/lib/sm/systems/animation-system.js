@@ -9,7 +9,7 @@ function AnimationSystem(ID) {
     if (anim) {
       anim.progress += delta;
       if (anim.progress > anim.length) {
-        anim.progress = anim.length;
+        anim.progress = .1;
       }
     }
   };

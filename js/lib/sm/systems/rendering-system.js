@@ -74,9 +74,9 @@ function RenderingSystem(ID) {
       sm.gfx.setStrokeColor(col);
     }
 
-    if (clip && false) {
+    if (clip) {
       sm.gfx.clipPoly(poly, state.renderData.positionSum, state.renderData.rotationSum);
-      sm.gfx.setFillColor(state.bgColor);
+      sm.gfx.setFillColor(colB);
       sm.gfx.drawPolygon(poly, state.renderData.positionSum, true, state.renderData.rotationSum);
       if (sm.conf.debug.active && false) {
         sm.gfx.setStrokeColor(Color.white);
@@ -103,7 +103,6 @@ function RenderingSystem(ID) {
       }
     }
 
-
     if (anim && pos) {
       if (!anim.loaded) {
         this.loadData(anim, state);
@@ -115,23 +114,21 @@ function RenderingSystem(ID) {
         if (frames) {
           var activeFrame = Math.floor(anim.frames.length * anim.progress);
           var frame = frames[activeFrame - 1];
-          sm.gfx.text(sm.utils.formatters.float_two_pt(anim.progress), 0, 0);
-
           if (frame) {
             frame = frame.frame;
+            sm.ctx.beginPath();
             sm.gfx.preDraw();
-            sm.gfx.setStrokeColor(Color.pink);
             sm.ctx.translate(-frame.w / 2, -frame.h / 2);
-            sm.ctx.translate(frame.x, frame.y);
-            sm.gfx.setTextConf({
-              font: 'Serif',
-              color: Color.green,
-              size: 24
-            });
-            sm.gfx.drawRect(0, 0, frame.w, frame.h, false, 0, true);
+            if (sm.conf.debug.active) {
+              sm.gfx.text(sm.utils.formatters.float_two_pt(anim.progress), 0, 0);
+            }
+
+            sm.ctx.translate(-frame.x, -frame.y);
+            sm.ctx.rect(frame.x, frame.y, frame.w, frame.h);
             sm.ctx.clip();
             sm.gfx.drawImage(image, pos.x, pos.y);
             sm.gfx.postDraw();
+            sm.ctx.closePath();
           }
         }
       }
@@ -154,7 +151,7 @@ function RenderingSystem(ID) {
 
     if (poly && pos) {
       sm.gfx.setStrokeColor(col);
-      sm.gfx.setFillColor(colB);
+      sm.gfx.setStrokeColor(colB);
       sm.gfx.drawPolygon(poly, state.renderData.positionSum, colB, state.renderData.rotationSum);
     }
 

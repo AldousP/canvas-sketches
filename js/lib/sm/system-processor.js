@@ -77,7 +77,9 @@ function SystemProcessor(handler, rootState) {
             }
           });
 
-          actionInstance.method(components, payload);
+          if (Object.keys(components).length > 0) {
+            actionInstance.method(components, payload);
+          }
         }
       });
     };

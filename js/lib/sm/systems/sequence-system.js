@@ -16,6 +16,7 @@ function SequenceSystem(ID) {
       if (newPosition < 0 || newPosition > 1) {
         newPosition = seq.dir < 0 ? 0 : 1;
         seq.dir = -1 * (seq.dir);
+        this.fireEvent(seq.onComplete);
       }
       this.actions.updateSequence(entity, newPosition);
     }

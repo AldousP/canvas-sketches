@@ -124,15 +124,21 @@ function RenderingSystem(ID) {
             frame = frame.frame;
             sm.ctx.beginPath();
             sm.gfx.preDraw();
-            sm.ctx.translate(-frame.w / 2, -frame.h / 2);
-            if (sm.conf.debug.active) {
-              sm.gfx.text(sm.utils.formatters.float_two_pt(anim.progress), 0, 0);
-            }
-
-            sm.ctx.translate(-frame.x, -frame.y);
-            sm.ctx.rect(frame.x, frame.y, frame.w, frame.h);
+            sm.gfx.setStrokeColor(Color.green);
+            sm.ctx.rect(
+                pos.x - frame.w / 2,
+                -pos.y - frame.h / 2,
+                frame.w,
+                frame.h
+            );
             sm.ctx.clip();
-            sm.gfx.drawImage(image, pos.x, pos.y);
+            sm.gfx.drawImage(
+                image,
+                pos.x - frame.x - frame.w / 2,
+                -pos.y - frame.y - frame.h / 2,
+                frame.w, frame.h,
+                anim.flipped
+            );
             sm.gfx.postDraw();
             sm.ctx.closePath();
           }

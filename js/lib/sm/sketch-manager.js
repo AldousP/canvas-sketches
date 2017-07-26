@@ -211,9 +211,15 @@
         sm.ctx.translate(-pos.x, pos.y);
       },
 
-      drawImage: function (image, x, y, w, h) {
+      drawImage: function (image, x, y, w, h, flipped) {
         if (image) {
-          sm.ctx.drawImage(image, x, y);
+          if (flipped) {
+            sm.ctx.translate(x + image.width, 0);
+            sm.ctx.scale(-1,1);
+            sm.ctx.drawImage(image, 0, y);
+          } else {
+            sm.ctx.drawImage(image, x, y);
+          }
         }
       },
 
@@ -249,7 +255,7 @@
         }
         var transX = adj.x + (w / 2);
         var transY = adj.y + (h / 2);
-        sm.ctx.translate(transX, transY);
+        sm.ctx.translate(transX, -transY);
         sm.ctx.rotate(rotation / DEG_RAD);
         sm.ctx.rect(-(w / 2), -(h / 2), w, h);
         if (fill) {
@@ -258,7 +264,7 @@
         sm.ctx.stroke();
         sm.ctx.closePath();
         sm.ctx.rotate(- (rotation / DEG_RAD));
-        sm.ctx.translate(-transX, -transY);
+        sm.ctx.translate(-transX, transY);
       },
 
       drawRectVec: function (vec, w, h, fill, rotation) {
@@ -343,8 +349,6 @@
             sm.gfx.textConf.size + 'px ' +
             sm.gfx.textConf.font;
         sm.ctx.font = styleString;
-
-        console.log(styleString);
         var align = sm.gfx.textConf.align;
         sm.ctx.textAlign = align ? align : 'center';
       },

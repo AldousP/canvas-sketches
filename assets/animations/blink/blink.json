@@ -202,10 +202,10 @@
 }],
 "meta": {
 	"app": "Adobe Animate",
-	"version": "15.1.1.13",
+	"version": "16.5.1.104",
 	"image": "blink.png",
 	"format": "RGBA8888",
-	"size": {"w":128,"h":256},
+	"size": {"w":87,"h":256},
 	"scale": "1"
 }
 }

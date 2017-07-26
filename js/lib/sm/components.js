@@ -104,7 +104,8 @@ function SequenceComponent(conf) {
   this.conf = conf ? conf : {
     length: 5,
     pos: 0,
-    dir : 1
+    dir : 1,
+    onComplete: ''
   };
 
   if (!conf.dir) {
@@ -118,9 +119,11 @@ function PathComponent(pts) {
   this.pos = new Vector();
 }
 
-function AnimationComponent (handle) {
+function AnimationComponent (handle, length, width, height) {
   this.name = ComponentType.animation;
   this.handle = handle;
-  this.length = 1;
+  this.length = length ? length : 1;
   this.progress = 0;
+  this.width = width;
+  this.height = height;
 }

@@ -13,4 +13,20 @@ function AnimationSystem(ID) {
       }
     }
   };
+
+  var that = this;
+  this.listeners = {
+    setFlip: function (payload) {
+      that.act('setAnimationFlip', payload.entityID, payload);
+    }
+  };
+
+  this.actions = {
+    setAnimationFlip : {
+      components: [ComponentType.animation],
+      method: function ( components, payload ) {
+        components[ComponentType.animation].flipped = payload.flipped;
+      }
+    }
+  };
 }

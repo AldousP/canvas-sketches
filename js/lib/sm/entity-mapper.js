@@ -41,7 +41,10 @@ function EntityMapper() {
   };
 	
 	this.bindToParent = function (parent, children) {
-	  var childrenComponent = new ChildrenComponent();
+	  var childrenComponent = parent.components[ComponentType.children];
+	  if (!childrenComponent) {
+	    childrenComponent = new ChildrenComponent();
+    }
 	  var parentComponent = new ParentComponent(parent.ID);
 	  for (var i = 0; i < children.length; i ++) {
       var child = children[i];

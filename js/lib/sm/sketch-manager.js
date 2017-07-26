@@ -447,7 +447,17 @@
       };
 
       try {
-        program.setup();
+        var sceneFile = state.sceneFile;
+        if (sceneFile) {
+          fetch(sceneFile)
+          .then(function (resp) { return resp.json() })
+          .then(function (data) {
+            program.entityMapper.entities = data;
+            program.setup();
+          });
+        } else {
+          program.setup();
+        }
       } catch (e) {
         sm.log.error('Error loading program: ' + meta.name);
         sm.log.error(e);

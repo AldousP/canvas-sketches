@@ -40,13 +40,14 @@ function SystemProcessor(handler, rootState) {
     that.systems.forEach(function (system) {
       system.fireEvent = that.fireEvent.bind(that);
       for (var i = 0; i < entities.length; i ++) {
-        if (!system.processEntity) return;
-        system.processEntity(
-            entities[i],
-            systemStates[system.name],
-            delta,
-            entities
-        );
+        if (system.processEntity) {
+          system.processEntity(
+              entities[i],
+              systemStates[system.name],
+              delta,
+              entities
+          );
+        }
       }
     });
 

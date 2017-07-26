@@ -12,7 +12,7 @@ function MovementSystem(ID) {
     var rotVec = smx.movVec(entity);
 
     if (rotMod) {
-      this.act('rotate', entity.ID, { amt: rotMod });
+      this.act('rotate', entity.ID, { amt: rotMod * DEG_RAD * delta });
     }
 
     if (rotVec && rotVec.len) {

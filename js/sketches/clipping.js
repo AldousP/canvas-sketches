@@ -117,7 +117,7 @@ var Clipping = function () {
   };
 
   this.update = function (delta) {
-    this.systemProcessor.processEntities(this.state, delta);
+    this.systemProcessor.processEntities(delta);
     sm.gfx.text("Use WASD to move and left & right to rotate.", 0, sm.gfx.height / 3);
 
     sm.gfx.setTextConf({

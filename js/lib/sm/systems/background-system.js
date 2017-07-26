@@ -3,7 +3,6 @@
 function BackgroundSystem(ID) {
 	this.ID = ID;
 	this.name = 'background';
-	this.type = SystemType.staticSystem;
 
 	this.pre = function (state) {
 		sm.gfx.clear(state.bgColor);

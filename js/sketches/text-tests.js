@@ -76,7 +76,7 @@ var TextTests = function () {
     var textPaneE = this.entityMapper.createEntity([
       new PositionComponent(200, 64),
       new RotationComponent(0),
-      new MovementComponent(new Vector(0, 0), 32),
+      new MovementComponent(new Vector(0, 0), 64),
       new TextComponent([
         'Rotated Text',
         'Great Value!'
@@ -150,6 +150,6 @@ var TextTests = function () {
   };
 
   this.update = function (delta) {
-    this.systemProcessor.processEntities(this.state, delta);
+    this.systemProcessor.processEntities(delta);
   }
 };

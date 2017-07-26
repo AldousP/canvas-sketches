@@ -94,7 +94,7 @@ var Nesting = function () {
   };
 
   this.update = function (delta) {
-    this.systemProcessor.processEntities(this.state, delta);
+    this.systemProcessor.processEntities(delta);
     sm.gfx.setFillColor(Color.white);
     sm.gfx.setTextConf({
       color: Color.white,

@@ -69,5 +69,9 @@ var smx = {
 
   path: function (entity) {
     return entity.components[ComponentType.path];
+  },
+
+  anim: function (entity) {
+    return entity.components[ComponentType.animation];
   }
 };

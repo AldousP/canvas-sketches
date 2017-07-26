@@ -75,8 +75,12 @@
     sm.loadProgram(new TextTests());
   };
 
+  window.loadAnimation = function () {
+    sm.loadProgram(new Animation());
+  };
+
   sm.init('canvas');
 
-  loadCameras();
+  loadAnimation();
 }());
 

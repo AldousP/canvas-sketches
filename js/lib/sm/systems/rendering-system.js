@@ -3,7 +3,31 @@
 function RenderingSystem(ID) {
   this.ID = ID;
   this.name = 'rendering';
-  this.tmpVecA = new Vector();
+
+  this.init = function (state) {
+    state.sheetCache = {};
+  };
+
+  this.loadData = function (anim, state) {
+    anim.loaded = true;
+    var handle = anim.handle;
+    var strippedHandle = (handle.substring(handle.lastIndexOf('/') + 1, handle.lastIndexOf('.')));
+    anim.imgHandle = strippedHandle;
+    if (!state.sheetCache[strippedHandle]) {
+      var assetLocation = state.assets + handle;
+      var rootLoc = assetLocation.substring(0, assetLocation.lastIndexOf('/'));
+      fetch(assetLocation).then(function (resp) {return resp.json()})
+      .then( function (data) {
+        var imgAsset = rootLoc + '/' + data.meta.image;
+        anim.frames = data.frames;
+        var img = new Image();
+        img.src = imgAsset;
+        img.onload = function () {
+          state.sheetCache[strippedHandle] = img;
+        }
+      })
+    }
+  };
 
   this.processEntity = function (entity, state, delta, entities, recursion) {
     var renderRoot = smx.renderRoot(entity);
@@ -29,6 +53,7 @@ function RenderingSystem(ID) {
     var children = smx.children(entity);
     var cam = smx.cam(entity);
     var text = smx.text(entity);
+    var anim = smx.anim(entity);
 
     var priorPos = cpyVec(state.renderData.positionSum);
     var priorRot = state.renderData.rotationSum;
@@ -49,7 +74,7 @@ function RenderingSystem(ID) {
       sm.gfx.setStrokeColor(col);
     }
 
-    if (clip) {
+    if (clip && false) {
       sm.gfx.clipPoly(poly, state.renderData.positionSum, state.renderData.rotationSum);
       sm.gfx.setFillColor(state.bgColor);
       sm.gfx.drawPolygon(poly, state.renderData.positionSum, true, state.renderData.rotationSum);
@@ -75,6 +100,40 @@ function RenderingSystem(ID) {
         sm.gfx.preDraw();
         this.processEntity(entities[children[i]], state, delta, entities, true);
         sm.gfx.postDraw();
+      }
+    }
+
+
+    if (anim && pos) {
+      if (!anim.loaded) {
+        this.loadData(anim, state);
+      }
+
+      if (anim.imgHandle) {
+        var image = state.sheetCache[anim.imgHandle];
+        var frames = anim.frames;
+        if (frames) {
+          var activeFrame = Math.floor(anim.frames.length * anim.progress);
+          var frame = frames[activeFrame - 1];
+          sm.gfx.text(sm.utils.formatters.float_two_pt(anim.progress), 0, 0);
+
+          if (frame) {
+            frame = frame.frame;
+            sm.gfx.preDraw();
+            sm.gfx.setStrokeColor(Color.pink);
+            sm.ctx.translate(-frame.w / 2, -frame.h / 2);
+            sm.ctx.translate(frame.x, frame.y);
+            sm.gfx.setTextConf({
+              font: 'Serif',
+              color: Color.green,
+              size: 24
+            });
+            sm.gfx.drawRect(0, 0, frame.w, frame.h, false, 0, true);
+            sm.ctx.clip();
+            sm.gfx.drawImage(image, pos.x, pos.y);
+            sm.gfx.postDraw();
+          }
+        }
       }
     }
 

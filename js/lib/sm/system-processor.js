@@ -1,9 +1,13 @@
 'use strict';
 
-function SystemProcessor(handler) {
+function SystemProcessor(handler, rootState) {
+  if (!rootState) sm.log.error('No rootState provided. ', 'sysproc');
+  if (!handler) sm.log.error('No handler provided. ', 'sysproc');
+
   this.systems = [];
   this.entityMapper = handler;
   this.systemNameList = [];
+  this.state = rootState;
 
   this.fireEvent = function (event, payload) {
     this.systems.forEach(function (system) {
@@ -14,7 +18,8 @@ function SystemProcessor(handler) {
     })
   };
 
-  this.processEntities = function (state, delta) {
+  this.processEntities = function (delta) {
+    var state = this.state;
     if (state && !state.systemStates) {
       state.systemStates = {};
     }
@@ -79,5 +84,15 @@ function SystemProcessor(handler) {
 
     this.systemNameList.push(system.name);
     this.systems.push(system);
+    if (system.init) {
+      var state = this.state.systemStates[system.name];
+
+      if (!state) {
+        state = {};
+      }
+
+      system.init(state);
+      this.state.systemStates[system.name] = state;
+    }
   };
 }

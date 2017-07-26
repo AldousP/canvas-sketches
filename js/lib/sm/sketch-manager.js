@@ -211,14 +211,9 @@
         sm.ctx.translate(-pos.x, pos.y);
       },
 
-      drawImage: function (image, x, y, w, h, align) {
+      drawImage: function (image, x, y, w, h) {
         if (image) {
-          if (align) {
-            var adj = align(x, y, w, h);
-            sm.ctx.drawImage(image, adj.x, adj.y, w, h);
-          } else {
-            sm.ctx.drawImage(image, x, y, w, h);
-          }
+          sm.ctx.drawImage(image, x, y);
         }
       },
 
@@ -242,10 +237,16 @@
         sm.ctx.restore();
       },
 
-      drawRect: function (x, y, w, h, fill, rotation) {
+      drawRect: function (x, y, w, h, fill, rotation, noAlign) {
         sm.ctx.beginPath();
         sm.ctx.fillStyle = 'white';
-        var adj = Align.center(x, y, w, h);
+        var adj;
+
+        if (!noAlign) {
+          adj = Align.center(x, y, w, h);
+        } else {
+          adj = { x: x, y: y};
+        }
         var transX = adj.x + (w / 2);
         var transY = adj.y + (h / 2);
         sm.ctx.translate(transX, transY);
@@ -336,9 +337,9 @@
 
       _processTextConf : function () {
         var styleString =
+            sm.gfx.textConf.size + 'px ' +
             sm.gfx.textConf.style + ' ' +
             'normal ' +                         // Font-Variant
-            sm.gfx.textConf.size + 'px ' +
             sm.gfx.textConf.font;
 
         sm.ctx.font = styleString;
@@ -435,7 +436,7 @@
 
       sm.log.notify('Loading Program: ' + meta.name + '...', sm.context);
       program.entityMapper = new EntityMapper();
-      program.systemProcessor = new SystemProcessor(program.entityMapper);
+      program.systemProcessor = new SystemProcessor(program.entityMapper, state);
 
       program.fireEvent = function (event, payload) {
         program.systemProcessor.fireEvent(event, payload);

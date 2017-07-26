@@ -18,7 +18,8 @@ var ComponentType = {
   renderroot : 'renderroot',
   text : 'text',
   sequence: 'sequence',
-  path: 'path'
+  path: 'path',
+  animation: 'animation'
 };
 
 function PolygonComponent(polygon) {
@@ -115,4 +116,11 @@ function PathComponent(pts) {
   this.name = ComponentType.path;
   this.pts = pts ? pts : [];
   this.pos = new Vector();
+}
+
+function AnimationComponent (handle) {
+  this.name = ComponentType.animation;
+  this.handle = handle;
+  this.length = 1;
+  this.progress = 0;
 }

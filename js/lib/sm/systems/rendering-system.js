@@ -85,6 +85,12 @@ function RenderingSystem(ID) {
       }
     }
 
+    if (poly && pos) {
+      sm.gfx.setStrokeColor(col);
+      sm.gfx.setFillColor(colB);
+      sm.gfx.drawPolygon(poly, state.renderData.positionSum, colB, state.renderData.rotationSum);
+    }
+
     if (children) {
       if (cam) {
         sm.gfx.preDraw();
@@ -149,11 +155,6 @@ function RenderingSystem(ID) {
       sm.gfx.postDraw();
     }
 
-    if (poly && pos) {
-      sm.gfx.setStrokeColor(col);
-      sm.gfx.setStrokeColor(colB);
-      sm.gfx.drawPolygon(poly, state.renderData.positionSum, colB, state.renderData.rotationSum);
-    }
 
     if (pos) {
       state.renderData.positionSum = priorPos;

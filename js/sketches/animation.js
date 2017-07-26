@@ -11,7 +11,7 @@ var Animation = function () {
         assets: 'assets/animations/'
       },
       background : {
-        bgColor: '#c7d1d7'
+        bgColor: '#515557'
       }
     }
   };
@@ -36,16 +36,28 @@ var Animation = function () {
 
     var floor = this.entityMapper.createEntity([
       new ColorComponent(Color.black, "#444444"),
-      new PositionComponent(0, -90),
+      new PositionComponent(0, -122),
       new RotationComponent(0),
-      new PolygonComponent(generatePolygon(4, 64, Math.PI / 4, 10, 1))
+      new PolygonComponent(generatePolygon(4, 64, Math.PI / 4, 10, 1.85))
     ], 'root', entities);
+
+
+    for (var i = 0; i < 312; i++) {
+        var child = this.entityMapper.createEntity([
+          new ColorComponent('rgba(255, 255, 255, .25)'),
+          new RotationComponent(0),
+          new MovementComponent(new Vector(SMath.rand(-5, -10), 0), 0),
+          new PositionComponent(SMath.rand(-512, 512), SMath.rand(450, 0)),
+          new PolygonComponent(generatePolygon(32, 3, Math.PI / 4))
+        ], 'random entity #' + i);
+        entities.push(child);
+    }
 
     entities.push(blink);
     entities.push(floor);
 
     var root = this.entityMapper.createEntity([
-      new ColorComponent(Color.white),
+      new ColorComponent(Color.white, '#c7d1d7'),
       new PositionComponent(0, 0),
       new RotationComponent(0),
       new CameraComponent({ pos: new Vector(0, 0),  width: 128,  height: 128,  zoom: 1 }),

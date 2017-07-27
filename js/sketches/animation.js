@@ -4,7 +4,7 @@ var Animation = function () {
     meta : {
       name : 'Animations',
       date : '07.25.2017',
-      description : 'JSON spritesheet loading.'
+      description : 'An example of loading sprite-sheet JSON from Adobe Animate into a scene.'
     },
     systemStates : {
       rendering: {

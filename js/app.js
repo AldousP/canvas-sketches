@@ -79,8 +79,12 @@
     sm.loadProgram(new Animation());
   };
 
+  window.loadStateMachines = function () {
+    sm.loadProgram(new StateMachines());
+  };
+
   sm.init('canvas');
 
-  loadAnimation();
+  loadStateMachines();
 }());
 

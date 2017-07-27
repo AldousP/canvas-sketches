@@ -23,14 +23,14 @@ var Animation = function () {
       new PositionComponent(0, 0),
       new RotationComponent(0),
       new AnimationComponent('blink/blink.json', 1, 64, 64)
-    ], 'root', entities);
+    ], 'blink', entities);
 
     var floor = this.entityMapper.createEntity([
       new ColorComponent(Color.black),
       new PositionComponent(0, -132),
       new RotationComponent(0),
       new PolygonComponent(generatePolygon(4, 64, Math.PI / 4, 10, 1.85))
-    ], 'root', entities);
+    ], 'floor', entities);
 
     entities.push(blink);
     entities.push(floor);

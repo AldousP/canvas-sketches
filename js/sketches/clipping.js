@@ -93,7 +93,7 @@ var Clipping = function () {
     this.systemProcessor.addSystem(new BackgroundSystem());
     this.systemProcessor.addSystem(new MovementSystem());
     this.systemProcessor.addSystem(new RenderingSystem());
-    this.systemProcessor.addSystem(new InputSystem());
+    this.systemProcessor.addSystem(new InputSystem({}));
 
     var that = this;
     this.systemProcessor.addSystem({

@@ -129,6 +129,9 @@ function AnimationComponent (handle, length, width, height) {
   this.height = height;
 }
 
-function StateMachineComponent() {
+function StateMachineComponent(fsmName) {
   this.name = ComponentType.stateMachine;
+  this.fsmName = fsmName;
+  this.stateTime = 0;
+  this.currentState = ''
 }

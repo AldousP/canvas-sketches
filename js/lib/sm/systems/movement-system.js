@@ -1,7 +1,6 @@
 'use strict';
 
-function MovementSystem(ID) {
-	this.ID = ID;
+function MovementSystem() {
 	this.name = 'movement';
 
 	this.pre = function () {

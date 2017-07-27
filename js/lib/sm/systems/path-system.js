@@ -1,7 +1,6 @@
 'use strict';
 
-function PathSystem(ID) {
-	this.ID = ID;
+function PathSystem() {
 	this.name = 'path';
 
 	this.pre = function () {

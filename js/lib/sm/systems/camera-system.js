@@ -1,7 +1,6 @@
 'use strict';
 
-function CameraSystem(ID) {
-  this.ID = ID;
+function CameraSystem() {
   this.name = 'camera';
 
   this.pre = function () {

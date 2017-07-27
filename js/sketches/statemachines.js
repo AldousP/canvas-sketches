@@ -20,13 +20,14 @@ var StateMachines = function () {
     var ball = this.entityMapper.createEntity([
         new PositionComponent(),
         new PolygonComponent(generatePolygon(32, 128, 0)),
-        new ColorComponent(Color.white, Color.white),
-        new TextComponent( ['THE BALL', 'IS WHITE'], {
-          color: '#ffc416',
+        new StateMachineComponent('sampleStateMachine'),
+        new ColorComponent(Color.white),
+        new TextComponent( ['THE BALL', 'IS INACTIVE'], {
+          color: Color.white,
           size: 24,
           font: 'Arial',
           style : 'bold',
-          align: 'right'
+          align: 'center'
         })
     ]);
 
@@ -38,6 +39,63 @@ var StateMachines = function () {
     this.systemProcessor.addSystem(new BackgroundSystem());
     this.systemProcessor.addSystem(new SequenceSystem());
     this.systemProcessor.addSystem(new RenderingSystem());
+    this.systemProcessor.addSystem(new InputSystem({
+      left_bump: function (fireEvent) {
+        fireEvent('cycle_left');
+      },
+
+      right_bump: function (fireEvent) {
+        fireEvent('cycle_right');
+      }
+    }));
+
+
+    var transitionLength = 2.5;
+    this.systemProcessor.addSystem(new StateMachineSystem({
+      sampleStateMachine: {
+        initialState: 0,
+        states: ['AT_REST', 'ACTIVE'],
+        AT_REST: {
+          listeners: {
+            cycle_left: 'ACTIVE'
+          },
+          enter: function (components) {
+            components[ComponentType.text].strings = ['THE BALL', 'IS INACTIVE.'];
+            components[ComponentType.text].conf.color = Color.white;
+            components[ComponentType.color].colorB = '#ffc416';
+            console.log('Entering AT_REST')
+          },
+
+          update: function (stateTime, transition) {
+            if (stateTime > transitionLength) {
+              transition('ACTIVE');
+            }
+          },
+          
+          exit: function () {
+            console.log('Exiting AT_REST')
+          }
+        },
+
+        ACTIVE: {
+          enter: function (components) {
+            components[ComponentType.text].strings = ['THE BALL', 'IS ACTIVE.'];
+            components[ComponentType.text].conf.color = '#ffc416';
+            components[ComponentType.color].colorB = Color.white;
+          },
+
+          update: function (stateTime, transition) {
+            if (stateTime > transitionLength) {
+              transition('AT_REST');
+            }
+          },
+
+          exit: function () {
+            console.log('Exiting ACTIVE')
+          }
+        }
+      }
+    }));
   };
 
   this.onResize = function (isMobile) {

@@ -1,7 +1,6 @@
 'use strict';
 
-function AnimationSystem(ID) {
-	this.ID = ID;
+function AnimationSystem() {
 	this.name = 'animation';
 
   this.processEntity = function (entity, state, delta, entities) {

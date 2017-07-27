@@ -1,7 +1,6 @@
 'use strict';
 
-function RenderingSystem(ID) {
-  this.ID = ID;
+function RenderingSystem() {
   this.name = 'rendering';
 
   this.init = function (state) {

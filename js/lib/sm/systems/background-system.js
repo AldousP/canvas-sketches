@@ -1,7 +1,6 @@
 'use strict';
 
-function BackgroundSystem(ID) {
-	this.ID = ID;
+function BackgroundSystem() {
 	this.name = 'background';
 
 	this.pre = function (state) {

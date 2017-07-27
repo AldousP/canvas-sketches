@@ -1,7 +1,6 @@
 'use strict';
 
-function SequenceSystem(ID) {
-	this.ID = ID;
+function SequenceSystem() {
 	this.name = 'sequencing';
 	
 	this.pre = function () {

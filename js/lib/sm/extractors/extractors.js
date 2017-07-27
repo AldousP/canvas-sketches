@@ -73,5 +73,9 @@ var smx = {
 
   anim: function (entity) {
     return entity.components[ComponentType.animation];
+  },
+  
+  fsm: function (entity) {
+    return entity.components[ComponentType.stateMachine];
   }
 };

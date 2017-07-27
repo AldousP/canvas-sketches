@@ -19,7 +19,8 @@ var ComponentType = {
   text : 'text',
   sequence: 'sequence',
   path: 'path',
-  animation: 'animation'
+  animation: 'animation',
+  stateMachine: 'fsm'
 };
 
 function PolygonComponent(polygon) {
@@ -126,4 +127,8 @@ function AnimationComponent (handle, length, width, height) {
   this.progress = 0;
   this.width = width;
   this.height = height;
+}
+
+function StateMachineComponent() {
+  this.name = ComponentType.stateMachine;
 }

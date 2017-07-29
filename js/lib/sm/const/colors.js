@@ -1,4 +1,5 @@
 var Color = {
+  clear: "rgba(0, 0, 0, 0)",
   white : "#FFFFFF",
   black : "#000",
   red : "#FF0000",

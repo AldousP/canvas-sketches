@@ -38,7 +38,8 @@ function RenderingSystem() {
         rotationSum : 0
       };
     } else {
-      if (renderRoot) {
+      if (renderRoot && !this.errored) {
+        this.errored = true;
         sm.log.error('Redundant RenderRoot component found on [' + entity.ID + ']' + entity.name + ' expect bugs.')
       }
     }

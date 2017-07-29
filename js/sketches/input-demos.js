@@ -19,19 +19,27 @@ var InputDemos = function () {
   this.setup = function () {
     var entities = [];
 
-    var controller = this.entityMapper.createEntity([
-        new PositionComponent(0, 0)
-    ], 'controller', this.buildController());
+    var controllerPane = this.entityMapper.createEntity([
+      new PositionComponent(-128, 0),
+      new ColorComponent(Color.white),
+      new ClipComponent(),
+      new PolygonComponent(generatePolygon(4, 128, 45 / DEG_RAD, 2, 1.5))
+    ], 'controllerPane', this.buildController() );
 
-    entities.push(controller);
+    var actionPane = this.entityMapper.createEntity([
+      new PositionComponent(172, 0),
+      new ColorComponent(Color.white),
+      new ClipComponent(),
+      new PolygonComponent(generatePolygon(4, 128, 45 / DEG_RAD, 1.25, 1.5))
+    ], 'actionPane', this.buildActionPane());
+
+    entities.push(controllerPane, actionPane);
 
     var root = this.entityMapper.createEntity([
-      new PositionComponent(),
       new RenderRoot()
     ], 'root', entities );
 
     this.state.rootID = root.ID;
-
     this.systemProcessor.addSystem(new BackgroundSystem());
     this.systemProcessor.addSystem(new RenderingSystem());
   };
@@ -40,11 +48,9 @@ var InputDemos = function () {
   var R1lastFrame = false;
   this.update = function (delta) {
     this.systemProcessor.processEntities(delta);
-
     this.animateInput();
-
   };
-  
+
   this.animateInput = function () {
     var leftStickPos = smx.pos(this.leftStick);
     var rightStickPos = smx.pos(this.rightStick);
@@ -60,7 +66,6 @@ var InputDemos = function () {
 
     var buttons = controller.buttons;
     var pressedButtons = [];
-    var that = this;
     buttons.forEach(function (button, i) {
       if (button.pressed) {
         pressedButtons[i] = button;
@@ -181,27 +186,47 @@ var InputDemos = function () {
 
     if (pressedButtons[DS4.L2]) {
       var button = pressedButtons[DS4.L2];
-      this.L2.components[ComponentType.polygon].polygon = generatePolygon(4, 16, Math.PI / 4, 1.5, 1 - button.value);
+      this.L2.components[ComponentType.polygon].polygon = generatePolygon(4, 16, Math.PI / 4, 1.85, 1 - button.value);
     } else {
-      this.L2.components[ComponentType.polygon].polygon = generatePolygon(4, 16, Math.PI / 4, 1.5, 1);
+      this.L2.components[ComponentType.polygon].polygon = generatePolygon(4, 16, Math.PI / 4, 1.85, 1);
     }
 
     if (pressedButtons[DS4.R2]) {
-      var button = pressedButtons[DS4.R2];
-      this.R2.components[ComponentType.polygon].polygon = generatePolygon(4, 16, Math.PI / 4, 1.5, 1 - button.value);
+      button = pressedButtons[DS4.R2];
+      this.R2.components[ComponentType.polygon].polygon = generatePolygon(4, 16, Math.PI / 4, 1.85, 1 - button.value);
     } else {
-      this.R2.components[ComponentType.polygon].polygon = generatePolygon(4, 16, Math.PI / 4, 1.5, 1);
+      this.R2.components[ComponentType.polygon].polygon = generatePolygon(4, 16, Math.PI / 4, 1.85, 1);
     }
 
-    sm.gfx.setTextConf({ align: 'right', color: 'white', font: 'arial', style: 'normal', size: 15});
-    sm.gfx.text( [
-      sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[0]),
-      sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[1]),
-      sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[2]),
-      sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[3])
-    ], sm.gfx.width / 3, 0);
+    if (sm.conf.debug.active) {
+      sm.gfx.setTextConf({ align: 'right', color: 'white', font: 'arial', style: 'normal', size: 15});
+      sm.gfx.text( [
+        sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[0]),
+        sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[1]),
+        sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[2]),
+        sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[3])
+      ], sm.gfx.width / 3, 0);
+      sm.gfx.text(Object.keys(pressedButtons), -sm.gfx.width / 3, 0);
+    }
+  };
+  
+  this.buildActionPane = function () {
+    var entities = [];
 
-    sm.gfx.text(Object.keys(pressedButtons), -sm.gfx.width / 3, 0);
+    var square = this.entityMapper.createEntity([
+      new PositionComponent(0, 0),
+      new PolygonComponent(generatePolygon(4, 32, 45 / DEG_RAD)),
+      new ColorComponent(Color.white)
+    ]);
+
+    entities.push(square);
+
+    entities.push(this.entityMapper.createEntity([
+      new ColorComponent(Color.white),
+      new PositionComponent(0, -128),
+      new PolygonComponent(generatePolygon(4, 64, 45 / DEG_RAD, 4, 1))
+    ]));
+    return entities;
   };
 
   /**

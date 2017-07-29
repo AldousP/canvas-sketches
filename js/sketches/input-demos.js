@@ -4,7 +4,7 @@ var InputDemos = function () {
     meta : {
       name : 'Input Demos',
       date : '07.27.2017',
-      description : 'Input Tests (Connect a controller)'
+      description : 'Input tests and Chrome controller demo.'
     },
     systemStates : {
       rendering: {

@@ -51,6 +51,9 @@ var InputDemos = function () {
 
     var span = 8;
     var controller = sm.input.state.controllers[0];
+    if (!controller) {
+      return;
+    }
     var axes = controller.axes;
     setVec(leftStickPos, span * axes[0], -span * axes[1]);
     setVec(rightStickPos, span * axes[2], -span * axes[3]);

@@ -139,10 +139,7 @@
 
         if (controllers) {
           var realControllers = [];
-
-
           var controllerKeys = Object.keys(controllers);
-
           controllerKeys.forEach(function (key) {
             var entry = controllers[key];
             if (entry && entry.axes && entry.buttons) {

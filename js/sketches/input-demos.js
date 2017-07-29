@@ -18,22 +18,28 @@ var InputDemos = function () {
 
   this.setup = function () {
     var entities = [];
-
     var controllerPane = this.entityMapper.createEntity([
       new PositionComponent(-128, 0),
       new ColorComponent(Color.white),
       new ClipComponent(),
-      new PolygonComponent(generatePolygon(4, 128, 45 / DEG_RAD, 2, 1.5))
+      new PolygonComponent(generatePolygon(4, 128, 45 / DEG_RAD, 2, 1.55))
     ], 'controllerPane', this.buildController() );
 
     var actionPane = this.entityMapper.createEntity([
-      new PositionComponent(172, 0),
+      new PositionComponent(172, -112),
       new ColorComponent(Color.white),
       new ClipComponent(),
-      new PolygonComponent(generatePolygon(4, 128, 45 / DEG_RAD, 1.25, 1.5))
+      new PolygonComponent(generatePolygon(4, 128, 45 / DEG_RAD, 1.25, .35))
     ], 'actionPane', this.buildActionPane());
 
-    entities.push(controllerPane, actionPane);
+    var scenePane = this.entityMapper.createEntity([
+      new PositionComponent(172, 32),
+      new ColorComponent(Color.white),
+      new ClipComponent(),
+      new PolygonComponent(generatePolygon(4, 128, 45 / DEG_RAD, 1.25, 1.2))
+    ], 'scenePane', this.buildScenePane());
+
+    entities.push(controllerPane, scenePane, actionPane);
 
     var root = this.entityMapper.createEntity([
       new RenderRoot()
@@ -56,7 +62,7 @@ var InputDemos = function () {
     var rightStickPos = smx.pos(this.rightStick);
 
     var span = 8;
-    var controller = sm.input.state.controllers[0];
+    var controller = sm.input.state.controllers[1];
     if (!controller) {
       return;
     }
@@ -209,8 +215,18 @@ var InputDemos = function () {
       sm.gfx.text(Object.keys(pressedButtons), -sm.gfx.width / 3, 0);
     }
   };
-  
+
   this.buildActionPane = function () {
+    var entities = [];
+    // this.pressedKey = this.entityMapper.createEntity([
+    //   new PolygonComponent(generatePolygon(4, 16, 45 / DEG_RAD)),
+    //   new PositionComponent(),
+    //   new ColorComponent(Color.white)
+    // ], 'pressedKey');
+    return entities;
+  };
+  
+  this.buildScenePane = function () {
     var entities = [];
 
     var square = this.entityMapper.createEntity([

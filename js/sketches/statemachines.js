@@ -63,7 +63,6 @@ var StateMachines = function () {
             components[ComponentType.text].strings = ['THE BALL', 'IS INACTIVE.'];
             components[ComponentType.text].conf.color = Color.white;
             components[ComponentType.color].colorB = '#ffc416';
-            console.log('Entering AT_REST')
           },
 
           update: function (stateTime, transition) {
@@ -73,7 +72,6 @@ var StateMachines = function () {
           },
           
           exit: function () {
-            console.log('Exiting AT_REST')
           }
         },
 
@@ -91,7 +89,6 @@ var StateMachines = function () {
           },
 
           exit: function () {
-            console.log('Exiting ACTIVE')
           }
         }
       }

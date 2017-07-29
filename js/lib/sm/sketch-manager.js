@@ -109,14 +109,50 @@
       }
     },
     input: {
-      fire: function (button) {
-        this.state[button] = true;
-        sm.activeProgram.fireEvent('input_' + button);
+      state: {
+        keyboard: {
+
+        },
+        mousePos: new Vector(),
+        controllers: [
+
+        ]
+      },
+      init: function () {
+        // Input initializations
+        document.addEventListener('keydown', function (event) {
+          console.log('KeyDOWN')
+          var keyCode = event.keyCode;
+
+
+        });
+
+        document.addEventListener('keyup', function (event) {
+          console.log('KeyUP')
+          var keyCode = event.keyCode;
+
+
+        });
       },
       update: function () {
-        this.state = {};
-      },
-      state: {}
+        var controllers = navigator.getGamepads();
+
+        if (controllers) {
+          var realControllers = [];
+
+
+          var controllerKeys = Object.keys(controllers);
+
+          controllerKeys.forEach(function (key) {
+            var entry = controllers[key];
+            if (entry && entry.axes && entry.buttons) {
+              realControllers.push(entry);
+            }
+          });
+          sm.input.state.controllers = realControllers;
+        }
+
+      }
     },
     log: {
       notify: function (msg, context) {
@@ -423,6 +459,9 @@
       sm.gfx.width = sm.canvas.width;
       sm.gfx.height = sm.canvas.height;
 
+
+      sm.input.init();
+      sm.input.update();
       if (program) {
         sm.loadProgram(program);
       }
@@ -451,17 +490,7 @@
       };
 
       try {
-        var sceneFile = state.sceneFile;
-        if (sceneFile) {
-          fetch(sceneFile)
-          .then(function (resp) { return resp.json() })
-          .then(function (data) {
-            program.entityMapper.entities = data;
-            program.setup();
-          });
-        } else {
-          program.setup();
-        }
+        program.setup();
       } catch (e) {
         sm.log.error('Error loading program: ' + meta.name);
         sm.log.error(e);
@@ -495,6 +524,8 @@
 
     appLoop: function () {
       sm.time.update();
+      sm.input.update();
+
       sm.gfx.clear(Color.dark_blue);
 
       sm.gfx.preDraw();
@@ -550,7 +581,6 @@
       }
 
       // Reset State and Input
-      sm.input.update();
       sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2 );
       sm.checkIfMobile();
 

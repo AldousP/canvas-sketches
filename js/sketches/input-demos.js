@@ -37,6 +37,7 @@ var InputDemos = function () {
     this.systemProcessor.addSystem(new RenderingSystem());
   };
 
+
   this.update = function (delta) {
     this.systemProcessor.processEntities(delta);
 

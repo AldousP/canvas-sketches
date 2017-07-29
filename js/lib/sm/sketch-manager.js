@@ -128,7 +128,7 @@
         });
 
         document.addEventListener('keyup', function (event) {
-          console.log('KeyUP')
+          console.log('KeyUP');
           var keyCode = event.keyCode;
 
 

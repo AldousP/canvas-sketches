@@ -136,17 +136,17 @@ var InputDemos = function () {
       this.select.components[ComponentType.color].colorB = this.state.systemStates.background.bgColor;
     }
 
-    // if (pressedButtons[DS4.L2]){
-    //   this.L2.components[ComponentType.color].colorB = Color.white;
-    // } else {
-    //   this.L2.components[ComponentType.color].colorB = this.state.systemStates.background.bgColor;
-    // }
-    //
-    // if (pressedButtons[DS4.R2]){
-    //   this.R2.components[ComponentType.color].colorB = Color.white;
-    // } else {
-    //   this.R2.components[ComponentType.color].colorB = this.state.systemStates.background.bgColor;
-    // }
+    if (pressedButtons[DS4.L2]){
+      this.L2.components[ComponentType.color].colorB = Color.white;
+    } else {
+      this.L2.components[ComponentType.color].colorB = this.state.systemStates.background.bgColor;
+    }
+
+    if (pressedButtons[DS4.R2]){
+      this.R2.components[ComponentType.color].colorB = Color.white;
+    } else {
+      this.R2.components[ComponentType.color].colorB = this.state.systemStates.background.bgColor;
+    }
 
     if (pressedButtons[DS4.L1]) {
       if (!L1lastFrame) {

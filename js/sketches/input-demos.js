@@ -50,18 +50,28 @@ var InputDemos = function () {
     setVec(leftStickPos, span * axes[0], -span * axes[1]);
     setVec(rightStickPos, span * axes[2], -span * axes[3]);
 
-    if (sm.conf.debug.active) {
-      sm.gfx.setTextConf({ align: 'right', color: 'white', font: 'arial', style: 'normal', size: 15});
 
-      sm.gfx.text( [
-        sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[0]),
-        sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[1]),
-        sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[2]),
-        sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[3])
-      ], sm.gfx.width / 3, 0);
+    var buttons = controller.buttons;
+    var pressedButtons = [];
+    buttons.forEach(function (button, i) {
+      if (button.pressed) {
+        pressedButtons[i] = button;
+      }
+    });
+
+    if (sm.conf.debug.active) {
+
     }
 
+    sm.gfx.setTextConf({ align: 'right', color: 'white', font: 'arial', style: 'normal', size: 15});
+    sm.gfx.text( [
+      sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[0]),
+      sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[1]),
+      sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[2]),
+      sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[3])
+    ], sm.gfx.width / 3, 0);
 
+    sm.gfx.text(Object.keys(pressedButtons), -sm.gfx.width / 3, 0);
   };
 
   /**

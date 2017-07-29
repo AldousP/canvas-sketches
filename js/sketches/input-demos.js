@@ -20,17 +20,6 @@ var InputDemos = function () {
   this.setup = function () {
     var entities = [];
 
-    entities.push(this.entityMapper.createEntity([
-      new PositionComponent(0, 128),
-      new TextComponent('Input Tests', {
-        color: Color.white,
-        size: 16,
-        font: 'Arial',
-        style : 'bold',
-        align: 'left'
-      })
-    ], 'labels'));
-
     var controller = this.entityMapper.createEntity([
         new PositionComponent(0, 0)
     ], 'controller', this.buildController());
@@ -50,7 +39,6 @@ var InputDemos = function () {
 
   this.update = function (delta) {
     this.systemProcessor.processEntities(delta);
-    sm.gfx.setTextConf({ align: 'right', color: 'white', font: 'arial', style: 'normal', size: 15});
 
     var leftStickPos = smx.pos(this.leftStick);
     var rightStickPos = smx.pos(this.rightStick);
@@ -61,12 +49,18 @@ var InputDemos = function () {
     setVec(leftStickPos, span * axes[0], -span * axes[1]);
     setVec(rightStickPos, span * axes[2], -span * axes[3]);
 
-    sm.gfx.text( [
+    if (sm.conf.debug.active) {
+      sm.gfx.setTextConf({ align: 'right', color: 'white', font: 'arial', style: 'normal', size: 15});
+
+      sm.gfx.text( [
         sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[0]),
         sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[1]),
         sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[2]),
         sm.utils.formatters.float_two_pt(sm.input.state.controllers[0].axes[3])
-    ], sm.gfx.width / 2, 0);
+      ], sm.gfx.width / 3, 0);
+    }
+
+
   };
 
   /**
@@ -85,38 +79,42 @@ var InputDemos = function () {
     var directionSize = circleSize / 4;
     var placementRadius = circleSize / 2;
 
-    var padUp = this.entityMapper.createEntity([
+    this.padUp = this.entityMapper.createEntity([
       new ColorComponent(Color.white),
       new PositionComponent(0, placementRadius),
       new PolygonComponent(generatePolygon(32, directionSize))
     ]);
 
-    var padLeft = this.entityMapper.createEntity([
+    this.padLeft = this.entityMapper.createEntity([
       new ColorComponent(Color.white),
       new PositionComponent(-placementRadius, 0),
       new PolygonComponent(generatePolygon(32, directionSize))
     ]);
 
-    var padRight = this.entityMapper.createEntity([
+    this.padRight = this.entityMapper.createEntity([
       new ColorComponent(Color.white),
       new PositionComponent(placementRadius, 0),
       new PolygonComponent(generatePolygon(32, directionSize))
     ]);
 
-    var padBottom = this.entityMapper.createEntity([
+    this.padBottom = this.entityMapper.createEntity([
       new ColorComponent(Color.white),
       new PositionComponent(0, -placementRadius),
       new PolygonComponent(generatePolygon(32, directionSize))
     ]);
 
-    leftHand.push(padUp, padLeft, padRight, padBottom);
+    leftHand.push(
+        this.padUp,
+        this.padLeft,
+        this.padRight,
+        this.padBottom
+    );
 
     var leftCircle = this.entityMapper.createEntity([
       new ColorComponent(Color.white),
       new PositionComponent(- controller_width / 6, 0),
       new PolygonComponent(generatePolygon(32, circleSize))
     ], 'leftCirc', leftHand);
-
 
     var rightHand = [];
     var buttonSize = circleSize / 4;

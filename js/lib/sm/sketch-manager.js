@@ -354,15 +354,16 @@
 
       drawCircle: function (x, y, radius) {
         sm.ctx.beginPath();
-        sm.ctx.arc(x, y, radius, 0, Math.PI * 2);
+        sm.ctx.arc(x, -y, radius, 0, Math.PI * 2);
         sm.ctx.stroke();
         sm.ctx.closePath();
       },
 
       drawCircleVec: function (pos, radius) {
         sm.ctx.beginPath();
-        sm.ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+        sm.ctx.arc(pos.x, -pos.y, radius, 0, Math.PI * 2);
         sm.ctx.stroke();
+        sm.ctx.fill();
         sm.ctx.closePath();
       },
 

@@ -70,7 +70,7 @@ var Sequences = function () {
       ])
     ]);
 
-    // entities.push(ballA, ballB, ballC);
+    entities.push(ballA, ballB, ballC);
 
     var root = this.entityMapper.createEntity([
       new RenderRoot()
@@ -88,7 +88,7 @@ var Sequences = function () {
           var path = smx.path(entity);
           var pos = smx.pos(entity);
           path.alpha = progress;
-          // sm.gfx.text(sm.utils.formatters.float_two_pt(progress), pos.x, pos.y);
+          sm.gfx.text(sm.utils.formatters.float_two_pt(progress), pos.x, pos.y);
 
           setVecVec(pos, path.pos);
           sm.gfx.setTextConf({ align:'center', color: that.state.systemStates.background.bgColor });
@@ -100,13 +100,19 @@ var Sequences = function () {
 
   this.update = function (delta) {
     this.systemProcessor.processEntities(delta);
-    var ptA = new Vector(-128, -128);
-    var ptB = new Vector(128, 128);
-    var cp1 = new Vector(16, 16);
-    var cp2 = new Vector(-16 -16);
-
-    sm.gfx.setStrokeColor(Color.white);
-    sm.gfx.drawLineVec(ptA, ptB);
-    sm.gfx.drawCircleVec(ptA, ptB);
+    // var ptA = new Vector(-128, -128);
+    // var ptB = new Vector(128, 128);
+    // var cp1 = new Vector(32, 64);
+    // var cp2 = new Vector(-32, -64);
+    //
+    // sm.gfx.setStrokeColor(Color.white);
+    // sm.gfx.drawLineVec(ptA, ptB);
+    //
+    // sm.gfx.drawLineVec(ptA, cp1);
+    // sm.gfx.drawLineVec(ptB, cp2);
+    //
+    // sm.gfx.setFillColor(Color.white);
+    // sm.gfx.drawCircleVec(cp1, 8);
+    // sm.gfx.drawCircleVec(cp2, 8);
   };
 };

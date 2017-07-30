@@ -38,3 +38,11 @@ var Align = {
 		}
 	}
 };
+
+var polySquare = function () {
+  return generatePolygon(4, 128, 45 / DEG_RAD, 1.25, 1.2)
+};
+
+var polyCircle = function (radius) {
+  return generatePolygon(32, radius, 45 / DEG_RAD, 1.25, 1.2)
+};

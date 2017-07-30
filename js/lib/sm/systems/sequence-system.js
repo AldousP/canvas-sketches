@@ -1,7 +1,17 @@
 'use strict';
 
-function SequenceSystem() {
+var SequenceType = {
+  NORMAL: 0,
+  PING_PONG: 1,
+  REVERSED: 2
+};
+
+
+
+function SequenceSystem(sequenceActions) {
 	this.name = 'sequencing';
+
+	this.sequenceActions = sequenceActions;
 	
 	this.pre = function () {
 
@@ -13,16 +23,21 @@ function SequenceSystem() {
     if (seq) {
       var that = this;
       seq.forEach(function (sequence, i) {
-        if (!sequence.dir) {
-          sequence.dir = 1;
+        if (sequence.type === SequenceType.PING_PONG) {
+          if (!sequence.dir) {
+            sequence.dir = 1;
+          }
+          var newPosition = (sequence.pos * sequence.length + (delta * sequence.dir)) / sequence.length;
+
+          if (newPosition < 0 || newPosition > 1) {
+            newPosition = sequence.dir < 0 ? 0 : 1;
+            sequence.dir = -1 * (sequence.dir);
+            that.fireEvent(sequence.onComplete);
+            that.sequenceActions[sequence.name].complete(entity)
+          }
+          that.actions.updateSequence(entity, i, newPosition);
+          that.sequenceActions[sequence.name].update(entity, newPosition)
         }
-        var newPosition = (sequence.pos * sequence.length + (delta * sequence.dir)) / sequence.length;
-        if (newPosition < 0 || newPosition > 1) {
-          newPosition = sequence.dir < 0 ? 0 : 1;
-          sequence.dir = -1 * (sequence.dir);
-          that.fireEvent(sequence.onComplete);
-        }
-        that.actions.updateSequence(entity, i, newPosition);
       })
     }
 	};

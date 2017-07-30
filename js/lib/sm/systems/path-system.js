@@ -2,6 +2,7 @@
 
 function PathSystem() {
 	this.name = 'path';
+	this.alpha = 0;
 
 	this.pre = function () {
 
@@ -9,10 +10,9 @@ function PathSystem() {
 
 	this.processEntity = function (entity, state, delta, entities) {
     var path = smx.path(entity);
-    var seq = smx.sequence(entity);
 
-    if (path && seq) {
-      var alpha = seq.pos;
+    if (path) {
+      var alpha = path.alpha;
       var ptLen = path.pts.length;
       var segmentCt = ptLen - 1;
       var localAlpha = alpha * segmentCt;
@@ -30,7 +30,8 @@ function PathSystem() {
         this.actions.updatePath(entity, new Vector(result.x, result.y));
       }
     }
-	};
+  };
+
 
 	this.post = function () {
 

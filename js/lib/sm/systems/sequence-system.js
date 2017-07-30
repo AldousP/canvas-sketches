@@ -7,36 +7,53 @@ var SequenceType = {
 };
 
 
-
 function SequenceSystem(sequenceActions) {
 	this.name = 'sequencing';
-
-	this.sequenceActions = sequenceActions;
+	this.sequenceActions = sequenceActions ? sequenceActions : {};
 	
 	this.pre = function () {
 
 	};
 
+  /**
+   * Iterates over every entity with a sequence component and
+   * updates the current alpha of the sequence based on user-defined
+   * fields.
+   */
 	this.processEntity = function (entity, state, delta, entities) {
     var seq = smx.sequence(entity);
     if (seq) {
       var that = this;
       seq.forEach(function (sequence, i) {
-          var newPosition = 0;
-          var current = sequence.length * sequence.pos;
-          newPosition = (current + delta) / sequence.length;
+        if (!sequence.dir) {
+          sequence.dir = 1;
+        }
+        sequence.pos = ((sequence.length * sequence.pos) + delta * sequence.dir) / sequence.length;
 
-          if (newPosition > 1) {
-            switch (sequence.type) {
-              case SequenceType.NORMAL:
-                newPosition -= 1;
-            }
+        if (sequence.pos > 1) {
+          switch (sequence.type) {
+            case SequenceType.NORMAL:
+              sequence.pos -= 1;
+              break;
+            case SequenceType.PING_PONG:
+              sequence.dir = sequence.dir ? sequence.dir * -1 : -1
           }
+        }
 
-          that.actions.updateSequence(entity, i, newPosition);
-          if (that.sequenceActions[sequence.name]) {
-            that.sequenceActions[sequence.name].update(entity, newPosition)
+        if (sequence.pos < 0) {
+          switch (sequence.type) {
+            case SequenceType.PING_PONG:
+              sequence.dir = sequence.dir ? sequence.dir * -1 : -1
           }
+        }
+
+        if (that.sequenceActions && that.sequenceActions[sequence.name]) {
+          var result = sequence.pos;
+          if (sequence.easing) {
+            result = that.sequenceActions.easers[sequence.easing](sequence.pos);
+          }
+          that.sequenceActions[sequence.name].update(entity, result)
+        }
       });
 	  }
   };
@@ -49,10 +66,4 @@ function SequenceSystem(sequenceActions) {
 
   };
 
-  this.actions = {
-    updateSequence: function (entity, index, position) {
-      var seq = smx.sequence(entity)[index];
-      seq.pos = position;
-    }
-	};
 }

@@ -34,34 +34,16 @@ var Sequences = function () {
         new PolygonComponent(polyCircle(16)),
         new ColorComponent(Color.white, Color.white),
         new SequenceComponent([
-          { name: 'positionSequence',
+          {
+            name: 'positionSequence',
             easing: 'squared',
-            type: SequenceType.NORMAL,
+            type: SequenceType.PING_PONG,
             length: 2,
             pos: 0
           }
         ])
     ]);
 
-    var ballB = this.entityMapper.createEntity([
-      new PositionComponent(),
-      new PathComponent([new Vector(-128, 0), new Vector(128, 0)]),
-      new PolygonComponent(polyCircle(16)),
-      new ColorComponent(Color.white, Color.white),
-      new SequenceComponent([
-        { name: 'positionSequence', type: SequenceType.PING_PONG, length: 5, pos: 0}
-      ])
-    ]);
-
-    var ballC = this.entityMapper.createEntity([
-      new PositionComponent(),
-      new PathComponent([new Vector(-128, -128), new Vector(128, -128)]),
-      new PolygonComponent(polyCircle(16)),
-      new ColorComponent(Color.white, Color.white),
-      new SequenceComponent([
-        { name: 'positionSequence', type: SequenceType.PING_PONG, length: 2.5, pos: 0}
-      ])
-    ]);
 
     entities.push(ballA);
 

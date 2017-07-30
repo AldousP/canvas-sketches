@@ -117,7 +117,6 @@ function TextComponent(strings, textConf) {
 //   dir : 1,
 //   onComplete: ''
 // };
-
 var SequenceStyles = {
   normal: {}
 };

@@ -33,7 +33,7 @@ var Sequences = function () {
         new PolygonComponent(polyCircle(16)),
         new ColorComponent(Color.white, Color.white),
         new SequenceComponent([
-          { name: 'positionSequence', type: SequenceType.PING_PONG, length: 10, pos: 0}
+          { name: 'positionSequence', easing: 'squared', type: SequenceType.PING_PONG, length: 10, pos: 0}
         ])
     ]);
 
@@ -68,6 +68,11 @@ var Sequences = function () {
     this.systemProcessor.addSystem(new PathSystem());
     this.systemProcessor.addSystem(new RenderingSystem());
     this.systemProcessor.addSystem(new SequenceSystem({
+      easers: {
+        squared: function (val) {
+          return Math.pow(val, 2);
+        }
+      },
       positionSequence: {
         update: function (entity, progress) {
           var path = smx.path(entity);

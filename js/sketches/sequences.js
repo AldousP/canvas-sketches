@@ -44,7 +44,6 @@ var Sequences = function () {
         ])
     ]);
 
-
     entities.push(ballA);
 
     var root = this.entityMapper.createEntity([
@@ -56,11 +55,6 @@ var Sequences = function () {
     this.systemProcessor.addSystem(new PathSystem());
     this.systemProcessor.addSystem(new RenderingSystem());
     this.systemProcessor.addSystem(new SequenceSystem({
-      easers: {
-        squared: function (val) {
-          return Math.pow(val, 2);
-        }
-      },
       positionSequence: {
         update: function (entity, progress) {
           var path = smx.path(entity);
@@ -78,7 +72,7 @@ var Sequences = function () {
   };
   
   var randomWord = function () {
-    return words[Math.floor(Math.random(0, 10))];
+    return words[Math.floor(SMath.rand(0, words.length))];
   };
 
   this.update = function (delta) {

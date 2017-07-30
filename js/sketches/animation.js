@@ -47,8 +47,7 @@ var Animation = function () {
       new ColorComponent(Color.white, '#c7d1d7'),
       new PositionComponent(0, 0),
       new SequenceComponent([
-          { length: .15, pos: 0, onComplete: 'spawnSnow' },
-          { length: .15, pos: 0, onComplete: 'spawnSnow' }
+          { name: 'snowSequence', length: .15, pos: 0 }
       ]),
       new RotationComponent(0),
       new CameraComponent(camConfig),
@@ -63,36 +62,27 @@ var Animation = function () {
     this.systemProcessor.addSystem(new BackgroundSystem());
     this.systemProcessor.addSystem(new MovementSystem());
     this.systemProcessor.addSystem(new PathSystem());
-    this.systemProcessor.addSystem(new SequenceSystem());
+    var that = this;
+    this.systemProcessor.addSystem(new SequenceSystem( {
+      snowSequence: {
+        // TODO: Improve spawning logic. Too verbose for userland.
+        complete: function () {
+          var flake = that.entityMapper.createEntity([
+            new ColorComponent(Color.white),
+            new RotationComponent(0),
+            new MovementComponent(new Vector(0, SMath.rand(-45, -100), 0), 0),
+            new PositionComponent(SMath.rand(-512, 512), SMath.rand(512, 312)),
+            new PolygonComponent(generatePolygon(SMath.rand(32, 64), 3, Math.PI / 4))
+          ], 'snowFlake');
+
+          that.entityMapper.bindToParent(that.entityMapper.entities[that.state.rootID], [flake]);
+        }
+      }
+    }));
     this.systemProcessor.addSystem(new CameraSystem());
     this.systemProcessor.addSystem(new AnimationSystem());
     this.systemProcessor.addSystem(new RenderingSystem());
-    var that = this;
 
-    this.systemProcessor.addSystem({
-      name: 'app-logic',
-      listeners : {
-        spawnSnow: function () {
-          that.entityMapper.bindToParent(root, [
-            that.entityMapper.createEntity([
-              new ColorComponent(Color.white),
-              new RotationComponent(0),
-              new MovementComponent(new Vector(0, SMath.rand(-45, -100), 0), 0),
-              new PositionComponent(SMath.rand(-512, 512), SMath.rand(512, 312)),
-              new PolygonComponent(generatePolygon(SMath.rand(32, 64), 3, Math.PI / 4))
-            ], 'snowFlake')
-          ])
-        },
-
-        processEntity : function (entity, state, delta, entities, recursion) {
-          var cam = smx.cam(entity);
-          var seq = smx.sequence(entity);
-          if (cam && seq && seq.name === 'camera_bob') {
-
-          }
-        }
-      }
-    });
   };
 
   this.onResize = function (isMobile) {

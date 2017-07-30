@@ -22,15 +22,6 @@ var Cameras = function () {
     this.systemProcessor.addSystem(new SequenceSystem({}));
     this.systemProcessor.addSystem(new CameraSystem());
     var that = this;
-    this.systemProcessor.addSystem({
-      name: 'app-cameras',
-
-      processEntity: function (entity, state, delta, entities) {
-        var cam = smx.cam(entity);
-        var seq = smx.sequence(entity);
-
-      }
-    });
 
     this.systemProcessor.addSystem(new RenderingSystem());
     var entities = [];

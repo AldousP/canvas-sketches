@@ -9,11 +9,16 @@ var SMath = {
   },
 
   /**
-   * Returns the interpolated value between the provided colors and alpha value.
-   * @param colorA
-   * @param colorB
+   * Returns the interpolated value between two colors.
    */
   lerpColor: function (colorA, colorB, alpha) {
     return colorA;
+  },
+
+  /**
+   * Returns the interpolated value between two constants.
+   */
+  lerp: function (valA, valB, alpha) {
+    return valA + (valB - valA) * alpha;
   }
 };

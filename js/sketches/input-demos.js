@@ -63,10 +63,7 @@ var InputDemos = function () {
   this.update = function (delta) {
     this.systemProcessor.processEntities(delta);
     this.animateInput();
-    // camConfig.rotation += 15 * delta;
-    // addVecConst(camConfig.pos, .15, .15);
   };
-
 
   var L1lastFrame = false;
   var R1lastFrame = false;

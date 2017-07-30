@@ -47,7 +47,15 @@ var Animation = function () {
       new ColorComponent(Color.white, '#c7d1d7'),
       new PositionComponent(0, 0),
       new SequenceComponent([
-          { name: 'snowSequence', length: .15, pos: 0 }
+          { name: 'snowSequence', length: .15, pos: 0 },
+          {
+            name: 'camSequence',
+            length: 5,
+            pos: .5,
+            easing: 'cubic',
+            easingParam: {},
+            type: SequenceType.PING_PONG
+          }
       ]),
       new RotationComponent(0),
       new CameraComponent(camConfig),
@@ -59,11 +67,24 @@ var Animation = function () {
     this.state.blinkID = blink.ID;
     this.state.rootID = root.ID;
 
+    var that = this;
     this.systemProcessor.addSystem(new BackgroundSystem());
     this.systemProcessor.addSystem(new MovementSystem());
     this.systemProcessor.addSystem(new PathSystem());
-    var that = this;
+    this.systemProcessor.addSystem(new CameraSystem());
+    this.systemProcessor.addSystem(new AnimationSystem());
+    this.systemProcessor.addSystem(new RenderingSystem());
+
     this.systemProcessor.addSystem(new SequenceSystem( {
+      camSequence: {
+        update: function (entity, progress) {
+          camConfig.rotation = SMath.lerp(
+              -2.5,
+              2.5,
+              progress
+          );
+        }
+      },
       snowSequence: {
         // TODO: Improve spawning logic. Too verbose for userland.
         complete: function () {
@@ -79,10 +100,6 @@ var Animation = function () {
         }
       }
     }));
-    this.systemProcessor.addSystem(new CameraSystem());
-    this.systemProcessor.addSystem(new AnimationSystem());
-    this.systemProcessor.addSystem(new RenderingSystem());
-
   };
 
   this.onResize = function (isMobile) {

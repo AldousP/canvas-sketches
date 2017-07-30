@@ -71,7 +71,7 @@ function SequenceSystem(sequenceActions) {
         }
 
         var result = sequence.pos;
-        if (sequence.easing) {
+        if (sequence.easing && easers[sequence.easing]) {
           result = easers[sequence.easing](sequence.pos);
         }
 

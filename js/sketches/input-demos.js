@@ -60,7 +60,7 @@ var InputDemos = function () {
     this.systemProcessor.addSystem(new RenderingSystem());
     this.systemProcessor.addSystem(new CameraSystem());
     this.systemProcessor.addSystem(new InputSystem({
-      helloEvent : {
+      jump : {
         controller: {
           port: 0,
           buttons: [DS4.cross]
@@ -73,21 +73,41 @@ var InputDemos = function () {
           port: 0,
           axes: {
             leftStick: {
-              deadZone: .15
+              deadZone: .25
+            }
+          }
+        }
+      },
+
+      zoomCamera: {
+        controller: {
+          port: 0,
+          axes: {
+            rightStick: {
+              deadZone: .25
             }
           }
         }
       }
     }));
+
     this.systemProcessor.addSystem({
-      name: 'Gameplay System',
+      name: 'gameplay',
       listeners : {
-        helloEvent: function (payload) {
-          console.log('!');
+        jump: function (payload, entities) {
 
         },
-        moveCamera: function (payload) {
-          console.log(payload);
+        moveCamera: function (payload, entities) {
+          var cam = smx.cam(entities[scenePane.ID]);
+          if (cam) {
+            addVecConst(cam.pos, payload.val.x * 10, payload.val.y * 10);
+          }
+        },
+        zoomCamera: function (payload, entities, delta) {
+          var cam = smx.cam(entities[scenePane.ID]);
+          if (cam) {
+            cam.zoom += payload.val.y * delta;
+          }
         }
       }
     })
@@ -95,13 +115,14 @@ var InputDemos = function () {
 
   this.update = function (delta) {
     this.systemProcessor.processEntities(delta);
-
     this.animateInput();
   };
 
   var L1lastFrame = false;
   var R1lastFrame = false;
 
+
+  // Cleanup this garbage.
   this.animateInput = function () {
     var keyReadout = this.pressedKey;
     var text = smx.text(keyReadout);
@@ -112,8 +133,6 @@ var InputDemos = function () {
         var key = sm.input.state.keyboard[keyName];
         if (key) {
           keyString += keyName + ', ';
-        } else {
-
         }
       });
       text.strings = keyString.split(', ');
@@ -139,7 +158,6 @@ var InputDemos = function () {
       }
     });
 
-    // Todo: clean up these redundant highlight calls. Highlight-system?
     if (pressedButtons[DS4.up]){
       this.padUp.components[ComponentType.color].colorB = Color.white;
     } else {

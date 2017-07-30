@@ -4,8 +4,9 @@ var SMath = {
   },
 
   project: function (val, originRangeA, originRangeB, targetRangeA, targetRangeB ) {
-
-    return val;
+    var originSpan = originRangeB - originRangeA;
+    var targetSpan = targetRangeB - targetRangeA;
+    return (val / originSpan) * targetSpan + targetRangeA;
   },
 
   /**

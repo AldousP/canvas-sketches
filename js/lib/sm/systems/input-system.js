@@ -42,6 +42,35 @@ function InputSystem(inputMap) {
         }
 
         var axes = controller.axes;
+        if (axes && inputSource.axes && inputSource.axes.length) {
+          var axesList = Object.keys(axes);
+          axesList.forEach(function (axe) {
+            switch (axe) {
+              case 'leftStick':
+                var config = axes[axe];
+                var leftStick = new Vector(inputSource.axes[0], -inputSource.axes[1]);
+                var val = leftStick.len;
+                var normVal = SMath.project(val, 0, 1.5, 0, 1);
+                if (normVal > config.deadZone) {
+                  if (that.fireEvent) {
+                    that.fireEvent(eventName, { val: leftStick});
+                  }
+                }
+                break;
+              case 'rightStick':
+                var config = axes[axe];
+                var rightStick = new Vector(inputSource.axes[2], -inputSource.axes[3]);
+                var val = rightStick.len;
+                var normVal = SMath.project(val, 0, 1.5, 0, 1);
+                if (normVal > config.deadZone) {
+                  if (that.fireEvent) {
+                    that.fireEvent(eventName, { val: rightStick});
+                  }
+                }
+                break;
+            }
+          })
+        }
       }
     });
   };

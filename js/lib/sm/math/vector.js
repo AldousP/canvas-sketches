@@ -51,6 +51,13 @@ function addVecConst(vec, x, y) {
   return vec;
 }
 
+function normVec(vec) {
+  vec.x /= vec.len;
+  vec.y /= vec.len;
+  calcLen(vec);
+  return vec;
+}
+
 function rotVec(vec, rot) {
   if (!vec || rot === null) return;
   var currRot = Math.atan2(vec.y, vec.x);

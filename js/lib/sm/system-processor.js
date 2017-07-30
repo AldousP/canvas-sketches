@@ -8,17 +8,20 @@ function SystemProcessor(handler, rootState) {
   this.entityMapper = handler;
   this.systemNameList = [];
   this.state = rootState;
+  this.delta = 0;
 
   this.fireEvent = function (event, payload) {
+    var that = this;
     this.systems.forEach(function (system) {
       var listeners = system.listeners;
       if (listeners && listeners[event]) {
-        listeners[event](payload);
+        listeners[event](payload, that.entityMapper.entities, that.delta);
       }
     })
   };
 
   this.processEntities = function (delta) {
+    this.delta = delta;
     var state = this.state;
     if (state && !state.systemStates) {
       state.systemStates = {};

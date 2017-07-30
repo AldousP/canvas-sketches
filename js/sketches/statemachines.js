@@ -39,16 +39,7 @@ var StateMachines = function () {
     this.systemProcessor.addSystem(new BackgroundSystem());
     this.systemProcessor.addSystem(new SequenceSystem());
     this.systemProcessor.addSystem(new RenderingSystem());
-    this.systemProcessor.addSystem(new InputSystem({
-      left_bump: function (fireEvent) {
-        fireEvent('cycle_left');
-      },
-
-      right_bump: function (fireEvent) {
-        fireEvent('cycle_right');
-      }
-    }));
-
+    this.systemProcessor.addSystem(new InputSystem());
 
     var transitionLength = 2.5;
     this.systemProcessor.addSystem(new StateMachineSystem({

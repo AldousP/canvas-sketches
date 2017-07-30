@@ -396,12 +396,13 @@
 
       _processTextConf : function () {
         var styleString =
-            sm.gfx.textConf.style + ' ' +
+            (sm.gfx.textConf.style ? sm.gfx.textConf.style : 'normal') + ' ' +
             'normal ' +                         // Font-Variant
             'normal ' +                         // Font-Variant
             sm.gfx.textConf.size + 'px ' +
             sm.gfx.textConf.font;
         sm.ctx.font = styleString;
+        sm.ctx.textBaseline = 'middle';
         var align = sm.gfx.textConf.align;
         sm.ctx.textAlign = align ? align : 'center';
       },

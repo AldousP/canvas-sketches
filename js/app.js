@@ -46,5 +46,5 @@
 
   sm.init('canvas');
 
-  loadSequences();
+  loadInputTests();
 }());

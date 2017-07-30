@@ -26,6 +26,7 @@ var InputDemos = function () {
 
   this.setup = function () {
     var entities = [];
+
     var controllerPane = this.entityMapper.createEntity([
       new PositionComponent(-128, 0),
       new ColorComponent(Color.white),
@@ -58,10 +59,43 @@ var InputDemos = function () {
     this.systemProcessor.addSystem(new BackgroundSystem());
     this.systemProcessor.addSystem(new RenderingSystem());
     this.systemProcessor.addSystem(new CameraSystem());
+    this.systemProcessor.addSystem(new InputSystem({
+      helloEvent : {
+        controller: {
+          port: 0,
+          buttons: [DS4.cross]
+        },
+        keys: [ Keys.space]
+      },
+
+      moveCamera : {
+        controller: {
+          port: 0,
+          axes: {
+            leftStick: {
+              deadZone: .15
+            }
+          }
+        }
+      }
+    }));
+    this.systemProcessor.addSystem({
+      name: 'Gameplay System',
+      listeners : {
+        helloEvent: function (payload) {
+          console.log('!');
+
+        },
+        moveCamera: function (payload) {
+          console.log(payload);
+        }
+      }
+    })
   };
 
   this.update = function (delta) {
     this.systemProcessor.processEntities(delta);
+
     this.animateInput();
   };
 
@@ -69,6 +103,12 @@ var InputDemos = function () {
   var R1lastFrame = false;
 
   this.animateInput = function () {
+    var keyReadout = this.pressedKey;
+    var text = smx.text(keyReadout);
+    if (text) {
+      text.strings = 'test!';
+    }
+
     var leftStickPos = smx.pos(this.leftStick);
     var rightStickPos = smx.pos(this.rightStick);
 
@@ -233,11 +273,18 @@ var InputDemos = function () {
    */
   this.buildActionPane = function () {
     var entities = [];
-    // this.pressedKey = this.entityMapper.createEntity([
-    //   new PolygonComponent(generatePolygon(4, 16, 45 / DEG_RAD)),
-    //   new PositionComponent(),
-    //   new ColorComponent(Color.white)
-    // ], 'pressedKey');
+    this.pressedKey = this.entityMapper.createEntity([
+      new PolygonComponent(generatePolygon(4, 32, 45 / DEG_RAD)),
+      new PositionComponent(-72),
+      new TextComponent('A', {
+        color: Color.white,
+        align: 'center',
+        font: 'Arial',
+        size: 16
+      }),
+      new ColorComponent(Color.white)
+    ], 'pressedKey');
+    entities.push(this.pressedKey);
     return entities;
   };
 
@@ -247,7 +294,7 @@ var InputDemos = function () {
   this.buildScenePane = function () {
     var entities = [];
     var square = this.entityMapper.createEntity([
-      new PositionComponent(0, 0),
+      new PositionComponent(0, -48),
       new PolygonComponent(generatePolygon(4, 32, 45 / DEG_RAD)),
       new ColorComponent(Color.white)
     ]);

@@ -15,15 +15,6 @@ var Sequences = function () {
       }
     }
   };
-  var words = ['Biff.', 'Zap.', 'Pow.', 'Thunk.', 'Completed and iteration of a sequence.'];
-
-  var camConfig = {
-    pos: new Vector(0, 0),
-    width: 128,
-    height: 128,
-    zoom: 1,
-    rotation: 0
-  };
 
   this.setup = function () {
     var entities = [];
@@ -44,7 +35,42 @@ var Sequences = function () {
         ])
     ]);
 
-    entities.push(ballA);
+    var ballB = this.entityMapper.createEntity([
+      new PositionComponent(-128, 0),
+      new PathComponent([new Vector(-128, 0), new Vector(128, 0)]),
+      new PolygonComponent(polyCircle(16)),
+      new ColorComponent(Color.white, Color.white),
+      new SequenceComponent([
+        {
+          name: 'positionSequence',
+          easing: 'squared',
+          type: SequenceType.NORMAL,
+          length: 2,
+          pos: 0
+        }
+      ])
+    ]);
+
+    var ballC = this.entityMapper.createEntity([
+      new PositionComponent(-128, -128),
+      new PathComponent([new Vector(-128, -128), new Vector(128, -128)]),
+      new PolygonComponent(polyCircle(16)),
+      new ColorComponent(Color.white, Color.white),
+      new SequenceComponent([
+        {
+          name: 'positionSequence',
+          easing: 'cubic',
+          easingConfig: {
+
+          },
+          type: SequenceType.NORMAL,
+          length: 2,
+          pos: 0
+        }
+      ])
+    ]);
+
+    // entities.push(ballA, ballB, ballC);
 
     var root = this.entityMapper.createEntity([
       new RenderRoot()
@@ -54,28 +80,33 @@ var Sequences = function () {
     this.systemProcessor.addSystem(new BackgroundSystem());
     this.systemProcessor.addSystem(new PathSystem());
     this.systemProcessor.addSystem(new RenderingSystem());
+
+    var that = this;
     this.systemProcessor.addSystem(new SequenceSystem({
       positionSequence: {
         update: function (entity, progress) {
           var path = smx.path(entity);
           var pos = smx.pos(entity);
           path.alpha = progress;
+          // sm.gfx.text(sm.utils.formatters.float_two_pt(progress), pos.x, pos.y);
+
           setVecVec(pos, path.pos);
-        },
-        
-        complete: function (entity) {
-          sm.gfx.text(randomWord(), 0, 0);
+          sm.gfx.setTextConf({ align:'center', color: that.state.systemStates.background.bgColor });
         }
       }
     }));
     this.systemProcessor.addSystem(new CameraSystem());
   };
-  
-  var randomWord = function () {
-    return words[Math.floor(SMath.rand(0, words.length))];
-  };
 
   this.update = function (delta) {
     this.systemProcessor.processEntities(delta);
+    var ptA = new Vector(-128, -128);
+    var ptB = new Vector(128, 128);
+    var cp1 = new Vector(16, 16);
+    var cp2 = new Vector(-16 -16);
+
+    sm.gfx.setStrokeColor(Color.white);
+    sm.gfx.drawLineVec(ptA, ptB);
+    sm.gfx.drawCircleVec(ptA, ptB);
   };
 };

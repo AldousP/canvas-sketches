@@ -320,6 +320,14 @@
         sm.ctx.translate(-transX, -transY);
       },
 
+      drawLineVec: function (ptA, ptB) {
+        sm.ctx.beginPath();
+        sm.ctx.moveTo(ptA.x, -ptA.y);
+        sm.ctx.lineTo(ptB.x, -ptB.y);
+        sm.ctx.stroke();
+        sm.ctx.closePath();
+      },
+
       drawLine: function (x1, y1, x2, y2) {
         sm.ctx.beginPath();
         sm.ctx.moveTo(x1, -y1);
@@ -351,6 +359,13 @@
         sm.ctx.closePath();
       },
 
+      drawCircleVec: function (pos, radius) {
+        sm.ctx.beginPath();
+        sm.ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+        sm.ctx.stroke();
+        sm.ctx.closePath();
+      },
+
       setStrokeColor: function (color) {
         sm.ctx.strokeStyle = color;
       },
@@ -361,6 +376,10 @@
 
       setFillColor: function (color) {
         sm.ctx.fillStyle = color;
+      },
+
+      setTextColor: function (color) {
+        this.textConf.color = color;
       },
 
       setTextConf: function (conf) {

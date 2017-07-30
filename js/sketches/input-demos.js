@@ -106,7 +106,17 @@ var InputDemos = function () {
     var keyReadout = this.pressedKey;
     var text = smx.text(keyReadout);
     if (text) {
-      text.strings = 'test!';
+      var keys = Object.keys(sm.input.state.keyboard);
+      var keyString = '';
+      keys.forEach(function (keyName) {
+        var key = sm.input.state.keyboard[keyName];
+        if (key) {
+          keyString += keyName + ', ';
+        } else {
+
+        }
+      });
+      text.strings = keyString.split(', ');
     }
 
     var leftStickPos = smx.pos(this.leftStick);
@@ -276,6 +286,7 @@ var InputDemos = function () {
     this.pressedKey = this.entityMapper.createEntity([
       new PolygonComponent(generatePolygon(4, 32, 45 / DEG_RAD)),
       new PositionComponent(-72),
+      new ClipComponent(),
       new TextComponent('A', {
         color: Color.white,
         align: 'center',

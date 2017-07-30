@@ -254,14 +254,14 @@ var InputDemos = function () {
 
     if (pressedButtons[DS4.L2]) {
       var button = pressedButtons[DS4.L2];
-      this.L2.components[ComponentType.polygon].polygon = generatePolygon(4, 16, Math.PI / 4, 1.85, 1 - button.value);
+      this.L2.components[ComponentType.polygon].polygon = generatePolygon(4, 16, Math.PI / 4, 1.85, button.value > 0 ? button.value : 1);
     } else {
       this.L2.components[ComponentType.polygon].polygon = generatePolygon(4, 16, Math.PI / 4, 1.85, 1);
     }
 
     if (pressedButtons[DS4.R2]) {
       button = pressedButtons[DS4.R2];
-      this.R2.components[ComponentType.polygon].polygon = generatePolygon(4, 16, Math.PI / 4, 1.85, 1 - button.value);
+      this.R2.components[ComponentType.polygon].polygon = generatePolygon(4, 16, Math.PI / 4, 1.85, button.value > 0 ? button.value : 1);
     } else {
       this.R2.components[ComponentType.polygon].polygon = generatePolygon(4, 16, Math.PI / 4, 1.85, 1);
     }
@@ -287,7 +287,7 @@ var InputDemos = function () {
       new PolygonComponent(generatePolygon(4, 32, 45 / DEG_RAD)),
       new PositionComponent(-72),
       new ClipComponent(),
-      new TextComponent('A', {
+      new TextComponent('', {
         color: Color.white,
         align: 'center',
         font: 'Arial',
@@ -295,7 +295,21 @@ var InputDemos = function () {
       }),
       new ColorComponent(Color.white)
     ], 'pressedKey');
-    entities.push(this.pressedKey);
+
+    this.mousePos = this.entityMapper.createEntity([
+      new PolygonComponent(generatePolygon(4, 32, 45 / DEG_RAD, 3)),
+      new PositionComponent(36),
+      new ClipComponent(),
+      new TextComponent('', {
+        color: Color.white,
+        align: 'center',
+        font: 'Arial',
+        size: 16
+      }),
+      new ColorComponent(Color.white)
+    ], 'mousePos');
+
+    entities.push(this.pressedKey, this.mousePos);
     return entities;
   };
 
@@ -345,7 +359,7 @@ var InputDemos = function () {
     this.L2 = this.entityMapper.createEntity([
       new ColorComponent(Color.white),
       new PositionComponent(0, circleSize * 1.75),
-      new PolygonComponent(generatePolygon(4, 16, Math.PI / 4, 1, 1))
+      new PolygonComponent(generatePolygon(4, 16, Math.PI / 4, 1.85, 1))
     ], 'L2');
 
     this.padUp = this.entityMapper.createEntity([
@@ -424,7 +438,7 @@ var InputDemos = function () {
     this.R2 = this.entityMapper.createEntity([
       new ColorComponent(Color.white),
       new PositionComponent(0, circleSize * 1.75),
-      new PolygonComponent(generatePolygon(4, 16, Math.PI / 4, 1, 1))
+      new PolygonComponent(generatePolygon(4, 16, Math.PI / 4, 1.85, 1))
     ], 'R2');
 
     rightHand.push(

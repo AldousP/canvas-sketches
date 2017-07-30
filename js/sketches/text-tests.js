@@ -3,7 +3,7 @@ var TextTests = function () {
     meta : {
       name : 'Text Tests',
       date : '06.27.2017',
-      description : 'Examples of text rendering.'
+      description : 'Shims to solve common text gripes.'
     },
     inputTargets : ['root'],
     systemStates : {

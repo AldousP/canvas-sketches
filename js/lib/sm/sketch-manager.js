@@ -322,8 +322,8 @@
 
       drawLine: function (x1, y1, x2, y2) {
         sm.ctx.beginPath();
-        sm.ctx.moveTo(x1, y1);
-        sm.ctx.lineTo(x2, y2);
+        sm.ctx.moveTo(x1, -y1);
+        sm.ctx.lineTo(x2, -y2);
         sm.ctx.stroke();
         sm.ctx.closePath();
       },

@@ -32,7 +32,6 @@ function PathSystem() {
     }
   };
 
-
 	this.post = function () {
 
 	};

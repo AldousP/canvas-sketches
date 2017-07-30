@@ -15,6 +15,7 @@ var Sequences = function () {
       }
     }
   };
+  var words = ['Biff.', 'Zap.', 'Pow.', 'Thunk.', 'Completed and iteration of a sequence.'];
 
   var camConfig = {
     pos: new Vector(0, 0),
@@ -28,12 +29,17 @@ var Sequences = function () {
     var entities = [];
 
     var ballA = this.entityMapper.createEntity([
-        new PositionComponent(),
+        new PositionComponent(-128, 128),
         new PathComponent([new Vector(-128, 128), new Vector(128, 128)]),
         new PolygonComponent(polyCircle(16)),
         new ColorComponent(Color.white, Color.white),
         new SequenceComponent([
-          { name: 'positionSequence', easing: 'squared', type: SequenceType.PING_PONG, length: 10, pos: 0}
+          { name: 'positionSequence',
+            easing: 'squared',
+            type: SequenceType.NORMAL,
+            length: 2,
+            pos: 0
+          }
         ])
     ]);
 
@@ -57,7 +63,7 @@ var Sequences = function () {
       ])
     ]);
 
-    entities.push(ballA, ballB, ballC);
+    entities.push(ballA);
 
     var root = this.entityMapper.createEntity([
       new RenderRoot()
@@ -82,15 +88,18 @@ var Sequences = function () {
         },
         
         complete: function (entity) {
-
+          sm.gfx.text(randomWord(), 0, 0);
         }
       }
     }));
     this.systemProcessor.addSystem(new CameraSystem());
   };
+  
+  var randomWord = function () {
+    return words[Math.floor(Math.random(0, 10))];
+  };
 
   this.update = function (delta) {
     this.systemProcessor.processEntities(delta);
-    ;
   };
 };

@@ -54,6 +54,7 @@ function RenderingSystem() {
     var cam = smx.cam(entity);
     var text = smx.text(entity);
     var anim = smx.anim(entity);
+    var path = smx.path(entity);
 
     var priorPos = cpyVec(state.renderData.positionSum);
     var priorRot = state.renderData.rotationSum;
@@ -89,6 +90,16 @@ function RenderingSystem() {
       sm.gfx.setStrokeColor(col);
       sm.gfx.setFillColor(colB);
       sm.gfx.drawPolygon(poly, state.renderData.positionSum, colB, state.renderData.rotationSum);
+    }
+
+    if (path) {
+      var lastPt = null;
+      path.pts.forEach(function (pt) {
+        if (lastPt) {
+          sm.gfx.drawLine(lastPt.x, lastPt.y, pt.x, pt.y);
+        }
+        lastPt = pt;
+      });
     }
 
     if (children) {

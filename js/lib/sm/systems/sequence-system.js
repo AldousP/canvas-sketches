@@ -19,28 +19,27 @@ function SequenceSystem(sequenceActions) {
 
 	this.processEntity = function (entity, state, delta, entities) {
     var seq = smx.sequence(entity);
-
     if (seq) {
       var that = this;
       seq.forEach(function (sequence, i) {
-        if (sequence.type === SequenceType.PING_PONG) {
-          if (!sequence.dir) {
-            sequence.dir = 1;
-          }
-          var newPosition = (sequence.pos * sequence.length + (delta * sequence.dir)) / sequence.length;
+          var newPosition = 0;
+          var current = sequence.length * sequence.pos;
+          newPosition = (current + delta) / sequence.length;
 
-          if (newPosition < 0 || newPosition > 1) {
-            newPosition = sequence.dir < 0 ? 0 : 1;
-            sequence.dir = -1 * (sequence.dir);
-            that.fireEvent(sequence.onComplete);
-            that.sequenceActions[sequence.name].complete(entity)
+          if (newPosition > 1) {
+            switch (sequence.type) {
+              case SequenceType.NORMAL:
+                newPosition -= 1;
+            }
           }
+
           that.actions.updateSequence(entity, i, newPosition);
-          that.sequenceActions[sequence.name].update(entity, newPosition)
-        }
-      })
-    }
-	};
+          if (that.sequenceActions[sequence.name]) {
+            that.sequenceActions[sequence.name].update(entity, newPosition)
+          }
+      });
+	  }
+  };
 
 	this.post = function () {
 

@@ -130,7 +130,7 @@ function SequenceComponent(sequences) {
 function PathComponent(pts) {
   this.name = ComponentType.path;
   this.pts = pts ? pts : [];
-  this.pos = new Vector();
+  this.pos = pts ? pts[0] : new Vector();
 }
 
 function AnimationComponent (handle, length, width, height) {

@@ -64,7 +64,7 @@ var smx = {
   },
   
   sequence: function (entity) {
-    return entity.components[ComponentType.sequence] ? entity.components[ComponentType.sequence].conf : null;
+    return entity.components[ComponentType.sequence] ? entity.components[ComponentType.sequence].sequences : null;
   },
 
   path: function (entity) {

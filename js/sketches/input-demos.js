@@ -16,6 +16,14 @@ var InputDemos = function () {
     }
   };
 
+  var camConfig = {
+    pos: new Vector(0, 0),
+    width: 128,
+    height: 128,
+    zoom: 1,
+    rotation: 0
+  };
+
   this.setup = function () {
     var entities = [];
     var controllerPane = this.entityMapper.createEntity([
@@ -35,6 +43,7 @@ var InputDemos = function () {
     var scenePane = this.entityMapper.createEntity([
       new PositionComponent(172, 32),
       new ColorComponent(Color.white),
+      new CameraComponent(camConfig),
       new ClipComponent(),
       new PolygonComponent(generatePolygon(4, 128, 45 / DEG_RAD, 1.25, 1.2))
     ], 'scenePane', this.buildScenePane());
@@ -48,21 +57,26 @@ var InputDemos = function () {
     this.state.rootID = root.ID;
     this.systemProcessor.addSystem(new BackgroundSystem());
     this.systemProcessor.addSystem(new RenderingSystem());
+    this.systemProcessor.addSystem(new CameraSystem());
   };
 
-  var L1lastFrame = false;
-  var R1lastFrame = false;
   this.update = function (delta) {
     this.systemProcessor.processEntities(delta);
     this.animateInput();
+    // camConfig.rotation += 15 * delta;
+    // addVecConst(camConfig.pos, .15, .15);
   };
+
+
+  var L1lastFrame = false;
+  var R1lastFrame = false;
 
   this.animateInput = function () {
     var leftStickPos = smx.pos(this.leftStick);
     var rightStickPos = smx.pos(this.rightStick);
 
     var span = 8;
-    var controller = sm.input.state.controllers[1];
+    var controller = sm.input.state.controllers[0];
     if (!controller) {
       return;
     }
@@ -78,6 +92,7 @@ var InputDemos = function () {
       }
     });
 
+    // Todo: clean up these redundant highlight calls. Highlight-system?
     if (pressedButtons[DS4.up]){
       this.padUp.components[ComponentType.color].colorB = Color.white;
     } else {
@@ -216,6 +231,9 @@ var InputDemos = function () {
     }
   };
 
+  /**
+   * Builds the display for input data.
+   */
   this.buildActionPane = function () {
     var entities = [];
     // this.pressedKey = this.entityMapper.createEntity([
@@ -225,10 +243,12 @@ var InputDemos = function () {
     // ], 'pressedKey');
     return entities;
   };
-  
+
+  /**
+   * Builds the pane containing the gameplay scene
+   */
   this.buildScenePane = function () {
     var entities = [];
-
     var square = this.entityMapper.createEntity([
       new PositionComponent(0, 0),
       new PolygonComponent(generatePolygon(4, 32, 45 / DEG_RAD)),

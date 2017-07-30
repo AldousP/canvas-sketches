@@ -40,7 +40,11 @@
     sm.loadProgram(new InputDemos());
   };
 
+  window.loadSequences= function () {
+    sm.loadProgram(new Sequences());
+  };
+
   sm.init('canvas');
 
-  loadInputTests();
+  loadSequences();
 }());

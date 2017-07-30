@@ -94,12 +94,11 @@ function RenderingSystem() {
     if (children) {
       if (cam) {
         sm.gfx.preDraw();
-
         var scaleX = cam.zoom;
         var scaleY = cam.zoom;
-
         sm.ctx.setTransform(scaleX, 0, 0, scaleY, sm.gfx.width / 2, sm.gfx.height / 2, 320);
         sm.ctx.translate(-cam.pos.x, cam.pos.y);
+        state.renderData.rotationSum += cam.rotation / DEG_RAD;
       }
 
       for (var i = 0; i < children.length; i++) {
@@ -125,6 +124,7 @@ function RenderingSystem() {
             sm.ctx.beginPath();
             sm.gfx.preDraw();
             sm.gfx.setStrokeColor(Color.green);
+            sm.ctx.rotate(state.renderData.rotationSum);
             sm.ctx.rect(
                 pos.x - frame.w / 2,
                 -pos.y - frame.h / 2,
@@ -159,8 +159,9 @@ function RenderingSystem() {
 
     if (cam) {
       sm.gfx.postDraw();
-    }
+      state.renderData.rotationSum -= cam.rotation / DEG_RAD;
 
+    }
 
     if (pos) {
       state.renderData.positionSum = priorPos;

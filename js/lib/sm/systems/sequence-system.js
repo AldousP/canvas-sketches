@@ -11,13 +11,19 @@ function SequenceSystem() {
     var seq = smx.sequence(entity);
 
     if (seq) {
-      var newPosition = (seq.pos * seq.length + (delta * seq.dir)) / seq.length;
-      if (newPosition < 0 || newPosition > 1) {
-        newPosition = seq.dir < 0 ? 0 : 1;
-        seq.dir = -1 * (seq.dir);
-        this.fireEvent(seq.onComplete);
-      }
-      this.actions.updateSequence(entity, newPosition);
+      var that = this;
+      seq.forEach(function (sequence, i) {
+        if (!sequence.dir) {
+          sequence.dir = 1;
+        }
+        var newPosition = (sequence.pos * sequence.length + (delta * sequence.dir)) / sequence.length;
+        if (newPosition < 0 || newPosition > 1) {
+          newPosition = sequence.dir < 0 ? 0 : 1;
+          sequence.dir = -1 * (sequence.dir);
+          that.fireEvent(sequence.onComplete);
+        }
+        that.actions.updateSequence(entity, i, newPosition);
+      })
     }
 	};
 
@@ -30,8 +36,8 @@ function SequenceSystem() {
   };
 
   this.actions = {
-    updateSequence: function (entity, position) {
-      var seq = smx.sequence(entity);
+    updateSequence: function (entity, index, position) {
+      var seq = smx.sequence(entity)[index];
       seq.pos = position;
     }
 	};

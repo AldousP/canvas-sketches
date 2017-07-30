@@ -73,7 +73,6 @@ var Cameras = function () {
     }
 
     entities.push(this.entityMapper.createEntity([
-      new SequenceComponent({ length: 2.5, pos: 0 }),
       new ColorComponent(Color.green),
       new PositionComponent(0, 0),
       new PathComponent([
@@ -97,7 +96,6 @@ var Cameras = function () {
       new ColorComponent(Color.cyan, Color.cyan),
       new PolygonComponent(generatePolygon(32, 6, 0))
     ], 'ball');
-
 
     entities.push(ball);
     var root = this.entityMapper.createEntity([

@@ -16,6 +16,14 @@ var Animation = function () {
     }
   };
 
+  var camConfig = {
+    pos: new Vector(0, 0),
+    width: 128,
+    height: 128,
+    zoom: 1,
+    rotation: 0
+  };
+
   this.setup = function () {
     var entities = [];
     var blink = this.entityMapper.createEntity([
@@ -38,9 +46,12 @@ var Animation = function () {
     var root = this.entityMapper.createEntity([
       new ColorComponent(Color.white, '#c7d1d7'),
       new PositionComponent(0, 0),
-      new SequenceComponent({ length: .15, pos: 0, onComplete: 'spawnSnow' }),
+      new SequenceComponent([
+          { length: .15, pos: 0, onComplete: 'spawnSnow' },
+          { length: .15, pos: 0, onComplete: 'spawnSnow' }
+      ]),
       new RotationComponent(0),
-      new CameraComponent({ pos: new Vector(0, 0),  width: 128,  height: 128,  zoom: 1 }),
+      new CameraComponent(camConfig),
       new PolygonComponent(generatePolygon(4, 128, Math.PI / 4,  4, 1.75)),
       new ClipComponent(),
       new RenderRoot()
@@ -61,20 +72,6 @@ var Animation = function () {
     this.systemProcessor.addSystem({
       name: 'app-logic',
       listeners : {
-        input_left: function () {
-          that.fireEvent('moveEntity', { entityID : that.state.blinkID, amt : new Vector(-15, 0) });
-          that.fireEvent('setFlip', { entityID : that.state.blinkID, flipped: true });
-        },
-        input_right: function () {
-          that.fireEvent('moveEntity', { entityID : that.state.blinkID, amt : new Vector(15, 0) });
-          that.fireEvent('setFlip', { entityID : that.state.blinkID, flipped: false });
-        },
-        input_left_bump: function () {
-          that.fireEvent('zoomCamOut', { entityID : that.state.rootID, amt : .15 });
-        },
-        input_right_bump: function () {
-          that.fireEvent('zoomCamIn', { entityID : that.state.rootID, amt : .15 });
-        },
         spawnSnow: function () {
           that.entityMapper.bindToParent(root, [
             that.entityMapper.createEntity([
@@ -85,6 +82,14 @@ var Animation = function () {
               new PolygonComponent(generatePolygon(SMath.rand(32, 64), 3, Math.PI / 4))
             ], 'snowFlake')
           ])
+        },
+
+        processEntity : function (entity, state, delta, entities, recursion) {
+          var cam = smx.cam(entity);
+          var seq = smx.sequence(entity);
+          if (cam && seq && seq.name === 'camera_bob') {
+
+          }
         }
       }
     });

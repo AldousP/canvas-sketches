@@ -4,8 +4,7 @@ var ComponentType = {
   polygon : 'poly',
   position : 'pos',
   rotation : 'rot',
-  velocity : 'vel',
-  acceleration : 'accl',
+  physics: 'physics',
   camera : 'cam',
   viewport : 'viewport',
   children : 'children',
@@ -20,7 +19,9 @@ var ComponentType = {
   sequence: 'sequence',
   path: 'path',
   animation: 'animation',
-  stateMachine: 'fsm'
+  stateMachine: 'fsm',
+  stroke: 'strokedElement',
+  polygonGroup: 'polygonGroup'
 };
 
 function PolygonComponent(polygon) {
@@ -39,6 +40,14 @@ function RotationComponent(rotation, radians) {
   this.rotation = rotation ? rotation : 0;
 }
 
+function PhysicsComponent() {
+  this.name = ComponentType.physics;
+  this.velocity = new Vector();
+  this.acceleration = new Vector();
+  this.friction = new Vector();
+  this.gravity = new Vector();e
+}
+
 function VelocityComponent(x, y) {
   this.name = ComponentType.velocity;
   this.velocity = new Vector(x, y);
@@ -55,7 +64,8 @@ function CameraComponent(conf) {
     pos: new Vector(0, 0),
     width: 128,
     height: 128,
-    zoom: 1
+    zoom: 1,
+    rotation: 0
   };
 }
 
@@ -100,18 +110,22 @@ function TextComponent(strings, textConf) {
   this.conf = textConf;
 }
 
-function SequenceComponent(conf) {
-  this.name = ComponentType.sequence;
-  this.conf = conf ? conf : {
-    length: 5,
-    pos: 0,
-    dir : 1,
-    onComplete: ''
-  };
 
-  if (!conf.dir) {
-    this.conf.dir = 1;
-  }
+// conf: {
+//   length: 5,
+//   pos: 0,
+//   dir : 1,
+//   onComplete: ''
+// };
+
+var SequenceStyles = {
+  normal: {}
+};
+
+function SequenceComponent(sequences) {
+  this.name = ComponentType.sequence;
+  this.sequences = sequences;
+  this.style = SequenceStyles.normal;
 }
 
 function PathComponent(pts) {
@@ -134,4 +148,9 @@ function StateMachineComponent(fsmName) {
   this.fsmName = fsmName;
   this.stateTime = 0;
   this.currentState = ''
+}
+
+function StrokeComponent(strokeWidth) {
+  this.name = ComponentType.stroke;
+  this.strokeWidth = strokeWidth;
 }

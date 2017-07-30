@@ -122,13 +122,12 @@
         // Input initializations
         document.addEventListener('keydown', function (event) {
           var keyCode = event.keyCode;
-          this.state.keyboard[keyCode] = true;
+          sm.input.state.keyboard[keyCode] = true;
         });
 
         document.addEventListener('keyup', function (event) {
-          console.log('KeyUP');
           var keyCode = event.keyCode;
-          this.state.keyboard[keyCode] = true;
+          sm.input.state.keyboard[keyCode] = false;
         });
       },
       update: function () {

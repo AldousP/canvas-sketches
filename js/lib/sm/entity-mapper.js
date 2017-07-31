@@ -6,7 +6,7 @@ function EntityMapper() {
   this.actionHistory = [];
   this.actionHistoryLength = 0;
 
-	this.createEntity = function (components, name, children) {
+	this.createEntity = function (components, name, children, parentID) {
 	  var entity = new Entity();
 	  entity.ID = this.entities.length;
 	  if (name) {
@@ -24,6 +24,10 @@ function EntityMapper() {
 
     if (children) {
       this.bindToParent(entity, children);
+    }
+
+    if (parentID) {
+      this.bindToParent(this.entities[parentID], this);
     }
 
     return entity;

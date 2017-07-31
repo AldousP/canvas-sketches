@@ -438,6 +438,20 @@
       }
     },
 
+    music: {
+      playingTracks: [],
+      loadTrack: function (location) {
+        var track = new Audio(location);
+        this.playingTracks.push(track);
+        track.loop = true;
+        return track;
+      },
+
+      playTrack: function () {
+        
+      }
+    },
+
     sfx: {
       ctx: new (window.AudioContext || window.webkitAudioContext)(),
       beep: function (note) {
@@ -485,6 +499,10 @@
       var state = program.state;
       var meta = state ? state.meta : null;
 
+      if (sm.activeProgram) {
+        sm.unloadProgram();
+      }
+
       if (!state) {
         sm.log.error('No state found on provided program.');
         return -1;
@@ -524,6 +542,10 @@
     },
 
     unloadProgram: function () {
+      sm.music.playingTracks.forEach(function (track) {
+        track.pause();
+        track.currentTime = 0;
+      });
       if (!sm.activeProgram) {
         sm.log.notify('Nothing to unload. Did you load a program?', sm.context);
       } else {

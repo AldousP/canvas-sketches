@@ -11,3 +11,19 @@ var Color = {
   orange : "#FF8800",
   dark_blue : "#000180"
 };
+
+/**
+ * @return {string}
+ */
+var RGBA = function (R, G, B, A) {
+  return 'rgba(' + R + ", " + G + ', ' + B + ', ' + A + ')';
+};
+
+var randColor = function () {
+  return RGBA(
+      Math.floor(SMath.rand(0, 255)),
+      Math.floor(SMath.rand(0, 255)),
+      Math.floor(SMath.rand(0, 255)),
+      sm.utils.formatters.float_two_pt(SMath.rand(0, 1))
+  );
+};

@@ -49,15 +49,32 @@ var InputDemos = function () {
       new PolygonComponent(generatePolygon(4, 128, 45 / DEG_RAD, 1.25, 1.2))
     ], 'scenePane', this.buildScenePane());
 
+
+    for (var i = 0; i < 300; i ++) {
+      var flake = this.entityMapper.createEntity([
+        new ColorComponent(Color.white),
+        new RotationComponent(0),
+        new MovementComponent(new Vector(SMath.rand(-1, -6), SMath.rand(-1, -6), 0), 0),
+        new PositionComponent(
+            SMath.rand(-sm.gfx.width / 2, sm.gfx.width),
+            SMath.rand(-sm.gfx.height / 2, sm.gfx.height)
+        ),
+        new PolygonComponent(generatePolygon(SMath.rand(3, 16), SMath.rand(.25, 4), Math.PI / 4))
+      ], 'snowFlake');
+      entities.push(flake);
+    }
+
     entities.push(controllerPane, scenePane, actionPane);
 
     var root = this.entityMapper.createEntity([
       new RenderRoot()
     ], 'root', entities );
 
-    this.state.rootID = root.ID;
+    this.rootID = root.ID;
+
     this.systemProcessor.addSystem(new BackgroundSystem());
     this.systemProcessor.addSystem(new RenderingSystem());
+    this.systemProcessor.addSystem(new MovementSystem());
     this.systemProcessor.addSystem(new CameraSystem());
     this.systemProcessor.addSystem(new InputSystem({
       jump : {
@@ -110,12 +127,17 @@ var InputDemos = function () {
           }
         }
       }
-    })
+    });
+
+    var track = sm.music.loadTrack(this.state.assets + '/music/input_demos.mp3');
+    track.volume = .25;
+    track.play();
   };
 
   this.update = function (delta) {
     this.systemProcessor.processEntities(delta);
     this.animateInput();
+
   };
 
   var L1lastFrame = false;

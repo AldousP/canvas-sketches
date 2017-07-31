@@ -130,7 +130,7 @@ var InputDemos = function () {
     });
 
     var track = sm.music.loadTrack(this.state.assets + '/music/input_demos.mp3');
-    track.volume = .25;
+    track.volume = .65;
     track.play();
   };
 

@@ -71,6 +71,35 @@ var Animation = function () {
     this.systemProcessor.addSystem(new BackgroundSystem());
     this.systemProcessor.addSystem(new MovementSystem());
     this.systemProcessor.addSystem(new PathSystem());
+    this.systemProcessor.addSystem(new InputSystem({
+      moveBlob : {
+        controller: {
+          port: 0,
+          axes: {
+            leftStick: {
+              deadZone: .25
+            }
+          }
+        }
+      }
+    }));
+
+    this.systemProcessor.addSystem({
+      name: 'gameplay',
+      listeners : {
+        moveBlob: function (payload, entities) {
+          var pos = smx.pos(blink);
+          var anim = smx.anim(blink);
+          if (pos) {
+            addVecConst(pos, payload.val.x * 10, 0);
+          }
+
+          if (anim) {
+            anim.flipped = payload.val.x < 0;
+          }
+        }
+      }
+    });
     this.systemProcessor.addSystem(new CameraSystem());
     this.systemProcessor.addSystem(new AnimationSystem());
     this.systemProcessor.addSystem(new RenderingSystem());

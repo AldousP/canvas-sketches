@@ -74,6 +74,68 @@ function InputSystem(inputMap) {
           }
         }
       }
+
+      var padConfig = event.pad;
+      var x = 0;
+      var y = 0;
+
+      if (padConfig) {
+        if (padConfig.down) {
+          var fired = false;
+          padConfig.down.forEach(function (trigger) {
+            if (sm.input.state.keyboard[trigger]) {
+              fired = true;
+            }
+          });
+
+          if (fired) {
+            y -= 1;
+          }
+        }
+
+        if (padConfig.up) {
+          var fired = false;
+          padConfig.up.forEach(function (trigger) {
+            if (sm.input.state.keyboard[trigger]) {
+              fired = true;
+            }
+          });
+
+          if (fired) {
+            y += 1;
+          }
+        }
+
+        if (padConfig.left) {
+          var fired = false;
+          padConfig.left.forEach(function (trigger) {
+            if (sm.input.state.keyboard[trigger]) {
+              fired = true;
+            }
+          });
+
+          if (fired) {
+            x -= 1;
+          }
+        }
+
+        if (padConfig.right) {
+          var fired = false;
+          padConfig.right.forEach(function (trigger) {
+            if (sm.input.state.keyboard[trigger]) {
+              fired = true;
+            }
+          });
+
+          if (fired) {
+            x += 1;
+          }
+        }
+
+        if (x || y) {
+          that.fireEvent(eventName, { val: new Vector(x, y)});
+        }
+      }
     });
   };
 

@@ -80,6 +80,10 @@ var Animation = function () {
               deadZone: .25
             }
           }
+        },
+        pad: {
+          left: [ Keys.left, Keys.a ],
+          right: [ Keys.right, Keys.d ]
         }
       }
     }));

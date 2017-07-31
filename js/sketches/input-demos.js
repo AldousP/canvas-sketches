@@ -93,6 +93,12 @@ var InputDemos = function () {
               deadZone: .25
             }
           }
+        },
+        pad: {
+          left: [ Keys.left, Keys.a ],
+          right: [ Keys.right, Keys.d ],
+          up: [ Keys.up, Keys.w ],
+          down: [ Keys.down, Keys.s ]
         }
       },
 

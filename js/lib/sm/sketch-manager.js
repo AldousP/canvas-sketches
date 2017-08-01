@@ -395,16 +395,22 @@
       },
 
       _processTextConf : function () {
-        var styleString =
-            (sm.gfx.textConf.style ? sm.gfx.textConf.style : 'normal') + ' ' +
-            'normal ' +                         // Font-Variant
-            'normal ' +                         // Font-Variant
-            sm.gfx.textConf.size + 'px ' +
-            sm.gfx.textConf.font;
-        sm.ctx.font = styleString;
+        var conf = sm.gfx.textConf;
+        var size = conf.size;
+        var font = conf.font;
+        var style = conf.style;
+        var weight = 'normal';
+        var align = conf.align;
+        var styleString = '';
+
+        styleString += (style ? style : 'normal') + ' ';
+        styleString += (weight ? weight : 'normal') + ' ';
+        styleString += size + 'px ';
+        styleString += font + ' ';
+
         sm.ctx.textBaseline = 'middle';
-        var align = sm.gfx.textConf.align;
         sm.ctx.textAlign = align ? align : 'center';
+        sm.ctx.font = styleString;
       },
 
       text: function (msgs, x, y, rotation) {

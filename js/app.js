@@ -44,6 +44,10 @@
     sm.loadProgram(new Sequences());
   };
 
+  window.loadFSMAnimations= function () {
+    sm.loadProgram(new FSMAnimations());
+  };
+
   sm.init('canvas');
 
   loadStateMachines();

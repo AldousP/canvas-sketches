@@ -41,10 +41,18 @@ var StateMachines = function () {
     this.systemProcessor.addSystem(new RenderingSystem());
     this.systemProcessor.addSystem(new InputSystem({
       cycle_state: {
-        keys: [Keys.e, Keys.q]
+        controller: {
+          port: 0,
+          buttons: [ DS4.circle ]
+        },
+        keys: [Keys.e ]
       },
       secret_state: {
-        keys: [Keys.x]
+        keys: [Keys.x],
+        controller: {
+          port: 0,
+          buttons: [ DS4.cross ]
+        }
       }
     }));
 
@@ -152,5 +160,12 @@ var StateMachines = function () {
 
   this.update = function (delta) {
     this.systemProcessor.processEntities(delta);
+    sm.gfx.preDraw();
+    sm.gfx.setFillColor(Color.white);
+    sm.gfx.setTextConf({style: 'italics', weight: 'light', font: 'arial',  size: 24});
+    sm.gfx.text('Press', -16, -sm.gfx.height / 2.35);
+    sm.gfx.setTextConf({ font: 'fontawesome',  size: 18});
+    sm.gfx.text('\uF1DB', 32, -sm.gfx.height / 2.35);
+    sm.gfx.postDraw();
   }
 };

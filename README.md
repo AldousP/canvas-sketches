@@ -1,8 +1,7 @@
 # Sketch-Manager 
 
 ## Overview
-Library for rendering to the canvas with some generally sense-making assumptions. Allows users to declare program files which adhere to an API exposing a render loop, input polling, entity component system, event management and other APIs for
-math, sound, polygon manipulation, math, projection, easing and clipping.
+Utility library for quickly creating interactive media in HTML5 canvas. Loads user defined programs which can call out to a variety of SM's modules to render polygons and text, poll for keyboard and controller input, play music and sound, and manage state. SM also exposes a Entity Component System API for use within programs which allows users to quickly compose interactive entities with children, and declare behavior using events and a finite state machine.
 
 To initialize sm, run ```sm.init```. sm will bind to the provided canvas target and renders the contents of its idle console or the active program. 
 

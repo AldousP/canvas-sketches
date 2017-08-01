@@ -21,7 +21,23 @@ var FSMAnimations = function () {
     var player = this.entityMapper.createEntity([
         new PositionComponent(),
         new RotationComponent(),
-        new PolygonComponent(generatePolygon(4, 32, 45 / DEG_RAD, 1, 1.25)),
+        new AnimationMapComponent(
+            {
+              idle: {
+                file: 'blink/blink.json',
+                length: 1,
+                width: 64,
+                height: 64
+              },
+              moving: {
+                file: 'blink/blink.json',
+                length: 1,
+                width: 64,
+                height: 64
+              }
+            }
+        ),
+        new PolygonComponent(generatePolygon(4, 64, 45 / DEG_RAD, 1, 1.25)),
         new AnimationComponent('blink/blink.json', 1, 64, 64)
     ]);
 
@@ -31,6 +47,7 @@ var FSMAnimations = function () {
     ], 'root', [ player ] );
 
     this.systemProcessor.addSystem(new BackgroundSystem());
+    this.systemProcessor.addSystem(new AnimationSystem());
     this.systemProcessor.addSystem(new SequenceSystem());
     this.systemProcessor.addSystem(new RenderingSystem());
     this.systemProcessor.addSystem(new InputSystem({

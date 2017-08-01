@@ -21,7 +21,7 @@ var ComponentType = {
   animation: 'animation',
   stateMachine: 'fsm',
   stroke: 'strokedElement',
-  polygonGroup: 'polygonGroup'
+  animationMap: 'animationMap'
 };
 
 function PolygonComponent(polygon) {
@@ -152,4 +152,9 @@ function StateMachineComponent(fsmName) {
 function StrokeComponent(strokeWidth) {
   this.name = ComponentType.stroke;
   this.strokeWidth = strokeWidth;
+}
+
+function AnimationMapComponent(map) {
+  this.name = ComponentType.animationMap;
+  this.animationMap = map;
 }

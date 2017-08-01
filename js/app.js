@@ -50,5 +50,5 @@
 
   sm.init('canvas');
 
-  loadStateMachines();
+  loadFSMAnimations();
 }());

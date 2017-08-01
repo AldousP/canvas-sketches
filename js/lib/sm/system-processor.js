@@ -12,7 +12,12 @@ function SystemProcessor(handler, rootState) {
 
   this.fireEvent = function (event, payload) {
     var that = this;
+    payload.eventName = event;
     this.systems.forEach(function (system) {
+      if (system.event) {
+        system.event(payload, that.entityMapper.entities, that.delta);
+      }
+
       var listeners = system.listeners;
       if (listeners && listeners[event]) {
         listeners[event](payload, that.entityMapper.entities, that.delta);

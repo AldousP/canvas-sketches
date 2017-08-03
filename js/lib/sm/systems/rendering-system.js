@@ -2,30 +2,25 @@
 
 function RenderingSystem() {
   this.name = 'rendering';
+  this.sheetNames = [];
+  this.sheetFiles = [];
 
-  this.init = function (state) {
-    state.sheetCache = {};
-  };
-
-  this.loadData = function (anim, state) {
-    anim.loaded = true;
-    var handle = anim.handle;
-    var strippedHandle = (handle.substring(handle.lastIndexOf('/') + 1, handle.lastIndexOf('.')));
-    anim.imgHandle = strippedHandle;
-    if (!state.sheetCache[strippedHandle]) {
-      var assetLocation = state.assets + handle;
-      var rootLoc = assetLocation.substring(0, assetLocation.lastIndexOf('/'));
-      fetch(assetLocation).then(function (resp) {return resp.json()})
-      .then( function (data) {
-        var imgAsset = rootLoc + '/' + data.meta.image;
-        anim.frames = data.frames;
-        var img = new Image();
-        img.src = imgAsset;
-        img.onload = function () {
-          state.sheetCache[strippedHandle] = img;
-        }
-      })
-    }
+  this.loadData = function (file, state) {
+    var assetLocation = state.assets + file;
+    var rootLoc = assetLocation.substring(0, assetLocation.lastIndexOf('/'));
+    var fileObj = {};
+    fetch(assetLocation).then(function (resp) {return resp.json()})
+    .then( function (data) {
+      var imgAsset = rootLoc + '/' + data.meta.image;
+      fileObj.frames = data.frames;
+      var img = new Image();
+      img.src = imgAsset;
+      img.onload = function () {
+        fileObj.img = img;
+      }
+    });
+    this.sheetNames.push(file);
+    this.sheetFiles.push(fileObj);
   };
 
   this.processEntity = function (entity, state, delta, entities, recursion) {
@@ -54,6 +49,7 @@ function RenderingSystem() {
     var cam = smx.cam(entity);
     var text = smx.text(entity);
     var anim = smx.anim(entity);
+    var animMap = smx.aniMap(entity);
     var path = smx.path(entity);
 
     var priorPos = cpyVec(state.renderData.positionSum);
@@ -118,42 +114,45 @@ function RenderingSystem() {
         sm.gfx.postDraw();
       }
     }
-
+    var sheetIndex = -1;
     if (anim && pos) {
-      if (!anim.loaded) {
-        this.loadData(anim, state);
+      sheetIndex = this.sheetNames.indexOf(anim.handle);
+      if (sheetIndex < 0) {
+        this.loadData(anim.handle, state);
+      } else {
+        this.drawAnimation(
+            this.sheetFiles[sheetIndex],
+            anim.progress,
+            pos.x,
+            pos.y,
+            anim.width,
+            anim.height,
+            state.renderData.rotationSum,
+            anim.flipped
+        );
       }
+    }
 
-      if (anim.imgHandle) {
-        var image = state.sheetCache[anim.imgHandle];
-        var frames = anim.frames;
-        if (frames) {
-          var activeFrame = Math.floor(anim.frames.length * anim.progress);
-          var frame = frames[activeFrame - 1];
-          if (frame) {
-            frame = frame.frame;
-            sm.ctx.beginPath();
-            sm.gfx.preDraw();
-            sm.gfx.setStrokeColor(Color.green);
-            sm.ctx.rotate(state.renderData.rotationSum);
-            sm.ctx.rect(
-                pos.x - frame.w / 2,
-                -pos.y - frame.h / 2,
-                frame.w,
-                frame.h
-            );
-            sm.ctx.clip();
-            sm.gfx.drawImage(
-                image,
-                pos.x - frame.x - frame.w / 2,
-                -pos.y - frame.y - frame.h / 2,
-                frame.w, frame.h,
-                anim.flipped
-            );
-            sm.gfx.postDraw();
-            sm.ctx.closePath();
-          }
-        }
+    if (animMap && pos) {
+      var conf = animMap.animationMap;
+      var animations = conf.animations;
+      var activeAnimation = animations[conf.activeState];
+      var file = activeAnimation.file;
+
+      sheetIndex = this.sheetNames.indexOf(file);
+      if (sheetIndex < 0) {
+        this.loadData(file, state);
+      } else {
+        this.drawAnimation(
+            this.sheetFiles[sheetIndex],
+            animMap.progress,
+            pos.x,
+            pos.y,
+            activeAnimation.width,
+            activeAnimation.height,
+            state.renderData.rotationSum,
+            activeAnimation.flipped
+        );
       }
     }
 
@@ -182,4 +181,40 @@ function RenderingSystem() {
       state.renderData.rotationSum = priorRot;
     }
   };
+
+  this.drawAnimation = function (animationObject, progress, x, y, w, h, rot, flipped) {
+    var frames = animationObject.frames;
+    if (frames) {
+      var image = animationObject.img;
+      var frameCount = Object.keys(frames).length;
+      var activeFrame = Math.floor(frameCount* progress);
+      var frame = frames[activeFrame - 1];
+      if (frame) {
+        frame = frame.frame;
+        sm.ctx.beginPath();
+        sm.gfx.preDraw();
+        sm.gfx.setStrokeColor(Color.green);
+        var skewX = w / frame.w;
+        var skewY = h / frame.h;
+        sm.ctx.scale(skewX, skewY);
+        sm.ctx.rotate(rot);
+        sm.ctx.rect(
+            x - frame.w / 2,
+            -y - frame.h / 2,
+            frame.w,
+            frame.h
+        );
+        sm.ctx.clip();
+        sm.gfx.drawImage(
+            image,
+            x - frame.x - frame.w / 2,
+            -y - frame.y - frame.h / 2,
+            frame.w, frame.h,
+            flipped
+        );
+        sm.gfx.postDraw();
+        sm.ctx.closePath();
+      }
+    }
+  }
 }

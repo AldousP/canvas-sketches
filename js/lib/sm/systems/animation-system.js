@@ -5,10 +5,18 @@ function AnimationSystem() {
 
   this.processEntity = function (entity, state, delta, entities) {
     var anim = smx.anim(entity);
+    var animMap = smx.aniMap(entity);
     if (anim) {
       anim.progress += delta;
       if (anim.progress > anim.length) {
         anim.progress = .1;
+      }
+    }
+
+    if (animMap) {
+      animMap.progress += delta;
+      if (animMap.progress > animMap.animationMap.animations[animMap.animationMap.activeState].length) {
+        animMap.progress = .1;
       }
     }
   };

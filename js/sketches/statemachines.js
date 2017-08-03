@@ -159,7 +159,7 @@ var StateMachines = function () {
   };
 
   this.update = function (delta) {
-    this.systemProcessor.processEntities(deltaa);
+    this.systemProcessor.processEntities(delta);
     sm.gfx.preDraw();
     sm.gfx.setFillColor(Color.white);
     sm.gfx.setTextConf({style: 'italics', weight: 'light', font: 'arial',  size: 24});

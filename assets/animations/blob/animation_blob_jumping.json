@@ -1,0 +1,203 @@
+﻿{"frames": [
+
+{
+	"filename": "jumping0000",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0001",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0002",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0003",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0004",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0005",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0006",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0007",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0008",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0009",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0010",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0011",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0012",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0013",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0014",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0015",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0016",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0017",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0018",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0019",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0020",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0021",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0022",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}
+,{
+	"filename": "jumping0023",
+	"frame": {"x":0,"y":0,"w":278,"h":313},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":278,"h":313},
+	"sourceSize": {"w":278,"h":313}
+}],
+"meta": {
+	"app": "Adobe Animate",
+	"version": "16.5.1.104",
+	"image": "animation_blob_jumping.png",
+	"format": "RGBA8888",
+	"size": {"w":512,"h":512},
+	"scale": "1"
+}
+}

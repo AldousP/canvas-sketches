@@ -23,22 +23,30 @@ var FSMAnimations = function () {
         new RotationComponent(),
         new AnimationMapComponent(
             {
-              idle: {
-                file: 'blink/blink.json',
-                length: 1,
-                width: 64,
-                height: 64
-              },
-              moving: {
-                file: 'blink/blink.json',
-                length: 1,
-                width: 64,
-                height: 64
+              activeState: 'idle',
+              animations: {
+                idle: {
+                  file: 'blob/animation_blob_idle.json',
+                  length: 1,
+                  width: 64,
+                  height: 64
+                },
+                moving: {
+                  file: 'blob/animation_blob_moving.json',
+                  length: 1,
+                  width: 64,
+                  height: 64
+                },
+                jumping: {
+                  file: 'blob/animation_blob_jumping.json',
+                  length: 1,
+                  width: 64,
+                  height: 64
+                }
               }
             }
         ),
-        new PolygonComponent(generatePolygon(4, 64, 45 / DEG_RAD, 1, 1.25)),
-        new AnimationComponent('blink/blink.json', 1, 64, 64)
+        new PolygonComponent(generatePolygon(4, 64, 45 / DEG_RAD, 1, 1.25))
     ]);
 
     var root = this.entityMapper.createEntity([

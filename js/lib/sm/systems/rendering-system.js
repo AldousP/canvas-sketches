@@ -136,7 +136,7 @@ function RenderingSystem() {
     if (animMap && pos) {
       var conf = animMap.animationMap;
       var animations = conf.animations;
-      var activeAnimation = animations[conf.activeState];
+      var activeAnimation = animations[animMap.activeState];
       var file = activeAnimation.file;
 
       sheetIndex = this.sheetNames.indexOf(file);

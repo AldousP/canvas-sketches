@@ -125,7 +125,7 @@ var Animation = function () {
             new ColorComponent(Color.white),
             new RotationComponent(0),
             new MovementComponent(new Vector(0, SMath.rand(-45, -100), 0), 0),
-            new PositionComponent(SMath.rand(-512, 512), SMath.rand(512, 312)),
+            new PositionComponent(SMath.rand(-512, 512), SMath.rand(128, 512)),
             new PolygonComponent(generatePolygon(SMath.rand(32, 64), 3, Math.PI / 4))
           ], 'snowFlake');
 

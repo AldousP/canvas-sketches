@@ -154,7 +154,8 @@ function StrokeComponent(strokeWidth) {
   this.strokeWidth = strokeWidth;
 }
 
-function AnimationMapComponent(map) {
+function AnimationMapComponent(initialState, map) {
+  this.activeState = initialState;
   this.name = ComponentType.animationMap;
   this.animationMap = map;
   this.progress = 0;

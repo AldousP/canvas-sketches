@@ -21,9 +21,10 @@ var FSMAnimations = function () {
     var player = this.entityMapper.createEntity([
         new PositionComponent(),
         new RotationComponent(),
+        new StateMachineComponent('blobAnimation'),
         new AnimationMapComponent(
+            'idle',
             {
-              activeState: 'idle',
               animations: {
                 idle: {
                   file: 'blob/animation_blob_idle.json',
@@ -59,24 +60,26 @@ var FSMAnimations = function () {
     this.systemProcessor.addSystem(new SequenceSystem());
     this.systemProcessor.addSystem(new RenderingSystem());
     this.systemProcessor.addSystem(new InputSystem({
-      cycle_state: {
-        // controller: {
-        //   port: 0,
-        //   buttons: [ DS4.circle ]
-        // },
-        // keys: [Keys.e, Keys.q]
+      jump: {
+        controller: {
+          port: 0,
+          buttons: [ DS4.cross ]
+        },
+        keys: [ Keys.space ]
       }
     }));
 
     this.systemProcessor.addSystem(new StateMachineSystem({
-      sampleStateMachine: {
+      blobAnimation: {
         initialState: 0,
-        states: ['STATEA', 'STATEB', 'STATEC', 'STATEX'],
-        STATEA: {
+        states: ['idle', 'moving', 'jumping'],
+        idle: {
           listeners: {
-            cycle_state: 'STATEB'
+            jump: 'jumping'
           },
           enter: function (components) {
+            components.animationMap.activeState = 'idle';
+            components.animationMap.progress = 0;
           },
 
           update: function (stateTime, transition) {
@@ -88,12 +91,10 @@ var FSMAnimations = function () {
           }
         },
 
-        STATEB: {
-          listeners: {
-            cycle_state: 'STATEC'
-          },
+        moving: {
           enter: function (components) {
-
+            components.animationMap.activeState = 'moving';
+            components.animationMap.progress = 0;
           },
 
           update: function (stateTime, transition) {
@@ -102,16 +103,15 @@ var FSMAnimations = function () {
           },
 
           exit: function () {
+
           }
         },
 
-        STATEC: {
-          listeners: {
-            cycle_state: 'STATEB',
-            secret_state: 'STATEX'
-          },
+        jumping: {
           enter: function (components) {
-
+            components.animationMap.activeState = 'jumping';
+            components.animationMap.progress = 0;
+            console.log(components.animationMap);
           },
 
           update: function (stateTime, transition) {

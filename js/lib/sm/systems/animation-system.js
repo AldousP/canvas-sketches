@@ -15,7 +15,7 @@ function AnimationSystem() {
 
     if (animMap) {
       animMap.progress += delta;
-      if (animMap.progress > animMap.animationMap.animations[animMap.animationMap.activeState].length) {
+      if (animMap.progress > animMap.animationMap.animations[animMap.activeState].length) {
         animMap.progress = .1;
       }
     }

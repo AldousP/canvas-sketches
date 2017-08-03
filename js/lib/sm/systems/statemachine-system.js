@@ -50,7 +50,6 @@ function StateMachineSystem(machineMapping) {
 	
 	this.event = function (event) {
 	  var machines = Object.keys(this.machineMapping);
-
 	  var that = this;
     machines.forEach(function (machineName) {
       var machine = that.machineMapping[machineName];
@@ -60,11 +59,11 @@ function StateMachineSystem(machineMapping) {
         var listeners = stateOption.listeners;
         if (listeners) {
           Object.keys(listeners).forEach(function (listenerName) {
-            var nextStateFunction = listeners[listenerName];
-            if (nextStateFunction) {
-              var nextState = nextStateFunction();
-              if (nextState && states.indexOf(nextState) !== -1) {
-                if (event.eventName === listenerName) {
+            if (listenerName === event.eventName ) {
+              var nextStateFunction = listeners[listenerName];
+              if (nextStateFunction) {
+                var nextState = nextStateFunction(event);
+                if (nextState && states.indexOf(nextState) !== -1) {
                   that.queuedTransitions.push({
                     currentState: stateOptionName,
                     nextState: nextState

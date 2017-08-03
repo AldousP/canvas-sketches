@@ -28,7 +28,7 @@ var Animation = function () {
     var entities = [];
     var blink = this.entityMapper.createEntity([
       new ColorComponent(Color.black),
-      new PositionComponent(0, -25),
+      new PositionComponent(0, -16),
       new RotationComponent(0),
       new AnimationComponent('blink/blink.json', 1, 64, 64)
     ], 'blink', entities);

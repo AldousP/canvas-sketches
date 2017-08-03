@@ -18,8 +18,9 @@ var FSMAnimations = function () {
 
   this.setup = function () {
 
-    var player = this.entityMapper.createEntity([
-        new PositionComponent(),
+    var playerA = this.entityMapper.createEntity([
+        new PlayerComponent('Player 1'),
+        new PositionComponent(-64),
         new RotationComponent(),
         new StateMachineComponent('blobAnimation'),
         new AnimationMapComponent(
@@ -50,15 +51,52 @@ var FSMAnimations = function () {
         new PolygonComponent(generatePolygon(4, 64, 45 / DEG_RAD, 1, 1.25))
     ]);
 
+    var playerB = this.entityMapper.createEntity([
+      new PositionComponent(64),
+      new PlayerComponent('Player 2'),
+      new RotationComponent(),
+      new StateMachineComponent('blobAnimation'),
+      new AnimationMapComponent(
+          'idle',
+          {
+            animations: {
+              idle: {
+                file: 'blob/animation_blob_idle.json',
+                length: 1,
+                width: 64,
+                height: 64
+              },
+              moving: {
+                file: 'blob/animation_blob_moving.json',
+                length: 1,
+                width: 64,
+                height: 64
+              },
+              jumping: {
+                file: 'blob/animation_blob_jumping.json',
+                length: 1,
+                width: 64,
+                height: 64
+              }
+            }
+          }
+      ),
+      new PolygonComponent(generatePolygon(4, 64, 45 / DEG_RAD, 1, 1.25))
+    ]);
+
+
     var root = this.entityMapper.createEntity([
       new PositionComponent(),
       new RenderRoot()
-    ], 'root', [ player ] );
+    ], 'root', [ playerA, playerB ] );
 
     this.systemProcessor.addSystem(new BackgroundSystem());
     this.systemProcessor.addSystem(new AnimationSystem());
     this.systemProcessor.addSystem(new SequenceSystem());
     this.systemProcessor.addSystem(new RenderingSystem());
+    this.systemProcessor.addSystem( {
+      name: ''
+    } );
     this.systemProcessor.addSystem(new InputSystem({
       jump: {
         controller: {
@@ -111,6 +149,11 @@ var FSMAnimations = function () {
         },
 
         moving: {
+          listeners: {
+            move: function (event) {
+
+            }
+          },
           enter: function (components) {
             components.animationMap.activeState = 'moving';
             components.animationMap.progress = 0;

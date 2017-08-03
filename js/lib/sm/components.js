@@ -160,3 +160,8 @@ function AnimationMapComponent(initialState, map) {
   this.animationMap = map;
   this.progress = 0;
 }
+
+function PlayerComponent(playerName) {
+  this.name = name;
+  this.playerName = playerName;
+}

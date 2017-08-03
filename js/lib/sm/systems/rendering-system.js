@@ -192,27 +192,30 @@ function RenderingSystem() {
       if (frame) {
         frame = frame.frame;
         sm.ctx.beginPath();
-        sm.gfx.preDraw();
+        // sm.gfx.preDraw();
         sm.gfx.setStrokeColor(Color.green);
+        sm.ctx.rotate(rot);
+        sm.ctx.translate(x, -y);
+
+
         var skewX = w / frame.w;
         var skewY = h / frame.h;
         sm.ctx.scale(skewX, skewY);
-        sm.ctx.rotate(rot);
         sm.ctx.rect(
-            x - frame.w / 2,
-            -y - frame.h / 2,
+            -frame.w / 2,
+            -frame.h / 2,
             frame.w,
             frame.h
         );
         sm.ctx.clip();
         sm.gfx.drawImage(
             image,
-            x - frame.x - frame.w / 2,
-            -y - frame.y - frame.h / 2,
+            -frame.x - frame.w / 2,
+            -frame.y - frame.h / 2,
             frame.w, frame.h,
             flipped
         );
-        sm.gfx.postDraw();
+        // sm.gfx.postDraw();
         sm.ctx.closePath();
       }
     }

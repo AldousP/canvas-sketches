@@ -66,6 +66,20 @@ var FSMAnimations = function () {
           buttons: [ DS4.cross ]
         },
         keys: [ Keys.space ]
+      },
+      move: {
+        controller: {
+          port: 0,
+          axes: {
+            leftStick: {
+              deadZone: .25
+            }
+          }
+        },
+        pad: {
+          left: [ Keys.left, Keys.a ],
+          right: [ Keys.right, Keys.d ]
+        }
       }
     }));
 
@@ -75,7 +89,12 @@ var FSMAnimations = function () {
         states: ['idle', 'moving', 'jumping'],
         idle: {
           listeners: {
-            jump: 'jumping'
+            jump: function () {
+              
+            },
+            move: function () {
+              
+            }
           },
           enter: function (components) {
             components.animationMap.activeState = 'idle';
@@ -98,8 +117,9 @@ var FSMAnimations = function () {
           },
 
           update: function (stateTime, transition) {
-
-
+            if (stateTime > .3) {
+              transition
+            }
           },
 
           exit: function () {
@@ -111,12 +131,12 @@ var FSMAnimations = function () {
           enter: function (components) {
             components.animationMap.activeState = 'jumping';
             components.animationMap.progress = 0;
-            console.log(components.animationMap);
           },
 
-          update: function (stateTime, transition) {
-
-
+          update: function (stateTime, transition, components) {
+            if (stateTime > 1) {
+              transition('idle');
+            }
           },
 
           exit: function () {

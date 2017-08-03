@@ -35,7 +35,7 @@ function StateMachineSystem(machineMapping) {
         }
       }
 
-      fsm[currentState].update(fsmComp.stateTime, transition);
+      fsm[currentState].update(fsmComp.stateTime, transition, entity.components);
 
       sm.gfx.text(
           sm.utils.formatters.float_one_pt(fsmComp.stateTime),
@@ -60,12 +60,17 @@ function StateMachineSystem(machineMapping) {
         var listeners = stateOption.listeners;
         if (listeners) {
           Object.keys(listeners).forEach(function (listenerName) {
-            var nextState = listeners[listenerName];
-            if (event.eventName === listenerName) {
-              that.queuedTransitions.push({
-                currentState: stateOptionName,
-                nextState: nextState
-              });
+            var nextStateFunction = listeners[listenerName];
+            if (nextStateFunction) {
+              var nextState = nextStateFunction();
+              if (nextState && states.indexOf(nextState) !== -1) {
+                if (event.eventName === listenerName) {
+                  that.queuedTransitions.push({
+                    currentState: stateOptionName,
+                    nextState: nextState
+                  });
+                }
+              }
             }
           });
         }

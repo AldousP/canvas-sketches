@@ -56,7 +56,6 @@ var StateMachines = function () {
       }
     }));
 
-    var transitionLength = 2.5;
     var that = this;
     this.systemProcessor.addSystem(new StateMachineSystem({
       sampleStateMachine: {
@@ -64,7 +63,9 @@ var StateMachines = function () {
         states: ['STATEA', 'STATEB', 'STATEC', 'STATEX'],
         STATEA: {
           listeners: {
-            cycle_state: 'STATEB'
+            cycle_state: function () {
+              return 'STATEB';
+            }
           },
           enter: function (components) {
             components[ComponentType.text].strings = ['STATE A'];
@@ -84,7 +85,9 @@ var StateMachines = function () {
 
         STATEB: {
           listeners: {
-            cycle_state: 'STATEC'
+            cycle_state: function () {
+              return 'STATEC';
+            }
           },
           enter: function (components) {
             components[ComponentType.text].strings = ['STATE B'];
@@ -104,8 +107,12 @@ var StateMachines = function () {
 
         STATEC: {
           listeners: {
-            cycle_state: 'STATEB',
-            secret_state: 'STATEX'
+            cycle_state: function () {
+              return 'STATEB';
+            },
+            secret_state: function () {
+              return 'STATEX';
+            }
           },
           enter: function (components) {
             components[ComponentType.text].strings = ['STATE C'];
@@ -125,7 +132,9 @@ var StateMachines = function () {
 
         STATEX: {
           listeners: {
-            secret_state: 'STATEC'
+            secret_state: function () {
+              return 'STATEC';
+            }
           },
           enter: function (components) {
             components[ComponentType.text].strings = ['STATE ???', '(Press X To Return)'];

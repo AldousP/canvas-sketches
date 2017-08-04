@@ -16,189 +16,118 @@ var FSMAnimations = function () {
     }
   };
 
-  this.setup = function () {
+  var SampleSystem = function () {
+    this.name = 'Sample System.';
+    this.filter = [ 'pos', 'col' ];
+    this.updateEntities = function (entities) {
+      console.log('updating entities ' + entities);
+    }
+  };
+  
+  var systems = [
+      new SampleSystem()
+  ];
 
-    var playerA = this.entityMapper.createEntity([
-        new PlayerComponent('Player 1'),
-        new PositionComponent(-64),
-        new RotationComponent(),
-        new StateMachineComponent('blobAnimation'),
-        new AnimationMapComponent(
-            'idle',
-            {
-              animations: {
-                idle: {
-                  file: 'blob/animation_blob_idle.json',
-                  length: 1,
-                  width: 64,
-                  height: 64
-                },
-                moving: {
-                  file: 'blob/animation_blob_moving.json',
-                  length: 1,
-                  width: 64,
-                  height: 64
-                },
-                jumping: {
-                  file: 'blob/animation_blob_jumping.json',
-                  length: 1,
-                  width: 64,
-                  height: 64
-                }
-              }
-            }
-        ),
-        new PolygonComponent(generatePolygon(4, 64, 45 / DEG_RAD, 1, 1.25))
-    ]);
+  var Entities = function () {
+    this.entities = [];
+    this.componentMap = {};
 
-    var playerB = this.entityMapper.createEntity([
-      new PositionComponent(64),
-      new PlayerComponent('Player 2'),
-      new RotationComponent(),
-      new StateMachineComponent('blobAnimation'),
-      new AnimationMapComponent(
-          'idle',
-          {
-            animations: {
-              idle: {
-                file: 'blob/animation_blob_idle.json',
-                length: 1,
-                width: 64,
-                height: 64
-              },
-              moving: {
-                file: 'blob/animation_blob_moving.json',
-                length: 1,
-                width: 64,
-                height: 64
-              },
-              jumping: {
-                file: 'blob/animation_blob_jumping.json',
-                length: 1,
-                width: 64,
-                height: 64
-              }
-            }
-          }
-      ),
-      new PolygonComponent(generatePolygon(4, 64, 45 / DEG_RAD, 1, 1.25))
-    ]);
+    /**
+     * Creates a new entity and returns an ID.
+     * @param name the entity name ( Non-unique: Informal usage. )
+     * @param components composition of the new entity.
+     * @param children an array of IDs to associate as children.
+     */
+    this.create = function (name, components, children) {
+      var entityID = this.entities.length;
+      var entityComponents = {};
 
+      /**
+       * 1. create named component map for entity use
+       * 2. associate entity with components for lookups.
+       */
+      for (var i = 0; i < components.length; i++) {
+        var comp = components[i];
+        entityComponents[comp.name] = comp;
 
-    var root = this.entityMapper.createEntity([
-      new PositionComponent(),
-      new RenderRoot()
-    ], 'root', [ playerA, playerB ] );
+        if (!this.componentMap[comp.name]) this.componentMap[comp.name] = [];
+        var index = this.componentMap[comp.name].indexOf(entityID);
 
-    this.systemProcessor.addSystem(new BackgroundSystem());
-    this.systemProcessor.addSystem(new AnimationSystem());
-    this.systemProcessor.addSystem(new SequenceSystem());
-    this.systemProcessor.addSystem(new RenderingSystem());
-    this.systemProcessor.addSystem( {
-      name: ''
-    } );
-    this.systemProcessor.addSystem(new InputSystem({
-      jump: {
-        controller: {
-          port: 0,
-          buttons: [ DS4.cross ]
-        },
-        keys: [ Keys.space ]
-      },
-      move: {
-        controller: {
-          port: 0,
-          axes: {
-            leftStick: {
-              deadZone: .25
-            }
-          }
-        },
-        pad: {
-          left: [ Keys.left, Keys.a ],
-          right: [ Keys.right, Keys.d ]
+        if (index === -1) {
+          this.componentMap[comp.name].push(entityID);
         }
+        this.componentMap[comp.name] = this.componentMap[comp.name];
       }
-    }));
 
-    this.systemProcessor.addSystem(new StateMachineSystem({
-      blobAnimation: {
-        initialState: 0,
-        states: ['idle', 'moving', 'jumping'],
-        idle: {
-          listeners: {
-            jump: function () {
-              
-            },
-            move: function () {
-              
+      this.entities.push({
+        id: entityID,
+        name: name,
+        comps: entityComponents
+      });
+
+      return entityID;
+    };
+
+    /**
+     * Removes the designated entity from the entity list and component map
+     */
+    this.destroy = function (ID) {
+      var entity = this.entities[ID];
+      var comps = entity.comps;
+
+      // Remove from component maps
+      if (comps) {
+        var compNames = Object.keys(comps);
+        for (var i = 0; i < compNames.length; i++) {
+          var compName = compNames[i];
+          var compMapping = this.componentMap[compName];
+          if (compMapping) {
+            var entityIndex = compMapping.indexOf(ID);
+            if (entityIndex !== -1) {
+              compMapping.splice(entityIndex, 1);
             }
-          },
-          enter: function (components) {
-            components.animationMap.activeState = 'idle';
-            components.animationMap.progress = 0;
-          },
-
-          update: function (stateTime, transition) {
-
-          },
-
-          exit: function () {
-
-          }
-        },
-
-        moving: {
-          listeners: {
-            move: function (event) {
-
-            }
-          },
-          enter: function (components) {
-            components.animationMap.activeState = 'moving';
-            components.animationMap.progress = 0;
-          },
-
-          update: function (stateTime, transition) {
-            if (stateTime > .3) {
-              transition
-            }
-          },
-
-          exit: function () {
-
-          }
-        },
-
-        jumping: {
-          enter: function (components) {
-            components.animationMap.activeState = 'jumping';
-            components.animationMap.progress = 0;
-          },
-
-          update: function (stateTime, transition, components) {
-            if (stateTime > 1) {
-              transition('idle');
-            }
-          },
-
-          exit: function () {
           }
         }
       }
-    }));
+
+      // Remove from entity list
+      this.entities.splice(ID, 1);
+    };
+
+    this.getEntities = function (ID) {
+      return this.entities[ID]
+    };
   };
 
-  this.onResize = function (isMobile) {
-    if (this.state.rootID) {
-      if (isMobile) {
-        this.entityMapper.entities[this.state.rootID].components[ComponentType.polygon]
-            .polygon = generatePolygon(4, 128, Math.PI / 4,  1.75, 1.75);
-      } else {
-        this.entityMapper.entities[this.state.rootID].components[ComponentType.polygon]
-            .polygon = generatePolygon(4, 128, Math.PI / 4,  4, 1.75);
+  this.setup = function () {
+    var em = new Entities();
+    var id = em.create('sampleEntity', [
+        new PositionComponent(),
+        new ColorComponent()
+    ]);
+
+    // Run through processor.
+    for (var i = 0; i < systems.length; i ++) {
+      var sys = systems[i];
+
+      var listLengths = {};
+      var longestName = null;
+      var longestLen = -1;
+      for (var j = 0; j < sys.filter.length; j++) {
+        var len = em.componentMap[sys.filter[j]].length;
+        listLengths[sys.filter[j]] = len;
+        if (len > longestLen) {
+          longestLen = len;
+          longestName = sys.filter[j];
+        }
       }
+
+      console.log(longestName);
+      // console.log(componentLists);
     }
+
+    // em.destroy(id);
+    // console.log(em);
   };
 
   this.update = function (delta) {

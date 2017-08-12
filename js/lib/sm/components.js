@@ -21,7 +21,9 @@ var ComponentType = {
   animation: 'animation',
   stateMachine: 'fsm',
   stroke: 'strokedElement',
-  animationMap: 'animationMap'
+  animationMap: 'animationMap',
+  rigidbody: 'rigidbody',
+  player: 'player'
 };
 
 function PolygonComponent(polygon) {
@@ -162,6 +164,10 @@ function AnimationMapComponent(initialState, map) {
 }
 
 function PlayerComponent(playerName) {
-  this.name = name;
+  this.name = ComponentType.player;
   this.playerName = playerName;
+}
+
+function RigidBodyComponent() {
+  this.name = ComponentType.rigidbody;
 }

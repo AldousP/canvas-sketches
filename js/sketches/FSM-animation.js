@@ -18,7 +18,12 @@ var FSMAnimations = function () {
 
   var SampleSystem = function () {
     this.name = 'Sample System.';
-    this.filter = [ 'pos', 'col' ];
+    this.filter = [
+        ComponentType.position,
+        ComponentType.rigidbody,
+        ComponentType.color,
+        ComponentType.text
+    ];
     this.updateEntities = function (entities) {
       console.log('updating entities ' + entities);
     }
@@ -101,29 +106,78 @@ var FSMAnimations = function () {
 
   this.setup = function () {
     var em = new Entities();
-    var id = em.create('sampleEntity', [
+
+    em.create('entity1', [
         new PositionComponent(),
         new ColorComponent()
+    ]);
+
+    em.create('entity2', [
+      new PositionComponent(),
+      new RigidBodyComponent()
+    ]);
+
+    em.create('entity3', [
+      new PositionComponent(),
+      new ColorComponent()
+    ]);
+
+    em.create('entity4', [
+      new PositionComponent(),
+      new RigidBodyComponent(),
+      new TextComponent()
     ]);
 
     // Run through processor.
     for (var i = 0; i < systems.length; i ++) {
       var sys = systems[i];
 
-      var listLengths = {};
       var longestName = null;
       var longestLen = -1;
+      var listLens = [];
       for (var j = 0; j < sys.filter.length; j++) {
         var len = em.componentMap[sys.filter[j]].length;
-        listLengths[sys.filter[j]] = len;
+        listLens.push({
+          name: sys.filter[j],
+          len: len
+        });
+
         if (len > longestLen) {
           longestLen = len;
           longestName = sys.filter[j];
         }
       }
 
-      console.log(longestName);
-      // console.log(componentLists);
+      listLens.sort(function (a, b) {
+        return a.len > b.len;
+      });
+
+      console.log(listLens);
+
+
+      // rootList.forEach(function (value) {
+      //   var valuePresent = false;
+      //   for (var j = 1; j < setsKeys.length; j++) {
+      //     var comparisonSet = sets[setsKeys[j]];
+      //     valuePresent = comparisonSet.indexOf(value) > -1;
+      //     if (j < 1 && !valuePresent) {
+      //       break;
+      //     }
+      //   }
+      //
+      //   if (valuePresent) {
+      //     finalEntities.push(value);
+      //   }
+      // });
+      // for (var k = 0; k < listLens.length; k++) {
+      //   var listStruct = listLens[k];
+      //   var currentList = em.componentMap[listStruct.name];
+      //   console.log('-----');
+      //   for (var l = 0; l < currentList.length; l++) {
+      //     console.log(currentList[l]);
+      //     console.log('--');
+      //   }
+      // }
     }
 
     // em.destroy(id);

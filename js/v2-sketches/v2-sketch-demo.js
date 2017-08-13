@@ -18,5 +18,6 @@ function v2SketchDemo() {
   this.update = function (delta, g) {
 
     g.clear(Color.black);
+    g.text('Hello World');
   };
 }

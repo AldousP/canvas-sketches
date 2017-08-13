@@ -401,12 +401,16 @@
         var style = conf.style;
         var weight = 'normal';
         var align = conf.align;
+        var color = conf.color;
+        if (!color) {
+          conf.color = Color.white;
+        }
         var styleString = '';
 
         styleString += (style ? style : 'normal') + ' ';
         styleString += (weight ? weight : 'normal') + ' ';
-        styleString += size + 'px ';
-        styleString += font + ' ';
+        styleString += (size ? size : '12') + 'px ';
+        styleString += (font ? font : 'arial') + ' ';
 
         sm.ctx.textBaseline = 'middle';
         sm.ctx.textAlign = align ? align : 'center';
@@ -576,6 +580,7 @@
       sm.gfx.clear(Color.dark_blue);
 
       sm.gfx.preDraw();
+      sm.gfx.setTextConf({});
       if (sm.activeProgram) {
         if (!sm.conf.paused ) {
           sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);

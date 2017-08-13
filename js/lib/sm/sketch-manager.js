@@ -501,6 +501,11 @@
       }
     },
 
+    loadV2Program: function (program) {
+      console.log('Loading program!');
+      sm.activeProgram = program;
+      program.setup();
+    },
     loadProgram: function (program) {
       var state = program.state;
       var meta = state ? state.meta : null;
@@ -571,14 +576,10 @@
       sm.gfx.clear(Color.dark_blue);
 
       sm.gfx.preDraw();
-      var state;
-      var meta;
       if (sm.activeProgram) {
-        state = sm.activeProgram.state;
-        meta = state.meta;
         if (!sm.conf.paused ) {
           sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
-          sm.activeProgram.update(sm.time.delta);
+          sm.activeProgram.update(sm.time.delta, sm.gfx);
           sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2);
         } else {
           sm.gfx.setFillColor(Color.green);
@@ -610,17 +611,7 @@
         sm.logs.reverse();
       }
 
-      // Render FPS & Title
-      if (sm.conf.debug.active) {
-        if (sm.activeProgram) {
-          sm.gfx.setTextConf(sm.conf.debug.logConsole.textConf);
-          sm.gfx.text(meta.name, sm.canvas.width / 2.75, sm.canvas.height / 2.2);
-          sm.gfx.text(sm.utils.formatters.float_two_pt(sm.time.frameRate),
-              sm.canvas.width / 2.75,
-              sm.canvas.height / 2.45
-          );
-        }
-      }
+
 
       // Reset State and Input
       sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2 );

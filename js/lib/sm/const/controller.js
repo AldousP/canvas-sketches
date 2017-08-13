@@ -13,7 +13,7 @@ DS4 = {
   R2: 7,
   leftstick: 10,
   rightstick: 11,
-  share: 8,
-  options: 9,
+  select: 8,
+  start: 9,
   touchpad: 17
 };

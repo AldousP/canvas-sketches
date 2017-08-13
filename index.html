@@ -27,43 +27,42 @@
             <canvas id="canvas" class="canvas" width="720" height="360"></canvas>
             <div id="web-boy" class="show-mobile">WebBoy</div>
             <div id="program-selector" class="hide-mobile">
-              <div class="program-option" onclick="loadFSMAnimations()">
-                <img src="assets/program-icons/FSM-animations.png" width="64" height="64">
-                <h5>FSM Animations</h5>
-              </div>
-              <div class="program-option" onclick="loadSequences()">
-                <img src="assets/program-icons/sequences.png" width="64" height="64">
-                <h5>Sequences</h5>
-              </div>
-              <div class="program-option" onclick="loadAnimation()">
-                <img src="assets/program-icons/animations.png" width="64" height="64">
-                <h5>Animation</h5>
-              </div>
-              <div class="program-option" onclick="loadInputTests()">
-                <img src="assets/program-icons/input-tests.png" width="64" height="64">
-                <h5>Input Tests</h5>
-              </div>
-              <div class="program-option" onclick="loadStateMachines()">
-                <img src="assets/program-icons/statemachines.png" width="64" height="64">
-                <h5>FSM</h5>
-              </div>
-              <div class="program-option" onclick="loadClipping()">
-                <img src="assets/program-icons/clipping.png" width="64" height="64">
-                <h5>Clipping</h5>
-              </div>
-              <div class="program-option" onclick="loadNesting()">
-                <img src="assets/program-icons/nesting.png" width="64" height="64">
-                <h5>Nesting</h5>
-              </div>
-              <div class="program-option" onclick="loadCameras()">
-                <img src="assets/program-icons/cameras.png" width="64" height="64">
-                <h5>Cameras</h5>
-              </div>
-              <div class="program-option" onclick="loadTextTests()">
-                <img src="assets/program-icons/text-tests.png" width="64" height="64">
-                <h5>Text Examples</h5>
-              </div>
-
+              <!--<div class="program-option" onclick="loadFSMAnimations()">-->
+                <!--<img src="assets/program-icons/FSM-animations.png" width="64" height="64">-->
+                <!--<h5>FSM Animations</h5>-->
+              <!--</div>-->
+              <!--<div class="program-option" onclick="loadSequences()">-->
+                <!--<img src="assets/program-icons/sequences.png" width="64" height="64">-->
+                <!--<h5>Sequences</h5>-->
+              <!--</div>-->
+              <!--<div class="program-option" onclick="loadAnimation()">-->
+                <!--<img src="assets/program-icons/animations.png" width="64" height="64">-->
+                <!--<h5>Animation</h5>-->
+              <!--</div>-->
+              <!--<div class="program-option" onclick="loadInputTests()">-->
+                <!--<img src="assets/program-icons/input-tests.png" width="64" height="64">-->
+                <!--<h5>Input Tests</h5>-->
+              <!--</div>-->
+              <!--<div class="program-option" onclick="loadStateMachines()">-->
+                <!--<img src="assets/program-icons/statemachines.png" width="64" height="64">-->
+                <!--<h5>FSM</h5>-->
+              <!--</div>-->
+              <!--<div class="program-option" onclick="loadClipping()">-->
+                <!--<img src="assets/program-icons/clipping.png" width="64" height="64">-->
+                <!--<h5>Clipping</h5>-->
+              <!--</div>-->
+              <!--<div class="program-option" onclick="loadNesting()">-->
+                <!--<img src="assets/program-icons/nesting.png" width="64" height="64">-->
+                <!--<h5>Nesting</h5>-->
+              <!--</div>-->
+              <!--<div class="program-option" onclick="loadCameras()">-->
+                <!--<img src="assets/program-icons/cameras.png" width="64" height="64">-->
+                <!--<h5>Cameras</h5>-->
+              <!--</div>-->
+              <!--<div class="program-option" onclick="loadTextTests()">-->
+                <!--<img src="assets/program-icons/text-tests.png" width="64" height="64">-->
+                <!--<h5>Text Examples</h5>-->
+              <!--</div>-->
             </div>
           </div>
         </div>
@@ -144,11 +143,10 @@
       </div>
     </div>
 
-    <script src="js/lib/sm/const/system-type.js"></script>
     <script src="js/lib/sm/const/colors.js"></script>
     <script src="js/lib/sm/const/notes.js"></script>
     <script src="js/lib/sm/const/keys.js"></script>
-    <script src="js/lib/sm/const/DS4.js"></script>
+    <script src="js/lib/sm/const/controller.js"></script>
 
     <script src="js/lib/sm/math/SMath.js"></script>
     <script src="js/lib/sm/math/vector.js"></script>
@@ -159,29 +157,8 @@
     <script src="js/lib/sm/system-processor.js"></script>
     <script src="js/lib/sm/components.js"></script>
     <script src="js/lib/sm/entity.js"></script>
-    <script src="js/lib/sm/extractors/extractors.js"></script>
 
-    <script src="js/lib/sm/systems/background-system.js"></script>
-    <script src="js/lib/sm/systems/animation-system.js"></script>
-    <script src="js/lib/sm/systems/camera-system.js"></script>
-    <script src="js/lib/sm/systems/input-system.js"></script>
-    <script src="js/lib/sm/systems/movement-system.js"></script>
-    <script src="js/lib/sm/systems/path-system.js"></script>
-    <script src="js/lib/sm/systems/physics-system.js"></script>
-    <script src="js/lib/sm/systems/rendering-system.js"></script>
-    <script src="js/lib/sm/systems/rendering-system.js"></script>
-    <script src="js/lib/sm/systems/sequence-system.js"></script>
-    <script src="js/lib/sm/systems/statemachine-system.js"></script>
-
-    <script src="js/sketches/nesting.js"></script>
-    <script src="js/sketches/clipping.js"></script>
-    <script src="js/sketches/cameras.js"></script>
-    <script src="js/sketches/text-tests.js"></script>
-    <script src="js/sketches/animation.js"></script>
-    <script src="js/sketches/statemachines.js"></script>
-    <script src="js/sketches/input-demos.js"></script>
-    <script src="js/sketches/sequences.js"></script>
-    <script src="js/sketches/FSM-animation.js"></script>
+    <script src="js/v2-sketches/v2-sketch-demo.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>

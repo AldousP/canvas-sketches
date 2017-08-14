@@ -5,6 +5,8 @@
  */
 
 (function () {
+  var tmpVec = new Vector();
+
   window.sm = {
     programDescription: function () {
       return sm.activeProgram ? sm.activeProgram.state.meta.description : 'No Program Loaded';
@@ -110,10 +112,10 @@
     },
     input: {
       state: {
+        cursor: new Vector(),
         keyboard: {
 
         },
-        mousePos: new Vector(),
         controllers: [
 
         ]
@@ -144,7 +146,6 @@
           });
           sm.input.state.controllers = realControllers;
         }
-
       }
     },
     log: {
@@ -198,6 +199,9 @@
       },
 
       drawPolygon: function (polygon, pos, fill, rotation) {
+        if (!pos) {
+          pos = tmpVec;
+        }
         sm.ctx.translate(pos.x, -pos.y);
         sm.ctx.rotate(rotation);
         sm.ctx.beginPath();
@@ -497,6 +501,16 @@
       sm.gfx.width = sm.canvas.width;
       sm.gfx.height = sm.canvas.height;
 
+      sm.canvas.onmousemove = function (evt) {
+        var x = evt.clientX;
+        var y = evt.clientY;
+        var offset = mountPoint.getClientRects()[0];
+        var offX = offset.left;
+        var offY = offset.top;
+        var newX = SMath.clamp(x - offX, 0, offset.width);
+        var newY = SMath.clamp(y - offY, 0, offset.height);
+        setVec(sm.input.state.cursor, newX, newY);
+      };
 
       sm.input.init();
       sm.input.update();
@@ -615,8 +629,6 @@
         );
         sm.logs.reverse();
       }
-
-
 
       // Reset State and Input
       sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2 );

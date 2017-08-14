@@ -11,6 +11,15 @@ var SMath = {
     var targetSpan = targetRangeB - targetRangeA;
     return (val / originSpan) * targetSpan + targetRangeA;
   },
+  
+  clamp: function (val, rangeA, rangeB) {
+    if (val < rangeA) {
+      return rangeA
+    } else if (val > rangeB) {
+      return rangeB;
+    }
+    return val;
+  },
 
   /**
    * Returns the interpolated value between two colors.

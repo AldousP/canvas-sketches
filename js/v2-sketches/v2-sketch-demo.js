@@ -6,8 +6,11 @@ function v2SketchDemo() {
     date: '08.13.2017'
   };
 
+  var rect;
+  var rotation = 0;
+
   this.setup = function () {
-    
+    rect = SPoly.polySquare(128);
   };
 
   /**
@@ -16,8 +19,11 @@ function v2SketchDemo() {
    * @param g reference to sm.gfx.
    */
   this.update = function (delta, g) {
-
     g.clear(Color.black);
     g.text('Hello World');
+
+    rotation += Math.PI / 16 * delta;
+    g.setStrokeColor(Color.white);
+    g.drawPolygon(rect, sm.input.state.cursor, false, rotation);
   };
 }

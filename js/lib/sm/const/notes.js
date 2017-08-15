@@ -1,5 +1,8 @@
 'use strict';
+if (!sc) {
+  var sc = {};
+}
 
-var Notes = {
+sc.notes = {
   C4 : 261.626
 };

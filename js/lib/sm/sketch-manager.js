@@ -5,7 +5,7 @@
  */
 
 (function () {
-  var tmpVec = new Vector();
+  var tmpVec = new SVec.Vector();
 
   window.sm = {
     programDescription: function () {
@@ -61,7 +61,7 @@
           logToScreen: true,
           logToBrowserConsole: true,
           textConf : {
-            color: Color.white,
+            color: sc.color.white,
             size: 12,
             font: 'Arial',
             style : 'normal',
@@ -99,20 +99,9 @@
     logs: [],
     ctx: {},
     canvas: {},
-    utils : {
-      formatters : {
-        float_two_pt : function (val) {
-          return parseFloat((Math.round(val * 100) / 100).toFixed(2));
-        },
-
-        float_one_pt : function (val) {
-          return parseFloat((Math.round(val * 100) / 100).toFixed(1));
-        }
-      }
-    },
     input: {
       state: {
-        cursor: new Vector(),
+        cursor: new SVec.Vector(),
         keyboard: {
 
         },
@@ -131,7 +120,46 @@
           var keyCode = event.keyCode;
           sm.input.state.keyboard[keyCode] = false;
         });
+
+        sm.input.conf = {};
+        var stylePaddingLeft = parseInt(document.defaultView.getComputedStyle(sm.canvas, null)['paddingLeft'], 10) || 0;
+        var stylePaddingTop = parseInt(document.defaultView.getComputedStyle(sm.canvas, null)['paddingTop'], 10)|| 0;
+        var styleBorderLeft = parseInt(document.defaultView.getComputedStyle(sm.canvas, null)['borderLeftWidth'], 10) || 0;
+        var styleBorderTop = parseInt(document.defaultView.getComputedStyle(sm.canvas, null)['borderTopWidth'], 10) || 0;
+        // Some pages have fixed-position bars (like the stumbleupon bar) at the top or left of the page
+        // They will mess up mouse coordinates and this fixes that
+        var html = document.body.parentNode;
+        var htmlTop = html.offsetTop;
+        var htmlLeft = html.offsetLeft;
+
+        var element = sm.canvas, offsetX = 0, offsetY = 0;
+
+        // Compute the total offset. It's possible to cache this if you want
+        if (element.offsetParent !== undefined) {
+          do {
+            offsetX += element.offsetLeft;
+            offsetY += element.offsetTop;
+          } while ((element = element.offsetParent));
+        }
+
+        offsetX += stylePaddingLeft + styleBorderLeft + htmlLeft;
+        offsetY += stylePaddingTop + styleBorderTop + htmlTop;
+        
+        sm.input.conf.offsetX = offsetX;
+        sm.input.conf.offsetY = offsetY;
+        
+        document.body.onmousemove = function (evt) {
+          var x = evt.clientX;
+          var y = evt.clientY;
+          var newX = x - sm.input.conf.offsetX;
+          var newY = y - sm.input.conf.offsetY;
+          newX -= sm.canvas.offsetWidth / 2;
+          newY -= sm.canvas.offsetHeight / 2;
+          newY *= -1;
+          SVec.setVec(sm.input.state.cursor, newX, newY);
+        };
       },
+
       update: function () {
         var controllers = navigator.getGamepads();
 
@@ -179,7 +207,7 @@
 
     gfx: {
       textConf : {
-        color: Color.white,
+        color: sc.color.white,
         size: 12,
         font: 'Arial',
         style : 'normal',
@@ -196,6 +224,11 @@
         }
         sm.ctx.fillRect(0, 0, sm.canvas.width * 100, sm.canvas.height * 100);
         sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
+      },
+      
+      drawPolygonConst: function (polygon, x, y, fill, rotation) {
+        SVec.setVec(tmpVec, x, y);
+        this.drawPolygon(polygon, tmpVec, fill, rotation);
       },
 
       drawPolygon: function (polygon, pos, fill, rotation) {
@@ -407,7 +440,7 @@
         var align = conf.align;
         var color = conf.color;
         if (!color) {
-          conf.color = Color.white;
+          conf.color = sc.color.white;
         }
         var styleString = '';
 
@@ -501,17 +534,6 @@
       sm.gfx.width = sm.canvas.width;
       sm.gfx.height = sm.canvas.height;
 
-      sm.canvas.onmousemove = function (evt) {
-        var x = evt.clientX;
-        var y = evt.clientY;
-        var offset = mountPoint.getClientRects()[0];
-        var offX = offset.left;
-        var offY = offset.top;
-        var newX = SMath.clamp(x - offX, 0, offset.width);
-        var newY = SMath.clamp(y - offY, 0, offset.height);
-        setVec(sm.input.state.cursor, newX, newY);
-      };
-
       sm.input.init();
       sm.input.update();
       if (program) {
@@ -591,7 +613,7 @@
       sm.time.update();
       sm.input.update();
 
-      sm.gfx.clear(Color.dark_blue);
+      sm.gfx.clear(sc.color.dark_blue);
 
       sm.gfx.preDraw();
       sm.gfx.setTextConf({});
@@ -601,7 +623,7 @@
           sm.activeProgram.update(sm.time.delta, sm.gfx);
           sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2);
         } else {
-          sm.gfx.setFillColor(Color.green);
+          sm.gfx.setFillColor(sc.color.green);
           sm.gfx.text(true, 'SM-PAUSED', 0, 0);
         }
       }
@@ -613,7 +635,7 @@
         if (sm.activeProgram) {
 					sm.gfx.setFillColor(sm.conf.debug.logConsole.color);
 				} else {
-					sm.gfx.setFillColor(Color.white);
+					sm.gfx.setFillColor(sc.color.white);
         }
         var viewPortW = sm.canvas.width;
         var viewPortH = sm.canvas.height;

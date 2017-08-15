@@ -1,4 +1,11 @@
-DS4 = {
+'use strict';
+if (!sc) {
+  var sc = {};
+}
+
+sc.inputs = {};
+
+sc.inputs.controller = {
   up: 12,
   left: 14,
   right: 15,

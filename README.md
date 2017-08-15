@@ -32,7 +32,7 @@ var SampleProgram = function () {
   
   this.update = function (delta) {
     sm.gfx.clear(this.state.bgColor);
-    sm.gfx.setStrokeColor(Color.white);
+    sm.gfx.setStrokeColor(sc.color.white);
     sm.gfx.text(true, this.state.meta.description, 0, -sm.gfx.height / 2.5 + 24, 12, 'Arial');
   }
 };
@@ -74,7 +74,7 @@ var Boxes = function () {
     for (var i = 0; i < this.state.entityCountX; i++) {
       for (var j = 0; j < this.state.entityCountY; j++) {
         var child = this.entityMapper.createEntity([
-          new ColorComponent(Color.white),
+          new ColorComponent(sc.color.white),
           new RotationComponent(0),
           new PositionComponent(-offsetX + i * 48, -offsetY + j * 48),
           new PolygonComponent(generatePolygon(4, 32, Math.PI / 4))
@@ -85,7 +85,7 @@ var Boxes = function () {
 
     entities.push(this.entityMapper.createEntity([
       new SequenceComponent({ length: 2.5, pos: 0 }),
-      new ColorComponent(Color.green),
+      new ColorComponent(sc.color.green),
       new PositionComponent(0, 0),
       new PathComponent([
         new Vector(0, 0),
@@ -105,7 +105,7 @@ var Boxes = function () {
     entities.push(this.entityMapper.createEntity([
       { name: 'ball' },
       new PositionComponent(0, 0),
-      new ColorComponent(Color.cyan, Color.cyan),
+      new ColorComponent(sc.color.cyan, sc.color.cyan),
       new PolygonComponent(generatePolygon(32, 6, 0))
     ], 'ball'));
 

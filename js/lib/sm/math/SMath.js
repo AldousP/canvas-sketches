@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Global math utility object.
  */

@@ -1,4 +1,10 @@
-var Color = {
+'use strict';
+if (!sc) {
+  var sc = {};
+}
+
+
+sc.color = {
   clear: "rgba(0, 0, 0, 0)",
   white : "#FFFFFF",
   black : "#000",
@@ -15,15 +21,15 @@ var Color = {
 /**
  * @return {string}
  */
-var RGBA = function (R, G, B, A) {
+sc.color.RGBA = function (R, G, B, A) {
   return 'rgba(' + R + ", " + G + ', ' + B + ', ' + A + ')';
 };
 
-var randColor = function () {
-  return RGBA(
+sc.color.randColor = function () {
+  return sc.color.RGBA(
       Math.floor(SMath.rand(0, 255)),
       Math.floor(SMath.rand(0, 255)),
       Math.floor(SMath.rand(0, 255)),
-      sm.utils.formatters.float_two_pt(SMath.rand(0, 1))
+      SFormat.float_two_pt(SMath.rand(0, 1))
   );
 };

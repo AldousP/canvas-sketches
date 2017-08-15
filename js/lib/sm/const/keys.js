@@ -1,4 +1,9 @@
-var Keys = {
+'use strict';
+if (!sc) {
+  var sc = {};
+}
+
+sc.keys = {
   backspace: 8,
   tab: 9,
   enter: 13,

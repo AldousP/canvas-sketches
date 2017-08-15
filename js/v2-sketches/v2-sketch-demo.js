@@ -7,10 +7,12 @@ function v2SketchDemo() {
   };
 
   var rect;
+  var circ;
   var rotation = 0;
 
   this.setup = function () {
     rect = SPoly.polySquare(128);
+    circ = SPoly.polyCircle(64);
   };
 
   /**
@@ -19,11 +21,12 @@ function v2SketchDemo() {
    * @param g reference to sm.gfx.
    */
   this.update = function (delta, g) {
-    g.clear(Color.black);
-    g.text('Hello World');
+    g.clear(sc.color.black);
+    g.text(sm.input.state.cursor);
 
     rotation += Math.PI / 16 * delta;
-    g.setStrokeColor(Color.white);
-    g.drawPolygon(rect, sm.input.state.cursor, false, rotation);
+    g.setStrokeColor(sc.color.white);
+    g.drawPolygon(rect, null, false, rotation);
+    g.drawPolygon(circ, sm.input.state.cursor, false, rotation);
   };
 }

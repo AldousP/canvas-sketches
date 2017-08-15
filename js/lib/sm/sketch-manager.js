@@ -496,7 +496,7 @@
       },
 
       playTrack: function () {
-        
+
       }
     },
 
@@ -517,6 +517,13 @@
             },
             200
         );
+      },
+      loadSound: function (location) {
+        return new Audio(location);
+      },
+
+      playSound: function (sound) {
+        sound.play();
       }
     },
 

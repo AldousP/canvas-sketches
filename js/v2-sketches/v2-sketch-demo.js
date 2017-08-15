@@ -9,10 +9,12 @@ function v2SketchDemo() {
   var rect;
   var circ;
   var rotation = 0;
+  var chime;
 
   this.setup = function () {
     rect = SPoly.polySquare(128);
     circ = SPoly.polyCircle(64);
+    chime = sm.sfx.loadSound('assets/sfx/UI_cmaj8_arp.mp3');
   };
 
   /**
@@ -28,5 +30,6 @@ function v2SketchDemo() {
     g.setStrokeColor(sc.color.white);
     g.drawPolygon(rect, null, false, rotation);
     g.drawPolygon(circ, sm.input.state.cursor, false, rotation);
+
   };
 }

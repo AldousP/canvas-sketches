@@ -29,7 +29,7 @@ function v2SketchDemo() {
     rotation += Math.PI / 16 * delta;
     g.setStrokeColor(sc.color.white);
     g.drawPolygon(rect, null, false, rotation);
-    g.drawPolygon(circ, sm.input.state.cursor, false, rotation);
+    g.drawPolygon(circ, sm.input.state.cursor, sm.input.state.mouseDown, rotation);
 
   };
 }

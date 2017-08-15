@@ -14,6 +14,10 @@ var SPoly = {
   Polygon: function (pts) {
     this.pts = pts ? pts : [];
   },
+  
+  overlap: function (polygonA, polygonB) {
+    return false;
+  },
 
   /**
    * Generate a new Polygon

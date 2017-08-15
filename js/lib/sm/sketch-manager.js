@@ -159,6 +159,14 @@
 
           SVec.setVec(sm.input.state.cursor, newX, newY);
         };
+        
+        sm.canvas.onmousedown = function () {
+          sm.input.state.mouseDown = true;
+        };
+
+        sm.canvas.onmouseup = function () {
+          sm.input.state.mouseDown = false;
+        };
       },
 
       update: function () {

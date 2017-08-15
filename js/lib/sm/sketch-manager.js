@@ -148,7 +148,7 @@
         sm.input.conf.offsetX = offsetX;
         sm.input.conf.offsetY = offsetY;
         
-        document.body.onmousemove = function (evt) {
+        sm.canvas.onmousemove = function (evt) {
           var x = evt.clientX;
           var y = evt.clientY;
           var newX = x - sm.input.conf.offsetX;
@@ -156,6 +156,7 @@
           newX -= sm.canvas.offsetWidth / 2;
           newY -= sm.canvas.offsetHeight / 2;
           newY *= -1;
+
           SVec.setVec(sm.input.state.cursor, newX, newY);
         };
       },

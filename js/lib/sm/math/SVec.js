@@ -33,13 +33,16 @@ SVec.Vector.prototype.toString = function () {
  * recalculates the length of the Vector.
  */
 
-
 /**
  * Sets the length field of the given Vector according to its x & y values.
  * @param vec
  */
 SVec.calcLen = function (vec) {
   vec.len = Math.sqrt((vec.x * vec.x) + (vec.y * vec.y));
+};
+
+SVec.dst = function (vec1, vec2) {
+  return Math.sqrt((vec1.x - vec2.x) * (vec1.x - vec2.x) + (vec1.y - vec2.y) * (vec1.y - vec2.y));
 };
 
 /**
@@ -141,4 +144,11 @@ SVec.lerpVec = function (vecA, vecB, alpha) {
     x: vecA.x + (vecB.x - vecA.x) * alpha,
     y: vecA.y + (vecB.y - vecA.y) * alpha
   }
+};
+
+/**
+ * Makes the vector its perpendicular
+ */
+SVec.perp = function (vec) {
+  return SVec.setVec(vec, vec.y, -vec.x);
 };

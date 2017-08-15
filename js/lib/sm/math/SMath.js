@@ -35,5 +35,12 @@ var SMath = {
    */
   lerp: function (valA, valB, alpha) {
     return valA + (valB - valA) * alpha;
+  },
+  
+  wrapIndex: function (index, length) {
+    if (index > length - 1) {
+      index = this.wrapIndex(index - length, length);
+    }
+    return index;
   }
 };

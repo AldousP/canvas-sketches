@@ -1,13 +1,11 @@
 'use strict';
 
-function SystemProcessor(handler, rootState) {
-  if (!rootState) sm.log.error('No rootState provided. ', 'sysproc');
+function SystemProcessor(handler) {
   if (!handler) sm.log.error('No handler provided. ', 'sysproc');
 
   this.systems = [];
   this.entityMapper = handler;
   this.systemNameList = [];
-  this.state = rootState;
   this.delta = 0;
 
   this.fireEvent = function (event, payload) {

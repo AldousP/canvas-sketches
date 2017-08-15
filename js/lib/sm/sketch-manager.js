@@ -558,54 +558,28 @@
     },
 
     loadV2Program: function (program) {
-      console.log('Loading program!');
-      sm.activeProgram = program;
-      program.setup();
-    },
-    loadProgram: function (program) {
-      var state = program.state;
-      var meta = state ? state.meta : null;
+      var conf = program.conf;
 
-      if (sm.activeProgram) {
-        sm.unloadProgram();
-      }
-
-      if (!state) {
-        sm.log.error('No state found on provided program.');
+      if (!conf) {
+        sm.log.error('No conf found on provided program.');
         return -1;
-      }
-
-      if (!meta) {
-        sm.log.error('No meta object found on the provided program');
-        return -1;
-      }
-
-      sm.log.notify('Loading Program: ' + meta.name + '...', sm.context);
-      program.entityMapper = new EntityMapper();
-      program.systemProcessor = new SystemProcessor(program.entityMapper, state);
-
-      program.fireEvent = function (event, payload) {
-        program.systemProcessor.fireEvent(event, payload);
-      };
-
-      try {
+      } else {
+        sm.log.notify('Loading Program: ' + conf.name + '...', sm.context);
+        if (sm.activeProgram) {
+          sm.unloadProgram();
+        }
+        sm.activeProgram = program;
         program.setup();
-      } catch (e) {
-        sm.log.error('Error loading program: ' + meta.name);
-        sm.log.error(e);
-        return;
-      }
 
-      sm.activeProgram = program;
-      sm.log.notify('Starting...', meta.name);
-      document.body.dispatchEvent(new CustomEvent('smProgramLoaded',
-          {
-            'detail': {
-              'name': meta.name,
-              'description': meta.description
-            }
-          })
-      );
+        document.body.dispatchEvent(new CustomEvent('smProgramLoaded',
+            {
+              'detail': {
+                'name': conf.name,
+                'description': conf.description
+              }
+            })
+        );
+      }
     },
 
     unloadProgram: function () {
@@ -613,10 +587,11 @@
         track.pause();
         track.currentTime = 0;
       });
+
       if (!sm.activeProgram) {
         sm.log.notify('Nothing to unload. Did you load a program?', sm.context);
       } else {
-        var name = sm.activeProgram.state.meta.name;
+        var name = sm.activeProgram.conf.name;
         sm.log.notify('Unloading: ' + name + '...', sm.context);
         sm.activeProgram = undefined;
         document.body.dispatchEvent(
@@ -636,7 +611,7 @@
       if (sm.activeProgram) {
         if (!sm.conf.paused ) {
           sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
-          sm.activeProgram.update(sm.time.delta, sm.gfx);
+          // sm.activeProgram.update(sm.time.delta, sm.gfx);
           sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2);
         } else {
           sm.gfx.setFillColor(sc.color.green);

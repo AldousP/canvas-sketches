@@ -24,7 +24,7 @@ var SPoly = {
    * @returns {boolean} if the Polygons overlap
    */
   overlaps: function (polyA, polyB, ptA, ptB) {
-    console.log(polyA, polyB, ptA, ptB);
+    // console.log(polyA, polyB, ptA, ptB);
 
     var polyAxes = [];
     var colliderAxes = [];

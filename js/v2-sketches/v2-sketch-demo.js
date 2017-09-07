@@ -9,7 +9,6 @@ function v2SketchDemo() {
 
   var rect;
   var circ;
-  var pos = new SVec.Vector();
   var rotation = 0;
   var chime;
 
@@ -18,6 +17,26 @@ function v2SketchDemo() {
     circ = SPoly.polyCircle(64);
     chime = sm.sfx.loadSound('assets/sfx/UI_cmaj8_arp.mp3');
     this.update(0, sm.gfx);
+
+    this.entities.buildEntity([
+	    new PositionComponent(),
+	    new RotationComponent()
+    ]);
+
+	  // this.entities.buildEntity([
+		 //  new PositionComponent(),
+	  // ]);
+	  //
+	  // this.entities.buildEntity([
+		 //  new PositionComponent(),
+	  // ]);
+	  //
+	  // this.entities.buildEntity([
+		 //  new PositionComponent(),
+	  // ]);
+
+    this.systems.addSystem(new SampleSystem());
+    this.systems.process(this.entities);
   };
 
   /**
@@ -32,8 +51,5 @@ function v2SketchDemo() {
     rotation += Math.PI / 16 * delta;
     g.setFillColor(sc.color.white);
     g.setStrokeColor(sc.color.white);
-
-    g.drawPolygon(rect, null, SPoly.overlaps(rect, circ, pos, sm.input.state.cursor), rotation);
-    g.drawPolygon(circ, sm.input.state.cursor, sm.input.state.mouseDown, rotation);
   };
 }

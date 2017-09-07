@@ -31,7 +31,7 @@ function PolygonComponent(polygon) {
 
 function PositionComponent(x, y) {
   this.name = ComponentType.position;
-  this.position = new Vector(x, y);
+  this.position = new SVec.Vector(x, y);
 }
 
 function RotationComponent(rotation, radians) {
@@ -42,26 +42,26 @@ function RotationComponent(rotation, radians) {
 
 function PhysicsComponent() {
   this.name = ComponentType.physics;
-  this.velocity = new Vector();
-  this.acceleration = new Vector();
-  this.friction = new Vector();
-  this.gravity = new Vector();e
+  this.velocity = new SVec.Vector();
+  this.acceleration = new SVec.Vector();
+  this.friction = new SVec.Vector();
+  this.gravity = new SVec.Vector();
 }
 
 function VelocityComponent(x, y) {
   this.name = ComponentType.velocity;
-  this.velocity = new Vector(x, y);
+  this.velocity = new SVec.Vector(x, y);
 }
 
 function AccelerationComponent(x, y) {
   this.name = ComponentType.acceleration;
-  this.acceleration = new Vector(x, y);
+  this.acceleration = new SVec.Vector(x, y);
 }
 
 function CameraComponent(conf) {
   this.name = ComponentType.camera;
   this.conf = conf ? conf :{
-    pos: new Vector(0, 0),
+    pos: new SVec.Vector(0, 0),
     width: 128,
     height: 128,
     zoom: 1,
@@ -99,7 +99,7 @@ function RenderRoot() {
 
 function MovementComponent(movementVec, rotSpeed, radians) {
   this.name = ComponentType.movement;
-  this.movementVec = movementVec ? movementVec : new Vector();
+  this.movementVec = movementVec ? movementVec : new SVec.Vector();
   this.rotSpeed = rotSpeed ? rotSpeed : 0;
   this.radians = radians ? radians : false;
 }
@@ -130,7 +130,7 @@ function SequenceComponent(sequences) {
 function PathComponent(pts) {
   this.name = ComponentType.path;
   this.pts = pts ? pts : [];
-  this.pos = pts ? pts[0] : new Vector();
+  this.pos = pts ? pts[0] : new SVec.Vector();
 }
 
 function AnimationComponent (handle, length, width, height) {

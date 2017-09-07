@@ -1,107 +1,75 @@
-'use strict';
+function SystemProcessor() {
+	'use strict';
 
-function SystemProcessor(handler) {
-  if (!handler) sm.log.error('No handler provided. ', 'sysproc');
+	this.systems = [];
 
-  this.systems = [];
-  this.entityMapper = handler;
-  this.systemNameList = [];
-  this.delta = 0;
+	this.addSystem = function (newSystem) {
+    this.systems.push(newSystem);
+	};
 
-  this.fireEvent = function (event, payload) {
-    var that = this;
-    payload.eventName = event;
-    this.systems.forEach(function (system) {
-      if (system.event) {
-        system.event(payload, that.entityMapper.entities, that.delta);
+	this.process = function (entityMapper) {
+	  var currentSystem;
+
+	  // All systems.
+    for (var i = 0; i < this.systems.length; i++) {
+      currentSystem = this.systems[i];
+	    var filter;
+	    var matches = {};
+	    var entityList = [];
+	    var blankList = false;
+	    var shortestName = '';
+	    var shortestLength = -1;
+
+	    // System  Filters
+	    for (var j = 0; j < currentSystem.filter.length; j ++) {
+	      filter = currentSystem.filter[j];
+      	matches[filter] = entityMapper.map[filter];
+
+      	// Skip this system if any filters yield blank entity lists.
+		    if (!matches[filter]) {
+      		blankList = true;
+      		break;
+	      }
+
+		    if (shortestLength === -1 || matches[filter].length < shortestLength) {
+		    	shortestLength = matches[filter].length;
+		    	shortestName = filter;
+		    }
       }
 
-      var listeners = system.listeners;
-      if (listeners && listeners[event]) {
-        listeners[event](payload, that.entityMapper.entities, that.delta);
-      }
-    })
-  };
+	    if (!blankList) {
+		    var shortest = entityMapper.map[shortestName];
+		    var allValuesPresent = true;
 
-  this.processEntities = function (delta) {
-    this.delta = delta;
-    var state = this.state;
-    if (state && !state.systemStates) {
-      state.systemStates = {};
+		    // List of values in the shortest list. Our root comparator.
+		    for (var k = 0; k < shortest.length; k++) {
+		    	var currShortest = shortest[k];
+		    	var keys = Object.keys(matches);
+		    	var comparingList;
+
+		    	// Iterate over all the lists in the matching lists object..
+			    for (var l = 0; l < keys.length; l++) {
+				    comparingList = entityMapper.map[keys[l]];
+				    // Don't check list if it is the root list.
+				    if (comparingList !== shortestName) {
+			        if (comparingList.indexOf(currShortest) < 0) {
+			        	allValuesPresent = false;
+			        	break;
+			        }
+				    }
+			    }
+		    }
+
+		    if (allValuesPresent) {
+			    for (var k = 0; k < shortest.length; k++) {
+			    	currentSystem.process(shortest[k], this.fireEvent);
+			    }
+		    }
+	    }
     }
+	}
 
-    var systemStates = state.systemStates;
-    var entities = this.entityMapper.entities;
-  	this.systems.forEach(function (system) {
-  	  if (!systemStates[system.name]) {
-  	    systemStates[system.name] = {};
-      }
+	this.fireEvent = function () {
 
-  		if (system.pre) {
-				system.pre(systemStates[system.name]);
-			}
-		});
-
-  	var that = this;
-    that.systems.forEach(function (system) {
-      system.fireEvent = that.fireEvent.bind(that);
-      for (var i = 0; i < entities.length; i ++) {
-        if (system.processEntity) {
-          system.processEntity(
-              entities[i],
-              systemStates[system.name],
-              delta,
-              entities
-          );
-        }
-      }
-    });
-
-		this.systems.forEach(function (system) {
-			if (system.post) {
-        system.post(systemStates[system.name]);
-			}
-		});
-  };
-
-  this.addSystem = function (system) {
-    system.processor = this;
-
-    if (this.systemNameList.indexOf(system.name) !== -1) {
-      sm.log.error('Duplicate system name declaration! : ' +  system.name, 'sysproc');
-    }
-
-    system.act = function (action, id, payload) {
-      var actions = Object.keys(system.actions);
-      actions.forEach(function ( actionName ) {
-        if (actionName === action) {
-          var actionInstance = system.actions[actionName];
-          var entity = system.processor.entityMapper.entities[id];
-          var components = {};
-          actionInstance.components.forEach(function ( component ) {
-            if (entity.components && entity.components[component]) {
-              components[component] = entity.components[component];
-            }
-          });
-
-          if (Object.keys(components).length > 0) {
-            actionInstance.method(components, payload);
-          }
-        }
-      });
-    };
-
-    this.systemNameList.push(system.name);
-    this.systems.push(system);
-    if (system.init) {
-      var state = this.state.systemStates[system.name];
-
-      if (!state) {
-        state = {};
-      }
-
-      system.init(state);
-      this.state.systemStates[system.name] = state;
-    }
-  };
+	}
 }

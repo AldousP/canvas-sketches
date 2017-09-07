@@ -535,7 +535,7 @@
       }
     },
 
-    init: function (canvasMountId, program) {
+    init: function (canvasMountId) {
       this.log.notify('Mounting @ ' + canvasMountId + '...', sm.context);
       var mountPoint = document.getElementById(canvasMountId);
 
@@ -552,9 +552,6 @@
 
       sm.input.init();
       sm.input.update();
-      if (program) {
-        sm.loadProgram(program);
-      }
     },
 
     loadV2Program: function (program) {
@@ -569,9 +566,15 @@
           sm.unloadProgram();
         }
         sm.activeProgram = program;
+
+        program.systems = new SystemProcessor();
+        program.entities = new EntityMapper();
         program.setup();
 
-        document.body.dispatchEvent(new CustomEvent('smProgramLoaded',
+	      /**
+         * Fires a DOM event so that program information can be displayed.
+	       */
+	      document.body.dispatchEvent(new CustomEvent('smProgramLoaded',
             {
               'detail': {
                 'name': conf.name,
@@ -611,7 +614,7 @@
       if (sm.activeProgram) {
         if (!sm.conf.paused ) {
           sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
-          // sm.activeProgram.update(sm.time.delta, sm.gfx);
+          sm.activeProgram.update(sm.time.delta, sm.gfx);
           sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2);
         } else {
           sm.gfx.setFillColor(sc.color.green);

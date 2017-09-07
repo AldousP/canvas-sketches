@@ -7,6 +7,8 @@ function SystemProcessor() {
     this.systems.push(newSystem);
 	};
 
+
+
 	this.process = function (entityMapper) {
 	  var currentSystem;
 
@@ -47,7 +49,7 @@ function SystemProcessor() {
 		    	var keys = Object.keys(matches);
 		    	var comparingList;
 
-		    	// Iterate over all the lists in the matching lists object..
+		    	// Iterate over all the lists in the matching lists object.
 			    for (var l = 0; l < keys.length; l++) {
 				    comparingList = entityMapper.map[keys[l]];
 				    // Don't check list if it is the root list.
@@ -60,16 +62,24 @@ function SystemProcessor() {
 			    }
 		    }
 
+		    // Process list if all values in the shortest list
+		    // exist in all required filter lists
 		    if (allValuesPresent) {
 			    for (var k = 0; k < shortest.length; k++) {
-			    	currentSystem.process(shortest[k], this.fireEvent);
+			    	currentSystem.process(
+			    		entityMapper.store[shortest[k]],
+					    this.fireEvent.bind(currentSystem)
+				    );
 			    }
 		    }
 	    }
     }
-	}
+	};
 
-	this.fireEvent = function () {
-
+	/**
+	 * Fires an event onto an entity
+	 */
+	this.fireEvent = function (entity, event) {
+		entity.events.push(event);
 	}
 }

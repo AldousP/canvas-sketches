@@ -9,7 +9,7 @@ function EntityMapper() {
 	this.addEntity = function (newEntity) {
 		console.log(newEntity);
 		this.store.push(newEntity);
-	}
+	};
 
 	this.buildEntity = function (components) {
 		var entity = new Entity();
@@ -18,7 +18,8 @@ function EntityMapper() {
 		this.injectComponents(entity, components);
 		this.store.push(entity);
 		return entity;
-	}
+	};
+
 
 	this.injectComponents = function (entity, components) {
 		for (var i = 0; i < components.length; i++) {

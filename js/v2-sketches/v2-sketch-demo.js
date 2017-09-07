@@ -20,23 +20,17 @@ function v2SketchDemo() {
 
     this.entities.buildEntity([
 	    new PositionComponent(),
-	    new RotationComponent()
+	    new RotationComponent(),
+      new ColorComponent()
     ]);
 
-	  // this.entities.buildEntity([
-		 //  new PositionComponent(),
-	  // ]);
-	  //
-	  // this.entities.buildEntity([
-		 //  new PositionComponent(),
-	  // ]);
-	  //
-	  // this.entities.buildEntity([
-		 //  new PositionComponent(),
-	  // ]);
+	  this.entities.buildEntity([
+		  new PositionComponent(),
+	  ]);
 
     this.systems.addSystem(new SampleSystem());
     this.systems.process(this.entities);
+    console.log(this.entities);
   };
 
   /**

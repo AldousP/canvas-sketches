@@ -7,30 +7,22 @@ function v2SketchDemo() {
     date: '08.13.2017'
   };
 
-  var rect;
-  var circ;
-  var rotation = 0;
-  var chime;
 
   this.setup = function () {
-    rect = SPoly.polySquare(128);
-    circ = SPoly.polyCircle(64);
-    chime = sm.sfx.loadSound('assets/sfx/UI_cmaj8_arp.mp3');
     this.update(0, sm.gfx);
 
     this.entities.buildEntity([
 	    new PositionComponent(),
 	    new RotationComponent(),
+      new RenderableComponent(),
       new ColorComponent()
     ]);
 
-	  this.entities.buildEntity([
-		  new PositionComponent(),
-	  ]);
-
-    this.systems.addSystem(new SampleSystem());
+    this.systems.addSystem(new SampleSystemA());
     this.systems.process(this.entities);
-    console.log(this.entities);
+    console.log(this.systems.eventStore);
+    this.systems.process(this.entities);
+    console.log(this.systems.eventStore);
   };
 
   /**
@@ -40,9 +32,8 @@ function v2SketchDemo() {
    */
   this.update = function (delta, g) {
     g.clear(sc.color.black);
-    g.text(sm.input.state.cursor);
+    g.text('Standby...');
 
-    rotation += Math.PI / 16 * delta;
     g.setFillColor(sc.color.white);
     g.setStrokeColor(sc.color.white);
   };

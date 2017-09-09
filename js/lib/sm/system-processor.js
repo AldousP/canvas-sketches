@@ -2,25 +2,41 @@ function SystemProcessor() {
 	'use strict';
 
 	this.systems = [];
+	this.systemNames = [];
+	this.eventStore = new EventStore();
 
 	this.addSystem = function (newSystem) {
-    this.systems.push(newSystem);
+	  if (this.systemNames.indexOf(newSystem.name) > -1) {
+	    sm.log.error('Skipping non unique system name: ' + newSystem.name,'systems');
+    } else {
+      this.systems.push(newSystem);
+      this.systemNames.push(newSystem.name)
+    }
 	};
-
-
 
 	this.process = function (entityMapper) {
 	  var currentSystem;
 
-	  // All systems.
+	  // All user-systems.
     for (var i = 0; i < this.systems.length; i++) {
       currentSystem = this.systems[i];
+      this.eventStore.cullSystemEvents(currentSystem.name);
+
 	    var filter;
 	    var matches = {};
-	    var entityList = [];
 	    var blankList = false;
 	    var shortestName = '';
 	    var shortestLength = -1;
+
+	    if (currentSystem.filter.length === 0) {
+	      for (var j = 0; j < entityMapper.store.length; j++) {
+          currentSystem.process(
+            entityMapper.store[j],
+            this.fireSystemEvent.bind(currentSystem)
+          );
+        }
+	      return;
+      }
 
 	    // System  Filters
 	    for (var j = 0; j < currentSystem.filter.length; j ++) {
@@ -65,10 +81,10 @@ function SystemProcessor() {
 		    // Process list if all values in the shortest list
 		    // exist in all required filter lists
 		    if (allValuesPresent) {
-			    for (var k = 0; k < shortest.length; k++) {
+			    for (k = 0; k < shortest.length; k++) {
 			    	currentSystem.process(
 			    		entityMapper.store[shortest[k]],
-					    this.fireEvent.bind(currentSystem)
+              this.fireSystemEvent.bind(currentSystem)
 				    );
 			    }
 		    }
@@ -76,10 +92,8 @@ function SystemProcessor() {
     }
 	};
 
-	/**
-	 * Fires an event onto an entity
-	 */
-	this.fireEvent = function (entity, event) {
-		entity.events.push(event);
-	}
+	var that = this;
+	this.fireSystemEvent = function (target, payload) {
+	  that.eventStore.fireEvent(target, payload, this.name);
+  }
 }

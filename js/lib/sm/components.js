@@ -22,7 +22,8 @@ var ComponentType = {
   stateMachine: 'fsm',
   stroke: 'strokedElement',
   animationMap: 'animationMap',
-  renderable: 'renderable'
+  renderable: 'renderable',
+  gameplay: 'game'
 };
 
 function PolygonComponent(polygon) {
@@ -168,4 +169,8 @@ function PlayerComponent(playerName) {
 
 function RenderableComponent() {
   this.name = ComponentType.renderable;
+}
+
+function GameplayComponent() {
+  this.name = ComponentType.gameplay;
 }

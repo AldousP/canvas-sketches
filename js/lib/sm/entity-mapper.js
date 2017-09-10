@@ -3,7 +3,7 @@ function EntityMapper() {
 
 	// Maps entity IDs to component type. The same entity may appear in multiple lists.
 	this.map = {};
-	// A flat map of all entities
+	// A list of all entities
 	this.store = [];
 
 	this.addEntity = function (newEntity) {

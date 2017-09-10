@@ -4,13 +4,14 @@ function SampleSystemA () {
 
 	// Defines which entities will be passed into the process function.
 	this.filter = [
-	  // ComponentType.position
+	  ComponentType.gameplay
 	];
 	
 	this.process = function (entity, fire) {
-	  fire(entity.ID, {
-	    msg: 'Hello Event Queue.'
-    });
+    fire(entity, EventTypes.MOVE_BY, {
+      x: 0,
+      y: 0
+    })
 	};
 }
 
@@ -22,7 +23,6 @@ function SampleSystemB () {
   ];
 
   this.process = function (entity, fire) {
-
 
   };
 }

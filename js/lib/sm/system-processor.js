@@ -29,12 +29,7 @@ function SystemProcessor() {
 	    var shortestLength = -1;
 
 	    if (currentSystem.filter.length === 0) {
-	      for (var j = 0; j < entityMapper.store.length; j++) {
-          currentSystem.process(
-            entityMapper.store[j],
-            this.fireSystemEvent.bind(currentSystem)
-          );
-        }
+	      this.processEntityList(currentSystem, Object.keys(entityMapper.store), entityMapper);
       } else {
         // System  Filters
         for (var j = 0; j < currentSystem.filter.length; j ++) {
@@ -79,20 +74,43 @@ function SystemProcessor() {
           // Process list if all values in the shortest list
           // exist in all required filter lists
           if (allValuesPresent) {
-            for (k = 0; k < shortest.length; k++) {
-              currentSystem.process(
-                entityMapper.store[shortest[k]],
-                this.fireSystemEvent.bind(currentSystem)
-              );
-            }
+            this.processEntityList(currentSystem, shortest, entityMapper);
           }
         }
 			}
     }
 	};
 
+  /**
+   * Runs a list of entity IDs through through the provided system's process function and event listeners.
+   */
+	this.processEntityList = function (system, list, mapper) {
+    for (var i = 0; i < list.length; i++) {
+      system.process(
+        mapper.store[list[i]],
+        this.fireSystemEvent.bind(system)
+      );
+    }
+
+    if (system.switches) {
+      var switchKeys = Object.keys(system.switches);
+      for (var j = 0; j < switchKeys.length; j++) {
+        var eventListener = system.switches[switchKeys[j]];
+        var eventList = this.eventStore.eventTypeMap[eventListener.type];
+        if (eventList) {
+          for (var k = 0; k < eventList.length; k++) {
+            var event = this.eventStore.events[eventList[k]];
+            if (event.targetID !== -1 && list.indexOf(event.targetID) !== -1) {
+              eventListener.onSwitch(mapper.store[event.targetID]);
+            }
+          }
+        }
+      }
+    }
+  };
+
 	var that = this;
-	this.fireSystemEvent = function (target, payload) {
-	  that.eventStore.fireEvent(target, payload, this.name);
+	this.fireSystemEvent = function (target, type, payload) {
+	  that.eventStore.fireEvent(target, type, payload, this.name);
   }
 }

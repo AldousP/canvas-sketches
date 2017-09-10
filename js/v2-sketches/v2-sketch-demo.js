@@ -11,14 +11,19 @@ function v2SketchDemo() {
     this.update(0, sm.gfx);
 
     this.entities.buildEntity([
+      new GameplayComponent(),
 	    new PositionComponent(),
 	    new RotationComponent(),
       new RenderableComponent(),
+      new MovementComponent(),
       new PolygonComponent(SPoly.polySquare(64))
     ]);
 
-    this.systems.addSystem(new SampleSystemA());
+    this.systems.addSystem(new MovementSystem());
     this.systems.addSystem(new RenderingSystem());
+    this.systems.addSystem(new SampleSystemA());
+
+    // this.systems.process(this.entities);
   };
 
   /**
@@ -29,7 +34,5 @@ function v2SketchDemo() {
   this.update = function (delta, g) {
     g.clear(sc.color.black);
     this.systems.process(this.entities);
-    g.setFillColor(sc.color.white);
-    g.setStrokeColor(sc.color.white);
   };
 }

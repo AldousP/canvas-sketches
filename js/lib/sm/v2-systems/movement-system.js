@@ -10,4 +10,13 @@ function MovementSystem () {
 	this.process = function (entity, fire) {
 
 	};
+
+  this.switches = {
+  	moveBy: {
+  		type: EventTypes.MOVE_BY,
+			onSwitch: function (entity) {
+  			console.log(entity);
+      }
+		}
+	}
 }

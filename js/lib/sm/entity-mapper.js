@@ -14,12 +14,11 @@ function EntityMapper() {
 	this.buildEntity = function (components) {
 		var entity = new Entity();
 		entity.ID = this.store.length;
-		entity.components = [];
+		entity.components = {};
 		this.injectComponents(entity, components);
 		this.store.push(entity);
 		return entity;
 	};
-
 
 	this.injectComponents = function (entity, components) {
 		for (var i = 0; i < components.length; i++) {
@@ -28,7 +27,7 @@ function EntityMapper() {
 				this.map[comp.name] = [];
 			}
 			this.map[comp.name].push(entity.ID);
-			entity.components.push(comp);
+			entity.components[comp.name] = comp;
 		}
 	}
 }

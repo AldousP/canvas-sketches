@@ -35,60 +35,59 @@ function SystemProcessor() {
             this.fireSystemEvent.bind(currentSystem)
           );
         }
-	      return;
-      }
+      } else {
+        // System  Filters
+        for (var j = 0; j < currentSystem.filter.length; j ++) {
+          filter = currentSystem.filter[j];
+          matches[filter] = entityMapper.map[filter];
 
-	    // System  Filters
-	    for (var j = 0; j < currentSystem.filter.length; j ++) {
-	      filter = currentSystem.filter[j];
-      	matches[filter] = entityMapper.map[filter];
+          // Skip this system if any filters yield blank entity lists.
+          if (!matches[filter]) {
+            blankList = true;
+            break;
+          }
 
-      	// Skip this system if any filters yield blank entity lists.
-		    if (!matches[filter]) {
-      		blankList = true;
-      		break;
-	      }
+          if (shortestLength === -1 || matches[filter].length < shortestLength) {
+            shortestLength = matches[filter].length;
+            shortestName = filter;
+          }
+        }
 
-		    if (shortestLength === -1 || matches[filter].length < shortestLength) {
-		    	shortestLength = matches[filter].length;
-		    	shortestName = filter;
-		    }
-      }
+        if (!blankList) {
+          var shortest = entityMapper.map[shortestName];
+          var allValuesPresent = true;
 
-	    if (!blankList) {
-		    var shortest = entityMapper.map[shortestName];
-		    var allValuesPresent = true;
+          // List of values in the shortest list. Our root comparator.
+          for (var k = 0; k < shortest.length; k++) {
+            var currShortest = shortest[k];
+            var keys = Object.keys(matches);
+            var comparingList;
 
-		    // List of values in the shortest list. Our root comparator.
-		    for (var k = 0; k < shortest.length; k++) {
-		    	var currShortest = shortest[k];
-		    	var keys = Object.keys(matches);
-		    	var comparingList;
+            // Iterate over all the lists in the matching lists object.
+            for (var l = 0; l < keys.length; l++) {
+              comparingList = entityMapper.map[keys[l]];
+              // Don't check list if it is the root list.
+              if (comparingList !== shortestName) {
+                if (comparingList.indexOf(currShortest) < 0) {
+                  allValuesPresent = false;
+                  break;
+                }
+              }
+            }
+          }
 
-		    	// Iterate over all the lists in the matching lists object.
-			    for (var l = 0; l < keys.length; l++) {
-				    comparingList = entityMapper.map[keys[l]];
-				    // Don't check list if it is the root list.
-				    if (comparingList !== shortestName) {
-			        if (comparingList.indexOf(currShortest) < 0) {
-			        	allValuesPresent = false;
-			        	break;
-			        }
-				    }
-			    }
-		    }
-
-		    // Process list if all values in the shortest list
-		    // exist in all required filter lists
-		    if (allValuesPresent) {
-			    for (k = 0; k < shortest.length; k++) {
-			    	currentSystem.process(
-			    		entityMapper.store[shortest[k]],
-              this.fireSystemEvent.bind(currentSystem)
-				    );
-			    }
-		    }
-	    }
+          // Process list if all values in the shortest list
+          // exist in all required filter lists
+          if (allValuesPresent) {
+            for (k = 0; k < shortest.length; k++) {
+              currentSystem.process(
+                entityMapper.store[shortest[k]],
+                this.fireSystemEvent.bind(currentSystem)
+              );
+            }
+          }
+        }
+			}
     }
 	};
 

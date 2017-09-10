@@ -7,7 +7,6 @@ function v2SketchDemo() {
     date: '08.13.2017'
   };
 
-
   this.setup = function () {
     this.update(0, sm.gfx);
 
@@ -15,14 +14,11 @@ function v2SketchDemo() {
 	    new PositionComponent(),
 	    new RotationComponent(),
       new RenderableComponent(),
-      new ColorComponent()
+      new PolygonComponent(SPoly.polySquare(64))
     ]);
 
     this.systems.addSystem(new SampleSystemA());
-    this.systems.process(this.entities);
-    console.log(this.systems.eventStore);
-    this.systems.process(this.entities);
-    console.log(this.systems.eventStore);
+    this.systems.addSystem(new RenderingSystem());
   };
 
   /**
@@ -32,8 +28,7 @@ function v2SketchDemo() {
    */
   this.update = function (delta, g) {
     g.clear(sc.color.black);
-    g.text('Standby...');
-
+    this.systems.process(this.entities);
     g.setFillColor(sc.color.white);
     g.setStrokeColor(sc.color.white);
   };

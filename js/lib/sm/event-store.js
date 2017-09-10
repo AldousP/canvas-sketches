@@ -5,7 +5,7 @@ function EventStore() {
 	this.systemEventMap = {};
 	
 	this.fireEvent = function (target, payload, source) {
-		console.log('Firing Event!:', target, payload, source);
+		// console.log('Firing Event!:', target, payload, source);
 		if (!this.systemEventMap[source]) {
 			this.systemEventMap[source] = [];
 		}

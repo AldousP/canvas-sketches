@@ -19,11 +19,11 @@ function v2SketchDemo() {
       new PolygonComponent(SPoly.polySquare(64))
     ]);
 
-    this.systems.addSystem(new MovementSystem());
+	  this.systems.addSystem(new SampleSystemA());
+	  this.systems.addSystem(new MovementSystem());
     this.systems.addSystem(new RenderingSystem());
-    this.systems.addSystem(new SampleSystemA());
 
-    // this.systems.process(this.entities);
+    this.systems.process(this.entities);
   };
 
   /**
@@ -33,6 +33,6 @@ function v2SketchDemo() {
    */
   this.update = function (delta, g) {
     g.clear(sc.color.black);
-    this.systems.process(this.entities);
+    // this.systems.process(this.entities);
   };
 }

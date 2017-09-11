@@ -11,10 +11,10 @@ function MovementSystem () {
 
 	};
 
-  this.switches = {
+  this.listeners = {
   	moveBy: {
   		type: EventTypes.MOVE_BY,
-			onSwitch: function (entity) {
+			handle: function (entity) {
   			console.log(entity);
       }
 		}

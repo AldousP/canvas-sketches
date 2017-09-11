@@ -8,7 +8,7 @@ function SampleSystemA () {
 	];
 	
 	this.process = function (entity, fire) {
-    fire(entity, EventTypes.MOVE_BY, {
+    fire(entity.ID, EventTypes.MOVE_BY, {
       x: 0,
       y: 0
     })

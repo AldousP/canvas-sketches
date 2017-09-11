@@ -19,7 +19,7 @@ function EventStore() {
 
 		this.events.push({
 			eventID: this.events.length,
-			targetID: target.ID,
+			targetID: target,
 			type: type,
 			data: payload,
 			src: source

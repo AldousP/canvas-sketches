@@ -92,20 +92,34 @@ function SystemProcessor() {
       );
     }
 
-    if (system.switches) {
-      var switchKeys = Object.keys(system.switches);
-      for (var j = 0; j < switchKeys.length; j++) {
-        var eventListener = system.switches[switchKeys[j]];
-        var eventList = this.eventStore.eventTypeMap[eventListener.type];
-        if (eventList) {
-          for (var k = 0; k < eventList.length; k++) {
-            var event = this.eventStore.events[eventList[k]];
-            if (event.targetID !== -1 && list.indexOf(event.targetID) !== -1) {
-              eventListener.onSwitch(mapper.store[event.targetID]);
-            }
-          }
-        }
-      }
+		/**
+		 * Fire the system's event listeners.
+		 */
+		if (system.listeners) {
+	    var eventKeys = Object.keys(system.listeners);
+	    var eventListener;
+	    for (i = 0; i < eventKeys.length; i++) {
+		    eventListener = system.listeners[eventKeys[i]];
+		    var queuedEventsIDs = this.eventStore.eventTypeMap[eventListener.type];
+		    if (queuedEventsIDs) {
+		    	for (var j = 0; j < queuedEventsIDs.length; j++) {
+		    		var eventInQueue = this.eventStore.events[queuedEventsIDs[j]];
+				    /**
+				     * Don't react to events fired by this system.
+				     */
+		    		if (eventInQueue.src !== system.name) {
+					    /**
+					     * Fire the event handler and pass it the target entity.
+					     */
+		    			if (eventInQueue.targetID !== -1) {
+		    				eventListener.handle(mapper.store[eventInQueue.targetID]);
+					    } else {
+						    eventListener.handle();
+					    }
+				    }
+			    }
+		    }
+	    }
     }
   };
 

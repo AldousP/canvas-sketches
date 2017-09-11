@@ -11,11 +11,16 @@ function MovementSystem () {
 
 	};
 
-  this.listeners = {
+  var getComp = function (entity, type) {
+		return entity.components[type];
+	};
+
+	this.listeners = {
   	moveBy: {
   		type: EventTypes.MOVE_BY,
-			handle: function (entity) {
-  			console.log(entity);
+			handle: function (data, target) {
+  			var pos = getComp(target, ComponentType.position);
+  			SVec.addVecConst(pos.position, data.x, data.y);
       }
 		}
 	}

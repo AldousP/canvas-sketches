@@ -14,7 +14,7 @@ function SystemProcessor() {
     }
 	};
 
-	this.process = function (entityMapper) {
+	this.process = function (entityMapper, delta) {
 	  var currentSystem;
 
 	  // All user-systems.
@@ -74,7 +74,7 @@ function SystemProcessor() {
           // Process list if all values in the shortest list
           // exist in all required filter lists
           if (allValuesPresent) {
-            this.processEntityList(currentSystem, shortest, entityMapper);
+            this.processEntityList(currentSystem, shortest, entityMapper, delta);
           }
         }
 			}
@@ -84,11 +84,12 @@ function SystemProcessor() {
   /**
    * Runs a list of entity IDs through through the provided system's process function and event listeners.
    */
-	this.processEntityList = function (system, list, mapper) {
+	this.processEntityList = function (system, list, mapper, delta) {
     for (var i = 0; i < list.length; i++) {
       system.process(
         mapper.store[list[i]],
-        this.fireSystemEvent.bind(system)
+        this.fireSystemEvent.bind(system),
+	      delta
       );
     }
 
@@ -112,9 +113,9 @@ function SystemProcessor() {
 					     * Fire the event handler and pass it the target entity.
 					     */
 		    			if (eventInQueue.targetID !== -1) {
-		    				eventListener.handle(mapper.store[eventInQueue.targetID]);
+		    				eventListener.handle(eventInQueue.data, mapper.store[eventInQueue.targetID]);
 					    } else {
-						    eventListener.handle();
+						    eventListener.handle(eventInQueue.data);
 					    }
 				    }
 			    }

@@ -12,7 +12,7 @@ function v2SketchDemo() {
 
     this.entities.buildEntity([
       new GameplayComponent(),
-	    new PositionComponent(),
+	    new PositionComponent(0, 0),
 	    new RotationComponent(),
       new RenderableComponent(),
       new MovementComponent(),
@@ -22,8 +22,6 @@ function v2SketchDemo() {
 	  this.systems.addSystem(new SampleSystemA());
 	  this.systems.addSystem(new MovementSystem());
     this.systems.addSystem(new RenderingSystem());
-
-    this.systems.process(this.entities);
   };
 
   /**
@@ -33,6 +31,6 @@ function v2SketchDemo() {
    */
   this.update = function (delta, g) {
     g.clear(sc.color.black);
-    // this.systems.process(this.entities);
+    this.systems.process(this.entities, delta);
   };
 }

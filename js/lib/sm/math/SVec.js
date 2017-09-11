@@ -95,8 +95,8 @@ SVec.multVec = function (vec1, vec2) {
 SVec.addVecConst = function (vec, x, y) {
   vec.x += x;
   vec.y += y;
-  SVec.calcLen(vec);
-  return vec;
+	SVec.calcLen(vec);
+	return vec;
 };
 
 /**

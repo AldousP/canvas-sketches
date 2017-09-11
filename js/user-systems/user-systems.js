@@ -7,9 +7,10 @@ function SampleSystemA () {
 	  ComponentType.gameplay
 	];
 	
-	this.process = function (entity, fire) {
+	this.process = function (entity, fire, delta) {
+		console.log(delta);
     fire(entity.ID, EventTypes.MOVE_BY, {
-      x: 0,
+      x: 25 * delta,
       y: 0
     })
 	};

@@ -4,6 +4,8 @@ function EventStore() {
 	this.events = [];
 	this.systemEventMap = {};
 	this.eventTypeMap = {};
+
+	this.pooledEventsByType = {};
 	
 	this.fireEvent = function (target, type, payload, source) {
 		if (!this.systemEventMap[source]) {
@@ -17,13 +19,21 @@ function EventStore() {
     this.eventTypeMap[type].push(this.events.length);
 		this.systemEventMap[source].push(this.events.length);
 
-		this.events.push({
-			eventID: this.events.length,
-			targetID: target,
-			type: type,
-			data: payload,
-			src: source
-		});
+		if (this.pooledEventsByType[type]) {
+			var event = this.pooledEventsByType[type].pop();
+			event.targetID = this.events.length;
+			event.src = source;
+			event.data = payload;
+			this.events.push(event);
+		} else {
+			this.events.push({
+				eventID: this.events.length,
+				targetID: target,
+				type: type,
+				data: payload,
+				src: source
+			});
+		}
 	};
 	
 	this.cullSystemEvents = function (source) {
@@ -33,8 +43,14 @@ function EventStore() {
       if (eventList) {
         for (var j = 0; j < eventList.length; j++) {
           var result = eventList[j];
-            this.eventTypeMap[result.type].splice(this.eventTypeMap[result.type].indexOf(result.eventID), 1);
-            this.systemEventMap[result.src].splice(this.systemEventMap[result.src].indexOf(result.eventID), 1);
+          this.eventTypeMap[result.type].splice(this.eventTypeMap[result.type].indexOf(result.eventID), 1);
+          this.systemEventMap[result.src].splice(this.systemEventMap[result.src].indexOf(result.eventID), 1);
+          result.targetID = -1;
+          result.src = undefined;
+          if (!this.pooledEventsByType[result.type]) {
+          	this.pooledEventsByType[result.type] = [];
+          }
+          this.pooledEventsByType[result.type].push(result);
         }
 			}
 		}

@@ -22,6 +22,13 @@ function MovementSystem () {
   			var pos = getComp(target, ComponentType.position);
   			SVec.addVecConst(pos.position, data.x, data.y);
       }
+		},
+		moveTo: {
+			type: EventTypes.MOVE_TO,
+			handle: function (data, target) {
+				var pos = getComp(target, ComponentType.position);
+				SVec.setVec(pos.position, data.x, data.y);
+			}
 		}
 	}
 }

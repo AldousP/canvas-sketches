@@ -8,10 +8,9 @@ function SampleSystemA () {
 	];
 	
 	this.process = function (entity, fire, delta) {
-		console.log(delta);
-    fire(entity.ID, EventTypes.MOVE_BY, {
-      x: 25 * delta,
-      y: 0
+    fire(entity.ID, EventTypes.MOVE_TO, {
+      x: sm.input.state.cursor.x,
+      y: sm.input.state.cursor.y
     })
 	};
 }

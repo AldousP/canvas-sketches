@@ -8,7 +8,6 @@ function MovementSystem () {
 	];
 	
 	this.process = function (entities, fire) {
-	  console.log(entities);
 
 	};
 
@@ -19,9 +18,9 @@ function MovementSystem () {
 	this.listeners = {
   	moveBy: {
   		type: EventTypes.MOVE_BY,
-			handle: function (data, target) {
+			handle: function (data, target, delta) {
   			var pos = getComp(target, ComponentType.position);
-  			SVec.addVecConst(pos.position, data.x, data.y);
+  			SVec.addVecConst(pos.position, data.x * delta, data.y * delta);
       }
 		},
 		moveTo: {

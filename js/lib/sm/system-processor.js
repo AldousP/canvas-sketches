@@ -24,7 +24,7 @@ function SystemProcessor() {
 	  // All user-systems.
     for (var i = 0; i < this.systems.length; i++) {
       currentSystem = this.systems[i];
-      this.eventStore.cullSystemEvents(currentSystem.name);
+      this.eventStore.cullSystemEvents(currentSystem.name, delta);
 
 	    var filter;
 	    var matches = {};
@@ -89,7 +89,7 @@ function SystemProcessor() {
    * Runs a list of entity IDs through through the provided system's process function and event listeners.
    */
   var tempStore = [];
-	this.processEntityList = function (system, list, mapper) {
+	this.processEntityList = function (system, list, mapper, delta) {
 	  tempStore = [];
     for (var i = 0; i < list.length; i++) {
       tempStore.push(mapper.store[list[i]]);
@@ -109,9 +109,10 @@ function SystemProcessor() {
 	    for (i = 0; i < eventKeys.length; i++) {
 		    eventListener = system.listeners[eventKeys[i]];
 		    var queuedEventsIDs = this.eventStore.eventTypeMap[eventListener.type];
-		    if (queuedEventsIDs) {
+		    if (queuedEventsIDs && this.eventStore.events.length) {
 		    	for (var j = 0; j < queuedEventsIDs.length; j++) {
-		    		var eventInQueue = this.eventStore.events[queuedEventsIDs[j]];
+            var eventInQueue = this.eventStore.events[queuedEventsIDs[j]];
+
 				    /**
 				     * Don't react to events fired by this system.
 				     */
@@ -120,7 +121,7 @@ function SystemProcessor() {
 					     * Fire the event handler and pass it the target entity.
 					     */
 		    			if (eventInQueue.targetID !== -1) {
-		    				eventListener.handle(eventInQueue.data, mapper.store[eventInQueue.targetID]);
+		    				eventListener.handle(eventInQueue.data, mapper.store[eventInQueue.targetID], delta);
 					    } else {
 						    eventListener.handle(eventInQueue.data);
 					    }
@@ -132,7 +133,7 @@ function SystemProcessor() {
   };
 
 	var that = this;
-	this.fireSystemEvent = function (target, type, payload) {
-	  that.eventStore.fireEvent(target, type, payload, this.name);
+	this.fireSystemEvent = function (target, type, payload, timer) {
+    that.eventStore.fireEvent(target, type, payload, this.name, timer);
   }
 }

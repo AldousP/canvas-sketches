@@ -6,8 +6,8 @@ function EventStore() {
 	this.eventTypeMap = {};
 
 	this.pooledEventsByType = {};
-	
-	this.fireEvent = function (target, type, payload, source) {
+
+	this.fireEvent = function (target, type, payload, source, timerData) {
 		if (!this.systemEventMap[source]) {
 			this.systemEventMap[source] = [];
 		}
@@ -19,8 +19,9 @@ function EventStore() {
     this.eventTypeMap[type].push(this.events.length);
 		this.systemEventMap[source].push(this.events.length);
 
+		var event;
 		if (this.pooledEventsByType[type] && this.pooledEventsByType[type].length) {
-			var event = this.pooledEventsByType[type].pop();
+			event = this.pooledEventsByType[type].pop();
       event.targetID = this.events.length;
       event.src = source;
       event.data = payload;
@@ -34,26 +35,45 @@ function EventStore() {
 				src: source
 			});
 		}
+
+		event = this.events[this.events.length - 1];
+		event.meta = {};
+
+		if (timerData) {
+      event = this.events[this.events.length - 1];
+      event.meta = {
+        elapsed: 0,
+        length: timerData.length
+      }
+    }
 	};
-	
-	this.cullSystemEvents = function (source) {
+
+  this.cullSystemEvents = function (source, delta) {
     if (!this.systemEventMap[source]) return;
-		for (var i = 0; i < this.systemEventMap[source].length; i++) {
-      var eventList = this.events.splice(this.systemEventMap[source][i].ID, 1);
-      if (eventList) {
-        for (var j = 0; j < eventList.length; j++) {
-          var result = eventList[j];
-          this.eventTypeMap[result.type].splice(this.eventTypeMap[result.type].indexOf(result.eventID), 1);
-          this.systemEventMap[result.src].splice(this.systemEventMap[result.src].indexOf(result.eventID), 1);
-          result.targetID = -1;
-          result.src = undefined;
-          if (!this.pooledEventsByType[result.type]) {
-          	this.pooledEventsByType[result.type] = [];
+    for (var i = 0; i < this.systemEventMap[source].length; i++) {
+      var eventList = this.systemEventMap[source];
+      for (var j = 0; j < eventList.length; j++) {
+        var result = this.events[j];
+        if (result.meta.length) {
+          result.meta.elapsed += delta;
+          if (result.meta.elapsed > result.meta.length) {
+            this.removeEvent(result)
           }
-          this.pooledEventsByType[result.type].push(result);
+        } else {
+          this.removeEvent(result);
         }
-			}
-		}
-		this.systemEventMap[source] = [];
+      }
+    }
+  };
+
+  this.removeEvent = function (event) {
+    this.eventTypeMap[event.type].splice(this.eventTypeMap[event.type].indexOf(event.eventID), 1);
+    this.systemEventMap[event.src].splice(this.systemEventMap[event.src].indexOf(event.eventID), 1);
+    event.targetID = -1;
+    event.src = undefined;
+    if (!this.pooledEventsByType[event.type]) {
+      this.pooledEventsByType[event.type] = [];
+    }
+    this.pooledEventsByType[event.type].push(event);
   }
 }

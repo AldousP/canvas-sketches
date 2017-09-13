@@ -6,15 +6,26 @@ function SampleSystemA () {
 	this.filter = [
 	  ComponentType.gameplay
 	];
+
+	this.setup = function () {
+    
+  };
 	
+  var fired = false;
 	this.process = function (entities, fire, delta) {
-	   console.log(entities);
-    entities.forEach(function (entity) {
-      fire(entity.ID, EventTypes.MOVE_TO, {
-        x: sm.input.state.cursor.x,
-        y: sm.input.state.cursor.y
-      })
+	  entities.forEach(function (entity) {
+
     });
+
+	  if (!fired && entities.length) {
+	    fired = true;
+      fire(entities[0].ID, EventTypes.MOVE_BY, {
+        x: 10,
+        y: 10
+      }, {
+        length: 2
+      })
+    }
 	};
 }
 

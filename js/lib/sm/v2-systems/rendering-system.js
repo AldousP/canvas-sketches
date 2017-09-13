@@ -7,15 +7,16 @@ function RenderingSystem () {
     ComponentType.polygon
 	];
 	
-	this.getComp = function (entity, type) {
+	var getComp = function (entity, type) {
     return entity.components[type];
   };
 	
-	this.process = function (entity, fire) {
-		var polygon = this.getComp(entity, ComponentType.polygon);
-    var pos = this.getComp(entity, ComponentType.position);
-
-    sm.gfx.setStrokeColor(sc.color.white);
-    sm.gfx.drawPolygon(polygon.polygon, pos.position);
+	this.process = function (entities, fire) {
+    entities.forEach(function (entity) {
+      var polygon = getComp(entity, ComponentType.polygon);
+      var pos = getComp(entity, ComponentType.position);
+      sm.gfx.setStrokeColor(sc.color.white);
+      sm.gfx.drawPolygon(polygon.polygon, pos.position);
+    })
 	};
 }

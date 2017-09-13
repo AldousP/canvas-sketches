@@ -7,11 +7,14 @@ function SampleSystemA () {
 	  ComponentType.gameplay
 	];
 	
-	this.process = function (entity, fire, delta) {
-    fire(entity.ID, EventTypes.MOVE_TO, {
-      x: sm.input.state.cursor.x,
-      y: sm.input.state.cursor.y
-    })
+	this.process = function (entities, fire, delta) {
+	   console.log(entities);
+    entities.forEach(function (entity) {
+      fire(entity.ID, EventTypes.MOVE_TO, {
+        x: sm.input.state.cursor.x,
+        y: sm.input.state.cursor.y
+      })
+    });
 	};
 }
 

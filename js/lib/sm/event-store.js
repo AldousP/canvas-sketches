@@ -19,12 +19,12 @@ function EventStore() {
     this.eventTypeMap[type].push(this.events.length);
 		this.systemEventMap[source].push(this.events.length);
 
-		if (this.pooledEventsByType[type]) {
+		if (this.pooledEventsByType[type] && this.pooledEventsByType[type].length) {
 			var event = this.pooledEventsByType[type].pop();
-			event.targetID = this.events.length;
-			event.src = source;
-			event.data = payload;
-			this.events.push(event);
+      event.targetID = this.events.length;
+      event.src = source;
+      event.data = payload;
+      this.events.push(event);
 		} else {
 			this.events.push({
 				eventID: this.events.length,

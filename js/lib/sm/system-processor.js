@@ -10,7 +10,11 @@ function SystemProcessor() {
 	    sm.log.error('Skipping non unique system name: ' + newSystem.name,'systems');
     } else {
       this.systems.push(newSystem);
-      this.systemNames.push(newSystem.name)
+      this.systemNames.push(newSystem.name);
+
+      if (newSystem.setup) {
+        newSystem.setup();
+      }
     }
 	};
 
@@ -84,14 +88,17 @@ function SystemProcessor() {
   /**
    * Runs a list of entity IDs through through the provided system's process function and event listeners.
    */
-	this.processEntityList = function (system, list, mapper, delta) {
+  var tempStore = [];
+	this.processEntityList = function (system, list, mapper) {
+	  tempStore = [];
     for (var i = 0; i < list.length; i++) {
-      system.process(
-        mapper.store[list[i]],
-        this.fireSystemEvent.bind(system),
-	      delta
-      );
+      tempStore.push(mapper.store[list[i]]);
     }
+
+    system.process(
+      tempStore,
+      this.fireSystemEvent.bind(system)
+    );
 
 		/**
 		 * Fire the system's event listeners.

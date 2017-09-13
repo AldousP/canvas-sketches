@@ -7,7 +7,8 @@ function MovementSystem () {
 		ComponentType.movement
 	];
 	
-	this.process = function (entity, fire) {
+	this.process = function (entities, fire) {
+	  console.log(entities);
 
 	};
 

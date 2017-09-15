@@ -48,6 +48,7 @@ function Pong () {
     this.systems.addSystem(new PongSystem());
     this.systems.addSystem(new VelocitySystem());
     this.systems.addSystem(new RenderingSystem());
+    this.systems.addSystem(new CollisionSystem())
   };
 
   this.update = function (delta, g) {

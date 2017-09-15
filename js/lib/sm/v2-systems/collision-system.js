@@ -1,19 +1,18 @@
-function VelocitySystem () {
-	this.name = 'velocity';
+function CollisionSystem () {
+	this.name = 'collision';
 
-	// Defines which entities will be passed into the process function.
 	this.filter = [
 		ComponentType.transform,
-		ComponentType.velocity
+		ComponentType.collider
 	];
 	
 	this.process = function (entities, fire) {
-	  var vel, pos;
+	  var col, pos;
 	  entities.forEach(function (entity) {
-	    vel = entity.components[ComponentType.velocity].velocity;
+	    col = entity.components[ComponentType.collider].volume;
 	    pos = entity.components[ComponentType.transform].position;
-	    if (vel && pos) {
-        SVec.addVecVec(pos, vel);
+	    if (col && pos) {
+
       }
     });
 	};

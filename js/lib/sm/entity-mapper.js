@@ -34,6 +34,18 @@ function EntityMapper() {
 	};
 
 	this.tagEntity = function (entityID, tagName) {
-	  console.log('tagging entity')
+    if (!this.tagMap[tagName]) {
+      this.tagMap[tagName] = [];
+    }
+
+    this.tagMap[tagName].push(entityID);
+  };
+  
+  this.getEntitiesForTag = function (tag) {
+    return this.tagMap[tag];
+  };
+  
+  this.getFirstOfTag = function (tag) {
+    return this.store[this.tagMap[tag][0]];
   }
 }

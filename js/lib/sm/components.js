@@ -25,7 +25,8 @@ var ComponentType = {
   renderable: 'renderable',
   gameplay: 'game',
   transform: 'transform',
-  gameState: ''
+  gameState: 'gamestate',
+  collider: 'collider'
 };
 
 function PolygonComponent(polygon) {
@@ -177,14 +178,19 @@ function GameplayComponent() {
   this.name = ComponentType.gameplay;
 }
 
-function TransformComponent () {
+function TransformComponent (x, y, r, h, v) {
   this.name = ComponentType.transform;
-  this.position = new SVec.Vector();
-  this.rotation = 0;
-  this.scale = new SVec.Vector();
+  this.position = new SVec.Vector(x, y);
+  this.rotation = r;
+  this.scale = new SVec.Vector(h, v);
 }
 
 function GameStateComponent() {
   this.name = ComponentType.gameState;
   this.gameState = {};
+}
+
+function ColliderComponent (poly) {
+  this.name = ComponentType.collider;
+  this.volume = poly;
 }

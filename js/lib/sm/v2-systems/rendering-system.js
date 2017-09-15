@@ -3,7 +3,7 @@ function RenderingSystem () {
 
 	this.filter = [
 		ComponentType.renderable,
-    ComponentType.position,
+    ComponentType.transform,
     ComponentType.polygon
 	];
 	
@@ -14,7 +14,7 @@ function RenderingSystem () {
 	this.process = function (entities, fire) {
     entities.forEach(function (entity) {
       var polygon = getComp(entity, ComponentType.polygon);
-      var pos = getComp(entity, ComponentType.position);
+      var pos = getComp(entity, ComponentType.transform);
       sm.gfx.setStrokeColor(sc.color.white);
       sm.gfx.drawPolygon(polygon.polygon, pos.position);
     })

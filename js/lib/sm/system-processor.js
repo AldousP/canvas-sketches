@@ -13,6 +13,7 @@ function SystemProcessor() {
       this.systemNames.push(newSystem.name);
 
       if (newSystem.setup) {
+        new
         newSystem.setup();
       }
     }
@@ -97,7 +98,9 @@ function SystemProcessor() {
 
     system.process(
       tempStore,
-      this.fireSystemEvent.bind(system)
+      this.fireSystemEvent.bind(system),
+      delta,
+      mapper
     );
 
 		/**

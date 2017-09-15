@@ -112,6 +112,17 @@ var SPoly = {
   },
 
   /**
+   * Scale the contents of a polygon by a scalar vector
+   * @param poly the polygon to scale
+   * @param scalar the scaling value
+   */
+  scalePoly: function (poly, scalar) {
+    poly.pts.forEach(function (pt) {
+      SVec.multVec(pt, scalar);
+    });
+  },
+
+  /**
    * Convenience method for generating a circle with the given radius.
    * @param radius of the circle
    * @returns a Polygon with thirty-two vertices and the designated radius.

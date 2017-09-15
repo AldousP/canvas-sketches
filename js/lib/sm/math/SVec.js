@@ -103,14 +103,14 @@ SVec.addVecConst = function (vec, x, y) {
  * Adds the contents of the second Vector to the first.
  */
 SVec.addVecVec = function (vec, vec2) {
-  return addVecConst(vec, vec2.x, vec2.y);
+  return SVec.addVecConst(vec, vec2.x, vec2.y);
 };
 
 /**
  * Subtracts the contents of the second Vector from the first.
  */
 SVec.subVecVec = function (vec, vec2) {
-  return addVecConst(vec, -vec2.x, -vec2.y);
+  return SVec.addVecConst(vec, -vec2.x, -vec2.y);
 };
 
 /**

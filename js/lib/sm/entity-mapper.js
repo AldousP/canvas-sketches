@@ -5,6 +5,8 @@ function EntityMapper() {
 	this.map = {};
 	// A list of all entities
 	this.store = [];
+	// A mapping of entities to tags.
+	this.tagMap = {};
 
 	this.addEntity = function (newEntity) {
 		console.log(newEntity);
@@ -29,5 +31,9 @@ function EntityMapper() {
 			this.map[comp.name].push(entity.ID);
 			entity.components[comp.name] = comp;
 		}
-	}
+	};
+
+	this.tagEntity = function (entityID, tagName) {
+	  console.log('tagging entity')
+  }
 }

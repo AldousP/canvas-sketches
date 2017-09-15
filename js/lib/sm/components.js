@@ -23,7 +23,9 @@ var ComponentType = {
   stroke: 'strokedElement',
   animationMap: 'animationMap',
   renderable: 'renderable',
-  gameplay: 'game'
+  gameplay: 'game',
+  transform: 'transform',
+  gameState: ''
 };
 
 function PolygonComponent(polygon) {
@@ -173,4 +175,16 @@ function RenderableComponent() {
 
 function GameplayComponent() {
   this.name = ComponentType.gameplay;
+}
+
+function TransformComponent () {
+  this.name = ComponentType.transform;
+  this.position = new SVec.Vector();
+  this.rotation = 0;
+  this.scale = new SVec.Vector();
+}
+
+function GameStateComponent() {
+  this.name = ComponentType.gameState;
+  this.gameState = {};
 }

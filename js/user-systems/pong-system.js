@@ -1,5 +1,5 @@
-function SampleSystemA () {
-	this.name = 'sample_A';
+function PongSystem () {
+	this.name = 'pong_system';
 	this.active = true;
 
 	// Defines which entities will be passed into the process function.
@@ -17,16 +17,4 @@ function SampleSystemA () {
 
     });
 	};
-}
-
-function SampleSystemB () {
-  this.name = 'sample_B';
-
-  this.filter = [
-    ComponentType.position
-  ];
-
-  this.process = function (entity, fire) {
-
-  };
 }

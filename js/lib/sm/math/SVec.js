@@ -80,6 +80,15 @@ SVec.sclVec = function (vec, scalar) {
 };
 
 /**
+ * Returns the dot product of the provided vectors
+ * @param vec1
+ * @param vec2
+ */
+SVec.dot = function (vec1, vec2) {
+  return vec1.x * vec2.x + vec1.y * vec2.y;
+};
+
+/**
  * Multiplies the values of the first Vector by the second.
  */
 SVec.multVec = function (vec1, vec2) {
@@ -151,4 +160,25 @@ SVec.lerpVec = function (vecA, vecB, alpha) {
  */
 SVec.perp = function (vec) {
   return SVec.setVec(vec, vec.y, -vec.x);
+};
+
+/**
+ * Calculates the vector representing the start and end of the overlapping range.
+ */
+SVec.overlap = function (vec1, vec2) {
+  var colliding = false;
+  var distA = Math.abs(vec1.y - vec1.x) / 2;
+  var distB = Math.abs(vec2.y - vec2.x) / 2;
+  var midA = (vec1.x + vec1.y) / 2;
+  var midB = (vec2.x + vec2.y) / 2;
+
+  if (Math.abs(midA - midB) < distA + distB) {
+    colliding = Math.sqrt((midB - midA) * (midB - midA)) < (distA + distB);
+  }
+
+  if (colliding) {
+    return new SVec.Vector(Math.max(vec1.x, vec2.x), Math.min(vec1.y, vec2.y));
+  } else {
+    return new SVec.Vector(0 ,0);
+  }
 };

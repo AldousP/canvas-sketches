@@ -15,68 +15,22 @@ var SPoly = {
     this.pts = pts ? pts : [];
   },
 
-  /**
-   * Returns true if the provided shapes, at the provided locations overlap.
-   * @param polyA
-   * @param polyB
-   * @param ptA
-   * @param ptB
-   * @returns {boolean} if the Polygons overlap
-   */
-  overlaps: function (polyA, polyB, ptA, ptB) {
-    // console.log(polyA, polyB, ptA, ptB);
+  project: function (polygon, axis) {
+    var norm = SVec.normVec(SVec.cpyVec(axis));
+    var min = SVec.dot(polygon.pts[0], norm);
+    var max = min;
 
-    var polyAxes = [];
-    var colliderAxes = [];
-    var polyOverlaps = [];
+    for (var i = 0; i < polygon.pts.length; i++) {
+      var proj = SVec.dot(polygon.pts[i], norm);
+      if (proj < min) {
+        min = proj;
+      }
 
-    for (var i = 0; i < polyA.pts.length; i++) {
-      var ptA = polyA.pts[i];
-      var ptB = polyA.pts[ SMath.wrapIndex(i + 1, polyA.pts.length) ];
-
-      // var edge = ptA.copy().sub(ptB);
-      // var normal = edge.copy();
-      // normal.set(-normal.y, normal.x);
-      // normal.normalize();
-      // polyAxes.add(normal);
+      if (proj > max) {
+        max = proj;
+      }
     }
-
-    // for (var i = 0; i < collider.vertices.size(); i++) {
-    //   var ptA = collider.vertices.get(i);
-    //   var ptB = collider.vertices.get(SolMath.wrapIndex(i + 1, collider.vertices.size()));
-    //   var edge = ptA.copy().sub(ptB);
-    //   var normal = edge.copy();
-    //   normal.set(-normal.y, normal.x);
-    //   normal.normalize();
-    //   colliderAxes.add(normal);
-    // }
-    //
-    // for (var axe in polyAxes) {
-    //   tmp1.set(0, 0);
-    //   var proj1 = project(polygon, axe);
-    //   var proj2 = project(collider, axe);
-    //   var overlap = SolMath.overlap(proj1.x, proj1.y, proj2.x, proj2.y);
-    //   polyOverlaps.add(new PVector().set(axe).setMag(overlap.y - overlap.x));
-    // }
-    //
-    // for (var axe in colliderAxes) {
-    //   tmp1.set(0, 0);
-    //   var proj1 = project(polygon, axe);
-    //   var proj2 = project(collider, axe);
-    //   var overlap = SolMath.overlap(proj1.x, proj1.y, proj2.x, proj2.y);
-    //   polyOverlaps.add(new PVector().set(axe).setMag(overlap.y - overlap.x));
-    // }
-    //
-    // if (polyOverlaps.size() > 0) {
-    //   var shortest = polyOverlaps.get(0);
-    //   for (var polyOverlap in polyOverlaps) {
-    //     if (polyOverlap.mag() < shortest.mag()) {
-    //       shortest = polyOverlap;
-    //     }
-    //   }
-    //   polygon.position.add(shortest.mult(-1));
-    // }
-    return false;
+    return new SVec.Vector(min, max);
   },
 
   /**

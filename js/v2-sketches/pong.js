@@ -2,7 +2,7 @@
 
 function Pong () {
   this.conf = {
-    name: 'Pong.',
+    name: 'Pong',
     description: 'Pong in SM.',
     date: '09.14.2017'
   };

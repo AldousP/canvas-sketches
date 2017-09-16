@@ -23,7 +23,7 @@ SVec.Vector = function Vector(x, y) {
  * For ease of logging.
  */
 SVec.Vector.prototype.toString = function () {
-  return this.x + ', ' + this.y;
+  return SFormat.float_two_pt(this.x) + ', ' + SFormat.float_two_pt(this.y);
 };
 
 /**
@@ -67,6 +67,11 @@ SVec.setVecVec = function (vec1, vec2) {
  */
 SVec.cpyVec = function (vec) {
   return new SVec.Vector(vec.x, vec.y);
+};
+
+SVec.setMag = function (vec, length) {
+  var scalar = length / vec.len;
+  return SVec.sclVec(vec, scalar);
 };
 
 /**
@@ -159,7 +164,7 @@ SVec.lerpVec = function (vecA, vecB, alpha) {
  * Makes the vector its perpendicular
  */
 SVec.perp = function (vec) {
-  return SVec.setVec(vec, vec.y, -vec.x);
+  return SVec.setVec(vec, -vec.y, vec.x);
 };
 
 /**

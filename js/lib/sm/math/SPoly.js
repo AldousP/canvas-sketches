@@ -15,23 +15,26 @@ var SPoly = {
     this.pts = pts ? pts : [];
   },
 
-  project: function (polygon, pos, axis) {
-    var norm = SVec.normVec(SVec.cpyVec(axis));
-    var min = SVec.dot(polygon.pts[0], norm);
-    var max = min;
-
-    for (var i = 0; i < polygon.pts.length; i++) {
-      var pt = SVec.addVecVec(SVec.cpyVec(polygon.pts[i]), pos);
-      var proj = SVec.dot(pt, norm);
-      if (proj < min) {
+  /**
+   * Projects the provided polygon object onto the provided axis.
+   * @returns {SVec.Vector}
+   */
+  project: function (poly, pos, axis) {
+    var axis_norm = SVec.normVec(SVec.cpyVec(axis));
+    var min, max;
+    for (var i = 0; i < poly.pts.length; i++) {
+      var proj = SVec.dot(SVec.addVecVec(SVec.cpyVec(poly.pts[i]), pos), axis_norm);
+      if (!min) {
         min = proj;
-      }
-
-      if (proj > max) {
         max = proj;
+      } else {
+        if (proj < min) {
+          min = proj;
+        } else if (proj > max) {
+          max = proj;
+        }
       }
     }
-
     return new SVec.Vector(min, max);
   },
 

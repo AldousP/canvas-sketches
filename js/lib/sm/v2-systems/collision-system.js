@@ -1,5 +1,6 @@
 function CollisionSystem () {
 	this.name = 'collision';
+	var debug = true;
 
 	this.filter = [
 		ComponentType.transform,
@@ -7,77 +8,71 @@ function CollisionSystem () {
 	];
 	
 	this.process = function (entities, fire) {
-	  var col, pos;
-
+	  var poly, pos;
 	  // Each entity in the root list compares against each in the list excluding itself
 	  entities.forEach(function (entity) {
-	    col = entity.components[ComponentType.collider].volume;
+	    poly = entity.components[ComponentType.collider].volume;
 	    pos = entity.components[ComponentType.transform].position;
-	    if (col && pos && entity.ID === 0) {
-	      var poly_axes = [];
-	      var poly_overlaps = [];
-        var ptA, ptB, edge, normal;
 
-        if (col && pos) {
-          // Get the axes for this entity.
-          for (var i = 0; i < col.pts.length; i++) {
-            ptA = SVec.cpyVec(col.pts[i]);
-            ptB = SVec.cpyVec(col.pts[SMath.wrapIndex(i + 1, col.pts.length)]);
-            SVec.addVecVec(ptA, pos);
-            SVec.addVecVec(ptB, pos);
-            edge = SVec.subVecVec(SVec.cpyVec(ptA), ptB);
-            normal = SVec.cpyVec(edge);
-            SVec.setVec(normal, -normal.y, normal.x);
-            SVec.normVec(normal);
-            poly_axes.push(normal);
-          }
+      var axes = [];
+      var overlaps = [];
 
-          var collider_axes;
+      poly.pts.forEach(function (pt, index) {
+        var ptA = SVec.cpyVec(pt);
+        var ptB = SVec.cpyVec(poly.pts[SMath.wrapIndex(index + 1, poly.pts.length)]);
+        var edge = SVec.subVecVec(SVec.cpyVec(ptA), ptB);
+        var norm = SVec.cpyVec(edge);
+        SVec.perp(norm);
+        sm.gfx.drawVec(norm);
+        axes.push(norm);
+      });
 
-          // Proceed to check against each entity in the list.
-          entities.forEach(function (collider) {
-            poly_overlaps = [];
-            collider_axes = [];
-            if (collider.ID !== entity.ID) {
-              var collider_col = collider.components[ComponentType.collider].volume;
-              var collider_pos = collider.components[ComponentType.transform].position;
+      entities.forEach(function (collider) {
+        if (collider.ID !== entity.ID) {
+          var col_poly = collider.components[ComponentType.collider].volume;
+          var col_pos = collider.components[ComponentType.transform].position;
+          col_poly.pts.forEach(function (pt, index) {
+            var ptA = SVec.cpyVec(pt);
+            var ptB = SVec.cpyVec(col_poly.pts[SMath.wrapIndex(index + 1, col_poly.pts.length)]);
+            var edge = SVec.subVecVec(SVec.cpyVec(ptA), ptB);
+            var norm = SVec.cpyVec(edge);
+            SVec.perp(norm);
+            if (debug) {
+              sm.gfx.drawVec(norm);
+            }
+            axes.push(norm);
+          });
 
-              // Get the axes for this collider that we're checking against the entity.
-              if (collider_col && collider_pos) {
-                for (var i = 0; i < collider_col.pts.length; i++) {
-                  ptA = SVec.cpyVec(collider_col.pts[i]);
-                  ptB = SVec.cpyVec(collider_col.pts[SMath.wrapIndex(i + 1, collider_col.pts.length)]);
-                  SVec.addVecVec(ptA, collider_pos);
-                  SVec.addVecVec(ptB, collider_pos);
-                  edge = SVec.subVecVec(SVec.cpyVec(ptA), ptB);
-                  normal = SVec.cpyVec(edge);
-                  SVec.setVec(normal, -edge.y, edge.x);
-                  SVec.normVec(normal);
-                  collider_axes.push(normal);
-                }
-              }
-              
-              poly_axes.forEach(function (axe) {
-                var proj1 = SPoly.project(col, pos, axe);
-                var proj2 = SPoly.project(collider_col, collider_pos, axe);
-                var overlap = SVec.overlap(proj1, proj2);
-                poly_overlaps.push(SVec.setMag(SVec.cpyVec(axe), overlap.y - overlap.x));
-              });
-
-              collider_axes.forEach(function (axe) {
-                var proj1 = SPoly.project(col, pos, axe);
-                var proj2 = SPoly.project(collider_col, collider_pos, axe);
-                var overlap = SVec.overlap(proj1, proj2);
-                poly_overlaps.push(SVec.setMag(SVec.cpyVec(axe), overlap.y - overlap.x));
-              });
+          var gap_found;
+          axes.forEach(function (axis) {
+            var proj_1 = SPoly.project(poly, pos, axis);
+            var proj_2 = SPoly.project(col_poly, col_pos, axis);
+            var overlap = SVec.overlap(proj_1, proj_2);
+            if (overlap.len === 0) {
+              gap_found = true;
+            } else {
+              overlaps.push(overlap);
             }
 
-            if (poly_overlaps.length) {
-              // console.log(entity.ID, 'colliding with', collider.ID);
+            var proj_pt_A = SVec.setMag(SVec.cpyVec(axis), proj_1.x);
+            var proj_pt_B = SVec.setMag(SVec.cpyVec(axis), proj_1.y);
+            var proj_pt_C = SVec.setMag(SVec.cpyVec(axis), proj_2.x);
+            var proj_pt_D = SVec.setMag(SVec.cpyVec(axis), proj_2.y);
+            if (debug) {
+              sm.gfx.setStrokeColor(sc.color.orange);
+              sm.gfx.drawLineVec(proj_pt_A, proj_pt_B);
+              sm.gfx.drawLineVec(proj_pt_C, proj_pt_D);
             }
           });
+
+          if (!gap_found) {
+            if (debug) {
+              sm.gfx.setStrokeColor(sc.color.orange);
+              sm.gfx.drawPolygon(poly, pos);
+            }
+          }
         }
-      }
+      });
     });
 	};
 

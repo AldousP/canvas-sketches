@@ -14,7 +14,7 @@ function Pong () {
     this.update(0, sm.gfx);
 
     var paddlePoly = SPoly.polySquare(64);
-    SPoly.scalePoly(paddlePoly, new SVec.Vector(.55, 2.75));
+    SPoly.scalePoly(paddlePoly, new SVec.Vector(.25, 1.75));
 
     // Player paddle
     var player = this.entities.buildEntity([
@@ -81,6 +81,13 @@ function Pong () {
       new PolygonComponent(goalPoly),
       new ColliderComponent(goalPoly)
     ]);
+
+    this.entities.buildEntity([
+      new RenderRoot(),
+      new RenderableComponent(),
+      new PolygonComponent(SPoly.polyCircle(0)),
+      new TransformComponent()
+    ], [AI_goal.ID, player_goal.ID, bottom_gutter.ID, top_gutter.ID, player.ID, AIPaddle.ID, ball.ID]);
 
     this.entities.tagEntity(ball.ID, 'ball');
     this.entities.tagEntity(AIPaddle.ID, 'AIPaddle');

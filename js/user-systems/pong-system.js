@@ -22,7 +22,7 @@ function PongSystem(ball_speed) {
     playerID = player.ID;
     ballID = ball.ID;
 
-    SVec.setVec(player_pos, player_pos.x, SMath.clamp(sm.input.state.cursor.y, -72, 72));
+    SVec.setVec(player_pos, player_pos.x, SMath.clamp(sm.input.state.cursor.y, -128, 128));
     entities.forEach(function (entity) {
 
     });
@@ -35,6 +35,7 @@ function PongSystem(ball_speed) {
         if (data.collider === ballID) {
           var ball = mapper.store[data.collider];
           var vel = ball.components[ComponentType.velocity].velocity;
+          sm.sfx.beep(sc.notes.C4 * 2);
 
           if (target.tags.indexOf('gutter') !== -1) {
             vel.y = -vel.y;

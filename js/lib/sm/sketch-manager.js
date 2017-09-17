@@ -126,7 +126,7 @@
         var stylePaddingTop = parseInt(document.defaultView.getComputedStyle(sm.canvas, null)['paddingTop'], 10)|| 0;
         var styleBorderLeft = parseInt(document.defaultView.getComputedStyle(sm.canvas, null)['borderLeftWidth'], 10) || 0;
         var styleBorderTop = parseInt(document.defaultView.getComputedStyle(sm.canvas, null)['borderTopWidth'], 10) || 0;
-        // Some pages have fixed-position bars (like the stumbleupon bar) at the top or left of the page
+        // Some pages have fixed-position bars at the top or left of the page
         // They will mess up mouse coordinates and this fixes that
         var html = document.body.parentNode;
         var htmlTop = html.offsetTop;

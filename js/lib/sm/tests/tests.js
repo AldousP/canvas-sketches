@@ -54,13 +54,12 @@ function eventPoolingTest(it) {
 /**
  * Runs the tests.
  */
-// STest.run([
-//   systemTest,
-//   entityMapperTest,
-//   eventCullingTest,
-//   eventPoolingTest
-// ]);
-
+STest.run([
+  systemTest,
+  entityMapperTest,
+  eventCullingTest,
+  eventPoolingTest
+]);
 
 // Helper Classes
 function TestSystem () {

@@ -27,12 +27,20 @@ function EntityMapper() {
 	  this.entityCount--;
   };
 
-	this.buildEntity = function (components) {
+	this.buildEntity = function (components, children, tags) {
 		var entity = new Entity();
 		entity.ID = this.entity_ID ++;
 		entity.components = {};
+		entity.children = children ? children : [];
 		this.injectComponents(entity, components);
 		this.addEntity(entity);
+
+		if (tags) {
+		  tags.forEach(function (tag) {
+		    that.tagEntity(entity.ID, tag);
+      })
+    }
+
 		return entity;
 	};
 
@@ -46,6 +54,13 @@ function EntityMapper() {
 			entity.components[comp.name] = comp;
 		}
 	};
+	
+	this.tagEntities = function (entities, tagName) {
+	  var that = this;
+	  entities.forEach(function (entity) {
+	    that.tagEntity(entity, tagName)
+    })
+  };
 
   this.tagEntity = function (entityID, tagName) {
     if (!this.tagMap[tagName]) {

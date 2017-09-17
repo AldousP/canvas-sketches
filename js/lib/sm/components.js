@@ -26,7 +26,8 @@ var ComponentType = {
   gameplay: 'game',
   transform: 'transform',
   gameState: 'gamestate',
-  collider: 'collider'
+  collider: 'collider',
+  velocity: 'velocity'
 };
 
 function PolygonComponent(polygon) {
@@ -115,17 +116,6 @@ function TextComponent(strings, textConf) {
   this.conf = textConf;
 }
 
-
-// conf: {
-//   length: 5,
-//   pos: 0,
-//   dir : 1,
-//   onComplete: ''
-// };
-var SequenceStyles = {
-  normal: {}
-};
-
 function SequenceComponent(sequences) {
   this.name = ComponentType.sequence;
   this.sequences = sequences;
@@ -181,7 +171,7 @@ function GameplayComponent() {
 function TransformComponent (x, y, r, h, v) {
   this.name = ComponentType.transform;
   this.position = new SVec.Vector(x, y);
-  this.rotation = r;
+  this.rotation = r ? r : 0;
   this.scale = new SVec.Vector(h, v);
 }
 
@@ -194,3 +184,24 @@ function ColliderComponent (poly) {
   this.name = ComponentType.collider;
   this.volume = poly;
 }
+
+/**
+ * Helpers to quickly grab values out of an entities data.
+ */
+var EX = {
+  transPos: function (entity) {
+    return entity.components[ComponentType.transform].position;
+  },
+
+  transRot: function (entity) {
+    return entity.components[ComponentType.transform].rotation;
+  },
+
+  vel: function (entity) {
+    return entity.components[ComponentType.velocity].velocity;
+  },
+
+  rendPoly: function (entity) {
+    return entity.components[ComponentType.polygon].polygon;
+  }
+};

@@ -126,9 +126,9 @@ function SystemProcessor() {
 					     * Fire the event handler and pass it the target entity.
 					     */
 		    			if (eventInQueue.targetID !== -1) {
-		    				eventListener.handle(eventInQueue.data, mapper.store[eventInQueue.targetID], delta, mapper);
+		    				eventListener.handle(eventInQueue.data, mapper.store[eventInQueue.targetID], delta, mapper, this.fireEvent);
 					    } else {
-						    eventListener.handle(eventInQueue.data, null, delta, mapper);
+						    eventListener.handle(eventInQueue.data, null, delta, mapper, this.fireEvent);
 					    }
 				    }
 			    }

@@ -13,5 +13,5 @@
   });
 
   sm.init('canvas');
-  sm.loadV2Program(new Pong());
+  sm.loadV2Program(new EntityTree());
 }());

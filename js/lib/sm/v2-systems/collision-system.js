@@ -1,7 +1,7 @@
 function CollisionSystem () {
 	this.name = 'collision';
 	var debug = false;
-	var debounce_interval = .033;
+	var debounce_interval = .013;
 
 	this.filter = [
 		ComponentType.transform,
@@ -68,11 +68,11 @@ function CollisionSystem () {
               overlaps.push(overlap);
             }
 
-            var proj_pt_A = SVec.setMag(SVec.cpyVec(axis), proj_1.x);
-            var proj_pt_B = SVec.setMag(SVec.cpyVec(axis), proj_1.y);
-            var proj_pt_C = SVec.setMag(SVec.cpyVec(axis), proj_2.x);
-            var proj_pt_D = SVec.setMag(SVec.cpyVec(axis), proj_2.y);
             if (debug) {
+              var proj_pt_A = SVec.setMag(SVec.cpyVec(axis), proj_1.x);
+              var proj_pt_B = SVec.setMag(SVec.cpyVec(axis), proj_1.y);
+              var proj_pt_C = SVec.setMag(SVec.cpyVec(axis), proj_2.x);
+              var proj_pt_D = SVec.setMag(SVec.cpyVec(axis), proj_2.y);
               sm.gfx.setStrokeColor(sc.color.orange);
               sm.gfx.drawLineVec(proj_pt_A, proj_pt_B);
               sm.gfx.drawLineVec(proj_pt_C, proj_pt_D);

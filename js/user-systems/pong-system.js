@@ -1,10 +1,10 @@
-function PongSystem() {
+function PongSystem(ball_speed) {
   this.name = 'pong_system';
   this.active = true;
+  this.ball_speed = ball_speed;
 
-  var playerID, ballID, AIPaddleID;
+  var playerID, ballID;
 
-  // Defines which entities will be passed into the process function.
   this.filter = [
     ComponentType.gameplay
   ];
@@ -14,9 +14,7 @@ function PongSystem() {
   };
 
   this.process = function (entities, fire, delta, mapper) {
-    var balls = mapper.getEntitiesForTag('ball');
-    var ball = mapper.store[balls[0]];
-    var ball_pos = ball.components[ComponentType.transform].position;
+    var ball = mapper.store[mapper.getEntitiesForTag('ball')[0]];
 
     var player = mapper.store[mapper.getEntitiesForTag('player')];
     var player_pos = player.components[ComponentType.transform].position;
@@ -33,11 +31,30 @@ function PongSystem() {
   this.listeners = {
     EntityCollision: {
       type: EventTypes.ENTITY_COLLISION,
-      handle: function (data, target, delta, mapper) {
+      handle: function (data, target, delta, mapper, fire) {
         if (data.collider === ballID) {
           var ball = mapper.store[data.collider];
           var vel = ball.components[ComponentType.velocity].velocity;
-          vel.x = -vel.x;
+
+          if (target.tags.indexOf('gutter') !== -1) {
+            vel.y = -vel.y;
+          }
+
+          if (target.tags.indexOf('paddle') !== -1) {
+            vel.x = -vel.x;
+            SVec.sclVec(vel, 1.10);
+          }
+
+          if (target.tags.indexOf('player_goal') !== -1) {
+            SVec.setVec(ball.components[ComponentType.transform].position, 0, 0);
+            SVec.setVec(ball.components[ComponentType.velocity].velocity, -ball_speed, SMath.rand(-ball_speed, ball_speed));
+            fire()
+          }
+
+          if (target.tags.indexOf('AI_goal') !== -1) {
+            SVec.setVec(ball.components[ComponentType.transform].position, 0, 0);
+            SVec.setVec(ball.components[ComponentType.velocity].velocity, ball_speed, SMath.rand(-ball_speed, ball_speed));
+          }
         }
       }
     }

@@ -1,13 +1,25 @@
 function CollisionSystem () {
 	this.name = 'collision';
-	var debug = false;
+	var debug = true;
+	var debounce_interval = .033;
 
 	this.filter = [
 		ComponentType.transform,
 		ComponentType.collider
 	];
-	
-	this.process = function (entities, fire) {
+
+	var lastFireDelta = 0;
+
+	this.process = function (entities, fire, delta, mapper) {
+
+	  lastFireDelta += delta;
+
+	  if (lastFireDelta > debounce_interval) {
+	    lastFireDelta = 0;
+    } else {
+	    return;
+    }
+
 	  var poly, pos;
 	  // Each entity in the root list compares against each in the list excluding itself
 	  entities.forEach(function (entity) {

@@ -38,7 +38,7 @@ function Pong () {
       new TransformComponent(),
       new RenderableComponent(),
       new GameplayComponent(),
-      new VelocityComponent(-1.5, -.5),
+      new VelocityComponent(-1, 0),
       new PolygonComponent(SPoly.polyCircle(16)),
       new ColliderComponent(SPoly.polyCircle(16))
     ]);

@@ -34,7 +34,7 @@ function PongSystem() {
     EntityCollision: {
       type: EventTypes.ENTITY_COLLISION,
       handle: function (data, target, delta, mapper) {
-        if (target.ID === playerID && data.collider === ballID) {
+        if (data.collider === ballID) {
           var ball = mapper.store[data.collider];
           var vel = ball.components[ComponentType.velocity].velocity;
           vel.x = -vel.x;

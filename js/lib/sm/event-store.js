@@ -1,14 +1,49 @@
 function EventStore() {
 	'use strict';
 
-	this.events = [];
+	this.events = {};
 	this.systemEventMap = {};
 	this.eventTypeMap = {};
-
 	this.pooledEventsByType = {};
+	this.eventCount = 0;
+	this.blankIDS = [];
+
+  // Used rather than an index, to avoid spillage bugs.
+	this.eventID = 0;
+
+  var that = this;
 
 	this.fireEvent = function (target, type, payload, source, timerData) {
-		if (!this.systemEventMap[source]) {
+    this.eventCount ++;
+    this.eventID ++;
+
+    var event;
+    if (this.pooledEventsByType[type] && this.pooledEventsByType[type].length) {
+      event = this.pooledEventsByType[type].pop();
+      event.eventID = this.eventID;
+      event.targetID = target;
+      event.src = source;
+      event.data = payload;
+    } else {
+      event = {
+        eventID: this.eventID,
+        targetID: target,
+        type: type,
+        data: payload,
+        src: source
+      };
+    }
+
+    this.events[this.eventID] = event;
+    event.meta = {};
+    if (timerData) {
+      event.meta = {
+        elapsed: 0,
+        length: timerData.length
+      }
+    }
+
+    if (!this.systemEventMap[source]) {
 			this.systemEventMap[source] = [];
 		}
 
@@ -16,65 +51,48 @@ function EventStore() {
       this.eventTypeMap[type] = [];
     }
 
-    this.eventTypeMap[type].push(this.events.length);
-		this.systemEventMap[source].push(this.events.length);
+    this.eventTypeMap[type].push(event.eventID);
+		this.systemEventMap[source].push(event.eventID);
 
-		var event;
-		if (this.pooledEventsByType[type] && this.pooledEventsByType[type].length) {
-			event = this.pooledEventsByType[type].pop();
-			event.ID = this.events.length;
-      event.targetID = target;
-      event.src = source;
-      event.data = payload;
-      this.events.push(event);
-		} else {
-			this.events.push({
-				eventID: this.events.length,
-				targetID: target,
-				type: type,
-				data: payload,
-				src: source
-			});
-		}
-
-		event = this.events[this.events.length - 1];
-		event.meta = {};
-
-		if (timerData) {
-      event = this.events[this.events.length - 1];
-      event.meta = {
-        elapsed: 0,
-        length: timerData.length
-      }
-    }
+    return event.eventID;
 	};
 
+  this.removeEventByID = function (ID) {
+    var event = this.events[ID];
+    this.events[ID] = undefined;
+
+    var eventsByType = this.eventTypeMap[event.type];
+    eventsByType.splice(eventsByType.indexOf(event.eventID));
+
+    this.eventCount--;
+    this.blankIDS.push(event.eventID);
+    this.poolEvent(event);
+  };
+
+
+  /**
+   * Removes all events originating from the provided scope.
+   */
   this.cullSystemEvents = function (source, delta) {
-    if (!this.systemEventMap[source]) return;
-    for (var i = 0; i < this.systemEventMap[source].length; i++) {
-      var eventList = this.systemEventMap[source];
-      for (var j = 0; j < eventList.length; j++) {
-        var result = this.events[j];
-        if (result.meta.length) {
-          result.meta.elapsed += delta;
-          if (result.meta.elapsed > result.meta.length) {
-            this.removeEvent(result)
-          }
-        } else {
-          this.removeEvent(result);
-        }
-      }
+    var eventsForSystem = this.systemEventMap[source];
+    if (eventsForSystem) {
+      eventsForSystem.forEach(function (ID) {
+        that.removeEventByID(ID);
+      });
+      this.systemEventMap[source] = [];
     }
   };
 
-  this.removeEvent = function (event) {
-    this.eventTypeMap[event.type].splice(this.eventTypeMap[event.type].indexOf(event.eventID), 1);
-    this.systemEventMap[event.src].splice(this.systemEventMap[event.src].indexOf(event.eventID), 1);
-    event.targetID = -1;
+  this.poolEvent = function (event) {
+    event.ID = undefined;
+    event.eventID = undefined;
+    event.meta = {};
     event.src = undefined;
-    if (!this.pooledEventsByType[event.type]) {
-      this.pooledEventsByType[event.type] = [];
+    event.targetID = undefined;
+    event.data = undefined;
+    if (!that.pooledEventsByType[event.type]) {
+      that.pooledEventsByType[event.type] = [];
     }
-    this.pooledEventsByType[event.type].push(event);
+    that.pooledEventsByType[event.type].push(event);
   }
 }

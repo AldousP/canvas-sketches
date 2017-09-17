@@ -10,18 +10,6 @@ function CollisionSystem () {
 	this.process = function (entities, fire) {
 	  var poly, pos;
 	  // Each entity in the root list compares against each in the list excluding itself
-
-
-    for (var i = 0; i < entities.length; i++) {
-      var entity = entities[i];
-
-      for (var j = 0; j < entities.length; j++) {
-        var collider = entities[j];
-
-      }
-    }
-
-
 	  entities.forEach(function (entity) {
 	    poly = entity.components[ComponentType.collider].volume;
 	    pos = entity.components[ComponentType.transform].position;
@@ -79,10 +67,9 @@ function CollisionSystem () {
             }
           });
 
-
           if (!gap_found) {
-            fire(entity.ID, EventTypes.ENTITY_COLLISION, {
-              collider: collider.ID
+            fire(collider.ID, EventTypes.ENTITY_COLLISION, {
+              collider: entity.ID
             });
             if (debug) {
               sm.gfx.setStrokeColor(sc.color.orange);

@@ -22,20 +22,18 @@ function SystemProcessor() {
 	this.process = function (entityMapper, delta) {
 	  var currentSystem;
 
-	  // All user-systems.
+    // All user-systems.
     for (var i = 0; i < this.systems.length; i++) {
       currentSystem = this.systems[i];
       this.eventStore.cullSystemEvents(currentSystem.name, delta);
 
-	    var filter;
+      var filter;
 	    var matches = {};
 	    var blankList = false;
 	    var shortestName = '';
 	    var shortestLength = -1;
 
-	    if (currentSystem.filter.length === 0) {
-	      this.processEntityList(currentSystem, Object.keys(entityMapper.store), entityMapper);
-      } else {
+	    if (currentSystem.filter && currentSystem.filter.length > 0) {
         // System  Filters
         for (var j = 0; j < currentSystem.filter.length; j ++) {
           filter = currentSystem.filter[j];
@@ -82,9 +80,13 @@ function SystemProcessor() {
             this.processEntityList(currentSystem, shortest, entityMapper, delta);
           }
         }
+      } else {
+        this.processEntityList(currentSystem, Object.keys(entityMapper.store), entityMapper, delta);
 			}
     }
-	};
+
+    this.eventStore.cullSystemEvents('global', delta);
+  };
 
   /**
    * Runs a list of entity IDs through through the provided system's process function and event listeners.
@@ -107,13 +109,12 @@ function SystemProcessor() {
 		 * Fire the system's event listeners.
 		 */
 		if (system.listeners) {
-
       var eventKeys = Object.keys(system.listeners);
 	    var eventListener;
 	    for (i = 0; i < eventKeys.length; i++) {
 		    eventListener = system.listeners[eventKeys[i]];
 		    var queuedEventsIDs = this.eventStore.eventTypeMap[eventListener.type];
-		    if (queuedEventsIDs && this.eventStore.events.length) {
+		    if (queuedEventsIDs && this.eventStore.eventCount) {
 		    	for (var j = 0; j < queuedEventsIDs.length; j++) {
             var eventInQueue = this.eventStore.events[queuedEventsIDs[j]];
 
@@ -125,9 +126,9 @@ function SystemProcessor() {
 					     * Fire the event handler and pass it the target entity.
 					     */
 		    			if (eventInQueue.targetID !== -1) {
-		    				eventListener.handle(eventInQueue.data, mapper.store[eventInQueue.targetID], delta);
+		    				eventListener.handle(eventInQueue.data, mapper.store[eventInQueue.targetID], delta, mapper);
 					    } else {
-						    eventListener.handle(eventInQueue.data);
+						    eventListener.handle(eventInQueue.data, null, delta, mapper);
 					    }
 				    }
 			    }
@@ -138,10 +139,10 @@ function SystemProcessor() {
 
 	var that = this;
 	this.fireSystemEvent = function (target, type, payload, timer) {
-    that.eventStore.fireEvent(target, type, payload, this.name, timer);
+    return that.eventStore.fireEvent(target, type, payload, this.name, timer);
   };
 
   this.fireEvent = function (target, type, payload, timer) {
-    that.eventStore.fireEvent(target, type, payload, 'global', timer);
+    return that.eventStore.fireEvent(target, type, payload, 'global', timer);
   }
 }

@@ -107,7 +107,8 @@ function SystemProcessor() {
 		 * Fire the system's event listeners.
 		 */
 		if (system.listeners) {
-	    var eventKeys = Object.keys(system.listeners);
+
+      var eventKeys = Object.keys(system.listeners);
 	    var eventListener;
 	    for (i = 0; i < eventKeys.length; i++) {
 		    eventListener = system.listeners[eventKeys[i]];
@@ -119,7 +120,7 @@ function SystemProcessor() {
 				    /**
 				     * Don't react to events fired by this system.
 				     */
-		    		if (eventInQueue.src !== system.name) {
+		    		if (eventInQueue && eventInQueue.src !== system.name) {
 					    /**
 					     * Fire the event handler and pass it the target entity.
 					     */

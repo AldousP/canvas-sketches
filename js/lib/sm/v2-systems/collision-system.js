@@ -1,6 +1,6 @@
 function CollisionSystem () {
 	this.name = 'collision';
-	var debug = true;
+	var debug = false;
 
 	this.filter = [
 		ComponentType.transform,
@@ -10,6 +10,18 @@ function CollisionSystem () {
 	this.process = function (entities, fire) {
 	  var poly, pos;
 	  // Each entity in the root list compares against each in the list excluding itself
+
+
+    for (var i = 0; i < entities.length; i++) {
+      var entity = entities[i];
+
+      for (var j = 0; j < entities.length; j++) {
+        var collider = entities[j];
+
+      }
+    }
+
+
 	  entities.forEach(function (entity) {
 	    poly = entity.components[ComponentType.collider].volume;
 	    pos = entity.components[ComponentType.transform].position;
@@ -23,7 +35,9 @@ function CollisionSystem () {
         var edge = SVec.subVecVec(SVec.cpyVec(ptA), ptB);
         var norm = SVec.cpyVec(edge);
         SVec.perp(norm);
-        sm.gfx.drawVec(norm);
+        if (debug) {
+          sm.gfx.drawVec(norm);
+        }
         axes.push(norm);
       });
 
@@ -65,7 +79,11 @@ function CollisionSystem () {
             }
           });
 
+
           if (!gap_found) {
+            fire(entity.ID, EventTypes.ENTITY_COLLISION, {
+              collider: collider.ID
+            });
             if (debug) {
               sm.gfx.setStrokeColor(sc.color.orange);
               sm.gfx.drawPolygon(poly, pos);

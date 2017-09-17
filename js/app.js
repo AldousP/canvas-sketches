@@ -13,7 +13,6 @@
   });
 
 
-  sm.init('canvas');
-
-  sm.loadV2Program(new Pong());
+  // sm.init('canvas');
+  // sm.loadV2Program(new Pong());
 }());

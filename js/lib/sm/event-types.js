@@ -1,4 +1,4 @@
 var EventTypes = {
-  MOVE_BY: 'MoveBy',
-  MOVE_TO: 'MoveTo'
+  MOVE_TO: 'MoveTo',
+  ENTITY_COLLISION: 'EntityCollision'
 };

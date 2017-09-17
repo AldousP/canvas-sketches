@@ -20,9 +20,14 @@ function eventTest(it) {
   it('should fire an event');
   var processor = new SystemProcessor();
   var entityMapper = new EntityMapper();
+  var target = entityMapper.buildEntity([]);
+
   processor.addSystem(new TestSystem());
-  processor.fireSystemEvent();
-  STest.assert();
+  processor.fireEvent(target, 'TEST_EVENT');
+  var event = processor.eventStore.events[0];
+  STest.assert(processor.eventStore.events.length === 1);
+  STest.assert(processor.eventStore.eventTypeMap['TEST_EVENT']);
+  STest.assert(event.src === 'global');
 }
 
 STest.run([

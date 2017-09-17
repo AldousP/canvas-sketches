@@ -22,7 +22,8 @@ function EventStore() {
 		var event;
 		if (this.pooledEventsByType[type] && this.pooledEventsByType[type].length) {
 			event = this.pooledEventsByType[type].pop();
-      event.targetID = this.events.length;
+			event.ID = this.events.length;
+      event.targetID = target;
       event.src = source;
       event.data = payload;
       this.events.push(event);

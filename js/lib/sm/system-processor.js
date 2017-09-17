@@ -139,5 +139,9 @@ function SystemProcessor() {
 	var that = this;
 	this.fireSystemEvent = function (target, type, payload, timer) {
     that.eventStore.fireEvent(target, type, payload, this.name, timer);
+  };
+
+  this.fireEvent = function (target, type, payload, timer) {
+    that.eventStore.fireEvent(target, type, payload, 'global', timer);
   }
 }

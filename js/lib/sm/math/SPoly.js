@@ -79,6 +79,20 @@ var SPoly = {
     poly.pts.forEach(function (pt) {
       SVec.multVec(pt, scalar);
     });
+
+    return poly;
+  },
+
+  /**
+   * Scale the contents of a polygon by an x and y
+   * @param poly the polygon to scale
+   */
+  scalePolyConst: function (poly, x, y) {
+    poly.pts.forEach(function (pt) {
+      SVec.multVecConst(pt, x, y);
+    });
+
+    return poly;
   },
 
   /**

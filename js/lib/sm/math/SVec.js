@@ -103,6 +103,19 @@ SVec.multVec = function (vec1, vec2) {
   return vec1;
 };
 
+
+/**
+ * Multiplies the values of the Vector by the x and y.
+ */
+SVec.multVecConst = function (vec1, x, y) {
+  vec1.x *= x;
+  vec1.y *= y;
+  SVec.calcLen(vec1);
+  return vec1;
+};
+
+
+
 /**
  * Adds the provided constants to the provided Vector
  */

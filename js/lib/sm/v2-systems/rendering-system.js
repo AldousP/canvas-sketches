@@ -16,20 +16,31 @@ function RenderingSystem () {
     var pos = EX.transPos(entity);
     var rot = EX.transRot(entity);
 
-    if (polygon && pos) {
-      sm.gfx.setStrokeColor(sc.color.white);
-      sm.gfx.drawPolygon(polygon, pos);
+    if (pos) {
+      sm.ctx.translate(pos.x, -pos.y);
+
+      if (rot) {
+        sm.ctx.rotate(rot);
+      }
+
+      if (polygon) {
+        sm.gfx.setStrokeColor(sc.color.white);
+        sm.gfx.drawPolygon(polygon);
+      }
 
       if (entity.children) {
-        sm.ctx.translate(pos.x, -pos.y);
-        sm.ctx.rotate(rot);
         entity.children.forEach(function (childID) {
           var child = mapper.store[childID];
           drawEntity(child, mapper);
         });
-        sm.ctx.rotate(-rot);
-        sm.ctx.translate(-pos.x, pos.y);
+
       }
+
+      if (rot) {
+        sm.ctx.rotate(-rot);
+      }
+
+      sm.ctx.translate(-pos.x, pos.y);
     }
   }
 }

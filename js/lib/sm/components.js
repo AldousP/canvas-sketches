@@ -150,7 +150,11 @@ function ColliderComponent (poly) {
  */
 var EX = {
   transPos: function (entity) {
-    return entity.components[ComponentType.transform].position;
+    if (entity.components[ComponentType.transform]) {
+      return entity.components[ComponentType.transform].position
+    } else {
+      return null;
+    }
   },
 
   transRot: function (entity) {
@@ -170,6 +174,10 @@ var EX = {
   },
 
   rendPoly: function (entity) {
-    return entity.components[ComponentType.polygon].polygon;
+    if (entity.components[ComponentType.polygon]) {
+      return entity.components[ComponentType.polygon].polygon;
+    } else {
+      return null;
+    }
   }
 };

@@ -466,18 +466,19 @@
       text: function (msgs, x, y, rotation) {
         this._processTextConf();
         var currentColor = sm.ctx.fillStyle;
-        var fontSize = sm.gfx.textConf.size;
+        var fontSize = sm.gfx.textConf;
 
         y = y ? -y : 0;
         x = x ? x : 0;
 
         sm.gfx.setFillColor(this.textConf.color);
         if (msgs.forEach) {
+          console.log(msgs.length);
           sm.ctx.save();
           sm.ctx.translate(x, y);
           sm.ctx.rotate(rotation);
           msgs.forEach(function (msg, index) {
-            sm.ctx.fillText(msg, 0, (index * fontSize));
+            sm.ctx.fillText(msg, 0, (index * 12));
           });
           sm.ctx.restore();
         } else {

@@ -57,7 +57,8 @@ function CollisionDetection () {
   this.update = function (delta, g) {
     g.clear(BG_COLOR);
     this.systems.process(this.entities, delta);
-    // box.components[ComponentType.transform].rotation += Math.PI / 8 * delta;
+    box.components[ComponentType.transform].rotation += Math.PI / 8 * delta;
+    sm.gfx.text(['This is where I learned the difference between', '"collision detection" & "collision response" and gave up.'], -32, 24, Math.PI / 8);
   };
 }
 

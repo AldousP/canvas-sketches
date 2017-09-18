@@ -32,6 +32,5 @@ function v2SketchDemo() {
   this.update = function (delta, g) {
     g.clear(sc.color.black);
      this.systems.process(this.entities, delta);
-    // console.log(this.systems.eventStore.events)
   };
 }

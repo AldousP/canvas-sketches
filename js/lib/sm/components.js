@@ -46,14 +46,6 @@ function RotationComponent(rotation, radians) {
   this.rotation = rotation ? rotation : 0;
 }
 
-function PhysicsComponent() {
-  this.name = ComponentType.physics;
-  this.velocity = new SVec.Vector();
-  this.acceleration = new SVec.Vector();
-  this.friction = new SVec.Vector();
-  this.gravity = new SVec.Vector();
-}
-
 function VelocityComponent(x, y) {
   this.name = ComponentType.velocity;
   this.velocity = new SVec.Vector(x, y);
@@ -75,16 +67,6 @@ function CameraComponent(conf) {
   };
 }
 
-function ChildrenComponent() {
-  this.name = ComponentType.children;
-  this.children = [];
-}
-
-function ParentComponent(parentID) {
-  this.name = ComponentType.parent;
-  this.parentID = parentID;
-}
-
 function ColorComponent(colorA, colorB) {
   this.name = ComponentType.color;
   this.color = colorA;
@@ -103,23 +85,10 @@ function RenderRoot() {
   this.name = ComponentType.renderroot;
 }
 
-function MovementComponent(movementVec, rotSpeed, radians) {
-  this.name = ComponentType.movement;
-  this.movementVec = movementVec ? movementVec : new SVec.Vector();
-  this.rotSpeed = rotSpeed ? rotSpeed : 0;
-  this.radians = radians ? radians : false;
-}
-
 function TextComponent(strings, textConf) {
   this.name = ComponentType.text;
   this.strings = strings;
   this.conf = textConf;
-}
-
-function SequenceComponent(sequences) {
-  this.name = ComponentType.sequence;
-  this.sequences = sequences;
-  this.style = SequenceStyles.normal;
 }
 
 function PathComponent(pts) {
@@ -144,20 +113,11 @@ function StateMachineComponent(fsmName) {
   this.currentState = ''
 }
 
-function StrokeComponent(strokeWidth) {
-  this.name = ComponentType.stroke;
-  this.strokeWidth = strokeWidth;
-}
-
 function AnimationMapComponent(initialState, map) {
   this.activeState = initialState;
   this.name = ComponentType.animationMap;
   this.animationMap = map;
   this.progress = 0;
-}
-
-function PlayerComponent(playerName) {
-  this.playerName = playerName;
 }
 
 function RenderableComponent() {
@@ -199,6 +159,14 @@ var EX = {
 
   vel: function (entity) {
     return entity.components[ComponentType.velocity].velocity;
+  },
+
+  accl: function (entity) {
+    if (entity.components[ComponentType.acceleration]) {
+      return entity.components[ComponentType.acceleration].acceleration;
+    } else {
+      return null;
+    }
   },
 
   rendPoly: function (entity) {

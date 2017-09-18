@@ -1,7 +1,7 @@
 function CollisionSystem () {
 	this.name = 'collision';
 	var debug = false;
-	var debounce_interval = .013;
+	var debounce_interval = .0166;
 
 	this.filter = [
 		ComponentType.transform,

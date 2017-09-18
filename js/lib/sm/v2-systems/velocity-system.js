@@ -6,14 +6,21 @@ function VelocitySystem () {
 		ComponentType.transform,
 		ComponentType.velocity
 	];
-	
-	this.process = function (entities, fire) {
-	  var vel, pos;
+
+  this.process = function (entities, fire, delta, mapper) {
+    var vel, pos, accl;
+
 	  entities.forEach(function (entity) {
-	    vel = entity.components[ComponentType.velocity].velocity;
-	    pos = entity.components[ComponentType.transform].position;
+	    vel = EX.vel(entity);
+	    accl = EX.accl(entity);
+	    pos = EX.transPos(entity);
+
+	    if (vel && accl) {
+	      SVec.addVecConst(vel, accl.x * delta, accl.y * delta);
+      }
+
 	    if (vel && pos) {
-        SVec.addVecVec(pos, vel);
+        SVec.addVecConst(pos, vel.x * delta, vel.y * delta);
       }
     });
 	};

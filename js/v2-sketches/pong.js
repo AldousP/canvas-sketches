@@ -8,7 +8,7 @@ function Pong () {
   };
 
   var BG_COLOR = "#114b53";
-  var ball_speed = 2.5;
+  var ball_speed = 128;
 
   this.setup = function () {
     this.update(0, sm.gfx);

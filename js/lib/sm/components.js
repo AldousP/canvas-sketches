@@ -179,5 +179,9 @@ var EX = {
     } else {
       return null;
     }
+  },
+  
+  renderable: function (entity) {
+    return entity.components[ComponentType.renderable];
   }
 };

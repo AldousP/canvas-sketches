@@ -30,8 +30,8 @@ function Breakout () {
       new TransformComponent(),
       new RenderableComponent(),
       new GameplayComponent(),
-      new PolygonComponent(SPoly.polyCircle(16)),
-      new ColliderComponent(SPoly.polyCircle(16))
+      new PolygonComponent(SPoly.polyCircle(8)),
+      new ColliderComponent(SPoly.polyCircle(8))
     ]);
 
     this.entities.buildEntity([

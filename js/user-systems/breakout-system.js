@@ -18,6 +18,7 @@ function BreakoutSystem(ball_speed) {
     var player = mapper.store[mapper.getEntitiesForTag('player')];
     var player_pos = player.components[ComponentType.transform].position;
 
+    SVec.setVec(player_pos, SMath.clamp(sm.input.state.cursor.x, -256, 256), player_pos.y);
   };
 
   this.listeners = {

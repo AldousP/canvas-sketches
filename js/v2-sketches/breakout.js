@@ -46,6 +46,7 @@ function Breakout () {
     this.entities.tagEntity(player.ID, 'paddle');
 
     this.systems.addSystem(new VelocitySystem());
+    this.systems.addSystem(new BreakoutSystem());
     this.systems.addSystem(new RenderingSystem());
     this.systems.addSystem(new CollisionSystem({
       debounce_interval: 1 / 30

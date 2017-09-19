@@ -1,7 +1,11 @@
-function CollisionSystem () {
+function CollisionSystem (config) {
+  if (!config) {
+    console.error('[SM][COLLISION] No config object passed.');
+    return;
+  }
 	this.name = 'collision';
 	var debug = false;
-	var debounce_interval = .0166;
+	var debounce_interval = config.debounce_interval;
 
 	this.filter = [
 		ComponentType.transform,
@@ -11,7 +15,6 @@ function CollisionSystem () {
 	var lastFireDelta = 0;
 
 	this.process = function (entities, fire, delta, mapper) {
-
 	  lastFireDelta += delta;
 
 	  if (lastFireDelta > debounce_interval) {

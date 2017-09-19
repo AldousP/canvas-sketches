@@ -100,7 +100,9 @@ function Pong () {
     this.systems.addSystem(new PongSystem(ball_speed));
     this.systems.addSystem(new VelocitySystem());
     this.systems.addSystem(new RenderingSystem());
-    this.systems.addSystem(new CollisionSystem());
+    this.systems.addSystem(new CollisionSystem({
+      debounce_interval: (1 / 60)
+    }));
   };
 
   this.update = function (delta, g) {

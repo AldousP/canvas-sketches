@@ -15,17 +15,14 @@ function PongSystem(ball_speed) {
 
   this.process = function (entities, fire, delta, mapper) {
     var ball = mapper.store[mapper.getEntitiesForTag('ball')[0]];
-
     var player = mapper.store[mapper.getEntitiesForTag('player')];
     var player_pos = player.components[ComponentType.transform].position;
-
+    var AIPAddle = mapper.store[mapper.getEntitiesForTag('AIPaddle')];
+    var AI_pos = AIPAddle.components[ComponentType.transform].position;
     playerID = player.ID;
     ballID = ball.ID;
-
     SVec.setVec(player_pos, player_pos.x, SMath.clamp(sm.input.state.cursor.y, -128, 128));
-    entities.forEach(function (entity) {
-
-    });
+    SVec.setVec(player_pos, player_pos.x, SMath.clamp(sm.input.state.cursor.y, -128, 128));
   };
 
   this.listeners = {

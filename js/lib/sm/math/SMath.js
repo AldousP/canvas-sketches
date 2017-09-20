@@ -1,9 +1,9 @@
-'use strict';
 
 /**
  * Global math utility object.
  */
 var SMath = {
+  DEG_TO_RAD: 0.0174533,
   rand: function (floor, ceil) {
     return (ceil - floor) * Math.random() + floor;
   },
@@ -27,7 +27,12 @@ var SMath = {
    * Returns the interpolated value between two colors.
    */
   lerpColor: function (colorA, colorB, alpha) {
-    return colorA;
+    return {
+      r: (colorB.r - colorA.r),
+      g: (colorB.g - colorA.g),
+      b: (colorB.b - colorA.b),
+      a: (colorB.a - colorA.a)
+    }
   },
 
   /**

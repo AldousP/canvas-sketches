@@ -120,8 +120,9 @@ function AnimationMapComponent(initialState, map) {
   this.progress = 0;
 }
 
-function RenderableComponent() {
+function RenderableComponent(conf) {
   this.name = ComponentType.renderable;
+  this.conf = conf ? conf : {};
 }
 
 function GameplayComponent() {
@@ -140,9 +141,14 @@ function GameStateComponent() {
   this.gameState = {};
 }
 
-function ColliderComponent (poly) {
+function ColliderComponent(poly) {
   this.name = ComponentType.collider;
   this.volume = poly;
+}
+
+function SequenceComponent(sequences) {
+  this.name = ComponentType.sequence;
+  this.conf = sequences;
 }
 
 /**
@@ -181,7 +187,22 @@ var EX = {
     }
   },
   
+  text: function (entity) {
+    if (entity.components[ComponentType.text]) {
+      return [
+        entity.components[ComponentType.text].strings,
+        entity.components[ComponentType.text].conf
+      ];
+    } else {
+      return null;
+    }
+  },
+  
+  sequence: function (entity) {
+    return entity.components[ComponentType.sequence].conf;
+  },
+
   renderable: function (entity) {
-    return entity.components[ComponentType.renderable];
+    return entity.components[ComponentType.renderable] ? entity.components[ComponentType.renderable].conf : null;
   }
 };

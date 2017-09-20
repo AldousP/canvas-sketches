@@ -26,31 +26,36 @@ function SequenceSystem (conf) {
               progress: 0,    // 0 - 1
               elapsedTime: 0, // Seconds
               direction: 1,   // -1 or 1
-              active: true
+              active: true,
+              complete: false
             }
           }
-          var handler = this.conf[ent_seq.name];
-          if (ent_seq.state.elapsedTime < handler.length) {
-            ent_seq.state.elapsedTime += delta;
-          } else {
-            ent_seq.state.elapsedTime -= handler.length;
-          }
-          ent_seq.state.progress = ent_seq.state.elapsedTime / handler.length;
 
-          var action;
-          for (var ll = 0; ll < handler.sequence.length; ll++) {
-            action = handler.sequence[ll];
-            if (action.start >= 0 && !action.end) {
-              if (ent_seq.state.elapsedTime > action.start) {
-                if (ent_seq.state.elapsedTime - delta <= action.start) {
-                  action.handle(entity);
+          if (!ent_seq.state.complete) {
+            var handler = this.conf[ent_seq.name];
+            if (ent_seq.state.elapsedTime < handler.length) {
+              ent_seq.state.elapsedTime += delta;
+            } else {
+              ent_seq.state.elapsedTime = 5;
+              ent_seq.state.complete = true;
+            }
+            ent_seq.state.progress = ent_seq.state.elapsedTime / handler.length;
+
+            var action;
+            for (var ll = 0; ll < handler.sequence.length; ll++) {
+              action = handler.sequence[ll];
+              if (action.start >= 0 && !action.end) {
+                if (ent_seq.state.elapsedTime > action.start) {
+                  if (ent_seq.state.elapsedTime - delta <= action.start) {
+                    action.handle(entity);
+                  }
                 }
+                // action.handle(entity);
+              } else if (action.start < ent_seq.state.elapsedTime && ent_seq.state.elapsedTime < action.end) {
+                var length = (action.end - action.start) - action.start ;
+                var alpha = (ent_seq.state.elapsedTime - action.start) / length;
+                action.handle(entity, alpha);
               }
-              // action.handle(entity);
-            } else if (action.start < ent_seq.state.elapsedTime && ent_seq.state.elapsedTime < action.end) {
-              var length = (action.end - action.start) - action.start ;
-              var alpha = (ent_seq.state.elapsedTime - action.start) / length;
-              action.handle(entity, alpha);
             }
           }
         }

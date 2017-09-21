@@ -30,9 +30,11 @@ var ComponentType = {
   velocity: 'velocity'
 };
 
-function PolygonComponent(polygon) {
+function PolygonComponent(polygon, stroke, fill) {
   this.name = ComponentType.polygon;
   this.polygon = polygon;
+  this.stroke = stroke;
+  this.fill = fill;
 }
 
 function PositionComponent(x, y) {

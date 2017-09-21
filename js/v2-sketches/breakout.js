@@ -28,14 +28,14 @@ function Breakout () {
     ], [], ['player', 'paddle']);
 
     // Ball
-    // var ball = e.buildEntity([
-    //   new TransformComponent(),
-    //   new RenderableComponent(),
-    //   new GameplayComponent(),
-    //   new VelocityComponent(ball_speed, -ball_speed),
-    //   new PolygonComponent(SPoly.polyCircle(8)),
-    //   new ColliderComponent(SPoly.polyCircle(8))
-    // ], [], ['ball']);
+    var ball = e.buildEntity([
+      new TransformComponent(),
+      new RenderableComponent(),
+      new GameplayComponent(),
+      new VelocityComponent(ball_speed, -ball_speed),
+      new PolygonComponent(SPoly.polyCircle(8)),
+      new ColliderComponent(SPoly.polyCircle(8))
+    ], [], ['ball']);
 
     // Gutters
     var gutter_l = e.buildEntity([
@@ -60,9 +60,10 @@ function Breakout () {
     ], [], ['gutter_top']);
 
     var text_pane = e.buildEntity([
-      new TextComponent('Component Text!', {
-        size: 24,
-        font: 'Questrial'
+      new TextComponent('Zone 1', {
+        size: 32,
+        font: 'Questrial',
+        color: BG_COLOR
       }),
       new TransformComponent(0, 0),
       new RenderableComponent({
@@ -71,7 +72,10 @@ function Breakout () {
       new SequenceComponent([
         { name: 'text_slide' }
       ]),
-      new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 8, 2))], []);
+      new PolygonComponent(
+        SPoly.scalePolyConst(SPoly.polySquare(32), 128, 3),
+        'rgba(0, 0, 0, 0)', '#FFFFFF'
+      )], []);
 
     // Render Root
     e.buildEntity([
@@ -80,7 +84,7 @@ function Breakout () {
       new PolygonComponent(SPoly.polyCircle(0)),
       new TransformComponent()
     ], [
-      // ball.ID,
+      ball.ID,
       player.ID,
       gutter_l.ID, gutter_r.ID, gutter_t.ID,
       text_pane.ID
@@ -91,26 +95,41 @@ function Breakout () {
     s.addSystem(new SequenceSystem({
       text_slide: {
         type: SequenceType.PING_PONG,
-        length: 5,
+        length: 2,
         startOn: ['SLIDE_TEXT'], // If the target of this event is the same as this entity.
         stopOn: ['STOP_SLIDE_TEXT'],
         sequence: [
-          { start: .75, handle: function () { sm.sfx.beep(sc.notes.C4)} },
-          { start: .90, handle: function () { sm.sfx.beep(329.63)} },
-          { start: 1.05, handle: function () { sm.sfx.beep(493.88)} },
           {
             start: 0,
+            handle: function (target) {
+              target.components[ComponentType.text].conf.color = 'rgba(0, 0, 0, 0)';
+              target.components[ComponentType.polygon].fill = 'rgba(0, 0, 0, 0)';
+            }
+          },
+          {
+            start: .45,
             end: 1,
+            handle: function (target, progress) {
+              var pos = EX.transPos(target);
+              SVec.setVec(pos, SMath.lerp(128, -172, Math.pow(progress, 4)), 0);
+              target.components[ComponentType.text].conf.color = 'rgba(71, 168, 189, ' + (SFormat.float_two_pt(progress)) + ')';
+              target.components[ComponentType.polygon].fill = 'rgba(255, 255, 255, ' + (SFormat.float_two_pt(progress)) + ')';
+            }
+          },
+          {
+            start: 0,
+            end: 2,
             handle: function (target, progress) {
               var pos = EX.transPos(target);
               SVec.setVec(pos, SMath.lerp(128, -172, Math.pow(progress, 4)), 0);
             }
           },
           {
-            start: .75,
-            end: 1.22,
+            start: 1.45,
+            end: 1.95,
             handle: function (target, progress) {
-              target.components[ComponentType.transform].rotation = SMath.lerp(SMath, Math.pow(progress, 2));
+              target.components[ComponentType.text].conf.color = 'rgba(71, 168, 189, ' + ( .99 - SFormat.float_two_pt(progress)) + ')';
+              target.components[ComponentType.polygon].fill = 'rgba(255, 255, 255, ' + ( .99 - SFormat.float_two_pt(progress)) + ')';
             }
           }
         ]

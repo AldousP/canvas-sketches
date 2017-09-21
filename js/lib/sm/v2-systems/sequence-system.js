@@ -50,9 +50,8 @@ function SequenceSystem (conf) {
                     action.handle(entity);
                   }
                 }
-                // action.handle(entity);
               } else if (action.start < ent_seq.state.elapsedTime && ent_seq.state.elapsedTime < action.end) {
-                var length = (action.end - action.start) - action.start ;
+                var length = (action.end - action.start);
                 var alpha = (ent_seq.state.elapsedTime - action.start) / length;
                 action.handle(entity, alpha);
               }

@@ -32,8 +32,15 @@ function RenderingSystem () {
         }
 
         if (polygon) {
-          sm.gfx.setStrokeColor(sc.color.white);
-          sm.gfx.drawPolygon(polygon);
+          var stroke = entity.components[ComponentType.polygon].stroke;
+          var fill = entity.components[ComponentType.polygon].fill;
+          sm.gfx.setStrokeColor(stroke ? stroke : '#FFFFFF');
+          if (fill) {
+            sm.gfx.setFillColor(fill);
+            sm.gfx.drawPolygon(polygon, null, true);
+          } else {
+            sm.gfx.drawPolygon(polygon);
+          }
         }
 
         if (textData) {

@@ -22,6 +22,16 @@ function entityMapperTest(it) {
   STest.assert(entityMapper.tagMap['SAMPLE_TAG'].length === 1);
 }
 
+function entityMapperDeleteTest(it) {
+  it('should create add an entity and delete an entity');
+
+  var entityMapper = new EntityMapper();
+  var entity = entityMapper.buildEntity([], [], ['test_component']);
+  STest.assert(entityMapper.entityCount === 1);
+  entityMapper.deleteEntity(entity.ID);
+  STest.assert(entityMapper.entityCount === 0);
+}
+
 function eventCullingTest(it) {
   it('should fire and cull an event.');
 
@@ -57,6 +67,7 @@ function eventPoolingTest(it) {
 STest.run([
   systemTest,
   entityMapperTest,
+  entityMapperDeleteTest,
   eventCullingTest,
   eventPoolingTest
 ]);

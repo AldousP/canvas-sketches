@@ -21,24 +21,43 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
     SVec.setVec(player_pos, SMath.clamp(sm.input.state.cursor.x, -range, range), player_pos.y);
   };
 
-  var that = this;
   this.listeners = {
+    ball_tile: {
+      type: 'BALL_TILE',
+      handle: function (data, target, delta, mapper, fire) {
+        var vel = EX.vel(target);
+        var pos = EX.transPos(target);
+        SVec.setVec(vel, vel.x, -vel.y);
+        var tile = mapper.store[data.collider];
+        // console.log(tile);
+        mapper.deleteEntity(tile.ID);
+      }
+    },
     ball_top: {
       type: 'BALL_GUTTER_TOP',
       handle: function (data, target, delta, mapper, fire) {
         var vel = EX.vel(target);
         var pos = EX.transPos(target);
         SVec.setVec(vel, vel.x, -vel.y);
-        SVec.setVec(pos, pos.x, pos.y - 8);
+        SVec.setVec(pos, pos.x, pos.y - 4);
       }
    },
+    ball_bottom: {
+      type: 'BALL_GUTTER_BOTTOM',
+      handle: function (data, target, delta, mapper, fire) {
+        var vel = EX.vel(target);
+        var pos = EX.transPos(target);
+        SVec.setVec(vel, vel.x, -vel.y);
+        SVec.setVec(pos, pos.x, pos.y + 4);
+      }
+    },
     ball_left: {
       type: 'BALL_GUTTER_LEFT',
       handle: function (data, target, delta, mapper, fire) {
         var vel = EX.vel(target);
         var pos = EX.transPos(target);
         SVec.setVec(vel, -vel.x, vel.y);
-        SVec.setVec(pos, pos.x + 8, pos.y);
+        SVec.setVec(pos, pos.x + 4, pos.y);
       }
     },
     ball_right: {
@@ -47,7 +66,7 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
         var vel = EX.vel(target);
         var pos = EX.transPos(target);
         SVec.setVec(vel, -vel.x, vel.y);
-        SVec.setVec(pos, pos.x - 8, pos.y);
+        SVec.setVec(pos, pos.x - 4, pos.y);
       }
     },
     ball_paddle: {
@@ -57,7 +76,7 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
         var pos = EX.transPos(target);
         var paddle_pos = EX.transPos(mapper.store[data.collider]);
         SVec.setVec(vel, vel.x, -vel.y);
-        SVec.setVec(pos, pos.x, pos.y + 8);
+        SVec.setVec(pos, pos.x, pos.y + 4);
         var ball_wiggle = Math.PI / 16;
         SVec.rotVec(vel, SMath.rand(-ball_wiggle, ball_wiggle))
       }

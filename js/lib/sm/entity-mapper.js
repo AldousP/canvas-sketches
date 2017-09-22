@@ -20,11 +20,16 @@ function EntityMapper() {
 	var that = this;
 	this.deleteEntity = function (ID) {
 	  var entity = this.store[ID];
-	  entity.tags.forEach(function (tag)  {
-	    that.tagMap.splice(that.tagMap[tag].indexOf(ID), 1);
+	  this.store[ID] = undefined;
+	  console.log(this.tagMap);
+	  var tags = entity.tags;
+	  tags.forEach(function (tag) {
+      var map = that.tagMap[tag];
+	    console.log(map);
+	    map.splice(map.indexOf(ID, 1));
     });
-
-	  this.entityCount--;
+    console.log(that);
+    this.entityCount--;
   };
 
 	this.buildEntity = function (components, children, tags) {
@@ -32,6 +37,10 @@ function EntityMapper() {
 		entity.ID = this.entity_ID ++;
 		entity.components = {};
 		entity.children = children ? children : [];
+		var that = this;
+		entity.children.forEach(function (child) {
+		  that.store[child].parent = entity.ID;
+    });
 		this.injectComponents(entity, components);
 		this.addEntity(entity);
 

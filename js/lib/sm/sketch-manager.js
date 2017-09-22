@@ -473,7 +473,6 @@
 
         sm.gfx.setFillColor(this.textConf.color);
         if (msgs.forEach) {
-          console.log(msgs.length);
           sm.ctx.save();
           sm.ctx.translate(x, y);
           sm.ctx.rotate(rotation);

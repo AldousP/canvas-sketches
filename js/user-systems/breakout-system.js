@@ -6,6 +6,11 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
   this.board_height = board_height;
   this.gameStateID;
   this.ballID;
+  this.lastPaddleX = 0;
+
+  this.collision_notes = [
+
+  ];
 
   this.filter = [
     ComponentType.gameState
@@ -36,6 +41,13 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
       SVec.setVec(player_pos, SMath.clamp(sm.input.state.cursor.x, -range, range), player_pos.y);
       // Set Score
       text_pane.components[ComponentType.text].strings = [state.score];
+
+      if (Math.abs(player_pos.x -  this.lastPaddleX) > 4) {
+        SVec.setVec(EX.renderableVec(player).vector, - (player_pos.x - this.lastPaddleX) * 128, 0);
+      }
+      this.lastPaddleX = player_pos.x;
+
+      SVec.setMag(EX.renderableVec(player).vector, (EX.renderableVec(player).vector.len * (0.85 * delta)));
     }
   };
   
@@ -43,7 +55,7 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
     EX.renderable(ball).disabled = true;
     var game_state = mapper.store[mapper.getEntitiesForTag('game_state')];
     var state = EX.state(game_state);
-    SVec.setVec(EX.transPos(ball), 0, 0);
+    SVec.setVec(EX.transPos(ball), 0, -64);
     SVec.setVec(EX.vel(ball), 0, 0);
 
     // Remove ball from state and UI
@@ -96,6 +108,7 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
         var pos = EX.transPos(target);
         SVec.setVec(vel, vel.x, -vel.y);
         SVec.setVec(pos, pos.x, pos.y - 4);
+        fire(data.collider, 'FLASH_GUTTER');
       }
    },
     ball_bottom: {

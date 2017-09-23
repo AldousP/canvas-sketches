@@ -32,10 +32,16 @@ function RenderingSystem () {
           sm.ctx.rotate(rot);
         }
 
+        if (renderableVec) {
+          sm.gfx.setStrokeColor(renderableVec.color);
+          sm.gfx.setStrokeWidth(renderableVec.stroke_width);
+          sm.gfx.drawVec(renderableVec.vector);
+        }
+
         if (polygon) {
           var stroke = entity.components[ComponentType.polygon].stroke;
           var fill = entity.components[ComponentType.polygon].fill;
-          sm.gfx.setStrokeColor(stroke ? stroke : '#FFFFFF');
+          sm.gfx.setStrokeColor(stroke ? stroke : 'rgba(0, 0, 0, 0)');
           // todo: expose configuration for this.
           sm.gfx.setStrokeWidth(2);
           if (fill) {
@@ -44,12 +50,6 @@ function RenderingSystem () {
           } else {
             sm.gfx.drawPolygon(polygon);
           }
-        }
-
-        if (renderableVec) {
-          sm.gfx.setStrokeColor(renderableVec.color);
-          sm.gfx.setStrokeWidth(renderableVec.stroke_width);
-          sm.gfx.drawVec(renderableVec.vector);
         }
 
         if (textData) {

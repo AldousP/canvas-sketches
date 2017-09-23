@@ -8,6 +8,11 @@ function SequenceSystem (conf) {
 	this.name = 'sequence-system';
 	this.conf = conf;
 
+	var keys = Object.keys(conf);
+	keys.forEach(function (key) {
+	  var sequence = conf[key];
+  });
+
 	this.filter = [
 		ComponentType.sequence
 	];
@@ -33,7 +38,7 @@ function SequenceSystem (conf) {
 
           if (!ent_seq.state.complete) {
             var handler = this.conf[ent_seq.name];
-            if (ent_seq.state.elapsedTime < handler.length) {
+            if (ent_seq.playing && ent_seq.state.elapsedTime < handler.length) {
               ent_seq.state.elapsedTime += delta;
             } else {
               ent_seq.state.elapsedTime = 5;

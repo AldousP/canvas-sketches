@@ -112,5 +112,6 @@ function EntityMapper() {
 
   this.getFirstOfTag = function (tag) {
     return this.store[this.tagMap[tag][0]];
-  }
+  };
+
 }

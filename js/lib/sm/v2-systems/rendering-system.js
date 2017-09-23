@@ -21,9 +21,10 @@ function RenderingSystem () {
     var pos = EX.transPos(entity);
     var rot = EX.transRot(entity);
     var renderable = EX.renderable(entity);
+    var renderableVec = EX.renderableVec(entity);
     var textData = EX.text(entity);
 
-    if (renderable) {
+    if (renderable && !renderable.disabled) {
       if (pos) {
         sm.ctx.translate(pos.x, -pos.y);
 
@@ -35,12 +36,20 @@ function RenderingSystem () {
           var stroke = entity.components[ComponentType.polygon].stroke;
           var fill = entity.components[ComponentType.polygon].fill;
           sm.gfx.setStrokeColor(stroke ? stroke : '#FFFFFF');
+          // todo: expose configuration for this.
+          sm.gfx.setStrokeWidth(2);
           if (fill) {
             sm.gfx.setFillColor(fill);
             sm.gfx.drawPolygon(polygon, null, true);
           } else {
             sm.gfx.drawPolygon(polygon);
           }
+        }
+
+        if (renderableVec) {
+          sm.gfx.setStrokeColor(renderableVec.color);
+          sm.gfx.setStrokeWidth(renderableVec.stroke_width);
+          sm.gfx.drawVec(renderableVec.vector);
         }
 
         if (textData) {

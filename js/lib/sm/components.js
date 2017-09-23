@@ -27,7 +27,8 @@ var ComponentType = {
   transform: 'transform',
   gameState: 'gamestate',
   collider: 'collider',
-  velocity: 'velocity'
+  velocity: 'velocity',
+  renderableVector: 'renderableVector'
 };
 
 function PolygonComponent(polygon, stroke, fill) {
@@ -124,7 +125,9 @@ function AnimationMapComponent(initialState, map) {
 
 function RenderableComponent(conf) {
   this.name = ComponentType.renderable;
-  this.conf = conf ? conf : {};
+  this.conf = conf ? conf : {
+    disabled: false
+  };
 }
 
 function GameplayComponent() {
@@ -151,6 +154,14 @@ function ColliderComponent(poly) {
 function SequenceComponent(sequences) {
   this.name = ComponentType.sequence;
   this.conf = sequences;
+}
+
+function RenderableVector(vector, color, stroke_width, off_set) {
+  this.name = ComponentType.renderableVector;
+  this.vector = vector;
+  this.color = color;
+  this.stroke_width = stroke_width;
+  this.off_set = off_set;
 }
 
 /**
@@ -206,6 +217,10 @@ var EX = {
 
   renderable: function (entity) {
     return entity.components[ComponentType.renderable] ? entity.components[ComponentType.renderable].conf : null;
+  },
+
+  renderableVec: function (entity) {
+    return entity.components[ComponentType.renderableVector] ? entity.components[ComponentType.renderableVector]: null;
   },
 
   state: function (entity) {

@@ -22,7 +22,8 @@ function Breakout () {
 
     var gameState = e.buildEntity([
       new GameStateComponent({
-        score: 0
+        score: 0,
+        balls: 3
       })
     ], [], ['game_state']);
 
@@ -39,8 +40,9 @@ function Breakout () {
       new TransformComponent(0, -64),
       new RenderableComponent(),
       new VelocityComponent(ball_speed, ball_speed),
-      new PolygonComponent(SPoly.polyCircle(8)),
-      new ColliderComponent(SPoly.polyCircle(8))
+      new PolygonComponent(SPoly.polyCircle(4), null, '#FFFFFF'),
+      new ColliderComponent(SPoly.polyCircle(4))
+      // new RenderableVector(new SVec.Vector(0, -32), '#FFFFFF', 1)
     ], [], ['ball']);
 
     // Gutters
@@ -72,18 +74,40 @@ function Breakout () {
       new ColliderComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1))
     ], [], ['gutter_bottom']);
 
+    var ball_indicator = e.buildEntity([
+      new TransformComponent(this.board_width / 2.35, this.board_height / 2.35),
+      new RenderableComponent(),
+      new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 2.65, 1), '#FFFFFF')
+    ], [
+      e.buildEntity([
+        new TransformComponent(-24, 0),
+        new RenderableComponent(),
+        new PolygonComponent(SPoly.polyCircle(4, 64), '#FFFFFF', '#FFFFFF')
+      ]).ID,
+      e.buildEntity([
+        new TransformComponent(0, 0),
+        new RenderableComponent(),
+        new PolygonComponent(SPoly.polyCircle(4, 64), '#FFFFFF', '#FFFFFF')
+      ]).ID,
+      e.buildEntity([
+        new TransformComponent(24, 0),
+        new RenderableComponent(),
+        new PolygonComponent(SPoly.polyCircle(4, 64), '#FFFFFF', '#FFFFFF')
+      ]).ID
+    ], ['ball_indicator']);
 
-    var blockPoly = SPoly.polySquare(32);
-    SPoly.scalePoly(blockPoly, new SVec.Vector(1.25, .45));
+    var blockPoly = SPoly.polySquare(16);
+    SPoly.scalePoly(blockPoly, new SVec.Vector(2.5, .45));
     var tile_IDS = [];
     var start_x = -(this.board_width / 3);
-    var start_y = 86;
+    var start_y = 100;
     var tile_length = 48;
-    var tile_height = 32;
+    var tile_height = 18;
+
     for (var i = 0; i < 8; i++) {
-      for (var j = 0; j < 2; j++) {
+      for (var j = 0; j < 8; j++) {
         var block = e.buildEntity([
-          new TransformComponent(start_x + (i * tile_length) , start_y - (j * tile_height)),
+          new TransformComponent((j % 2 === 0 ? 32 : 0) + start_x + (i * tile_length) , start_y - (j * tile_height)),
           new RenderableComponent(),
           new PolygonComponent(blockPoly, null, '#FFFFFF'),
           new ColliderComponent(blockPoly)
@@ -94,11 +118,11 @@ function Breakout () {
 
     var text_pane = e.buildEntity([
       new TextComponent('0', {
-        size: 18,
+        size: 24,
         font: 'Questrial',
         color: sc.color.white
       }),
-      new TransformComponent(-this.board_width / 2, this.board_height / 2),
+      new TransformComponent(-this.board_width / 2.35, this.board_height / 2.35),
       new RenderableComponent()
       ], [], ['score_pane']);
 
@@ -112,7 +136,8 @@ function Breakout () {
       ball.ID,
       player.ID,
       gutter_l.ID, gutter_r.ID, gutter_t.ID, gutter_b.ID,
-      text_pane.ID
+      text_pane.ID,
+      ball_indicator.ID
     ].concat(tile_IDS));
 
     s.addSystem(new BreakoutSystem(ball_speed, sm.gfx.width * .8, sm.gfx.height));

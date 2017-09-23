@@ -4,8 +4,8 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
   this.ball_speed = ball_speed;
   this.board_width = board_width;
   this.board_height = board_height;
-  this.ballID = -1;
   this.gameStateID;
+  this.ballID;
 
   this.filter = [
     ComponentType.gameState
@@ -19,15 +19,62 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
     var player = mapper.store[mapper.getEntitiesForTag('player')];
     var player_pos = player.components[ComponentType.transform].position;
     var range = this.board_width / 2;
-    SVec.setVec(player_pos, SMath.clamp(sm.input.state.cursor.x, -range, range), player_pos.y);
-
-    var state = EX.state(entities[0]);
     var text_pane = mapper.store[mapper.getEntitiesForTag('score_pane')[0]];
-    text_pane.components[ComponentType.text].strings = [state.score];
+
+    if (!this.ballID) {
+      this.ballID = mapper.store[mapper.getEntitiesForTag('ball')].ID;
+    }
 
     if (!this.gameStateID) {
-      this.gameStateID = entities[0].ID;
+      this.gameStateID = mapper.store[mapper.getEntitiesForTag('game_state')].ID;
     }
+
+    var state = EX.state(mapper.store[this.gameStateID]);
+
+    if (!state.game_over) {
+      // Set Paddle Pos
+      SVec.setVec(player_pos, SMath.clamp(sm.input.state.cursor.x, -range, range), player_pos.y);
+      // Set Score
+      text_pane.components[ComponentType.text].strings = [state.score];
+    }
+  };
+  
+  this.ballHitFloor = function (ball, mapper) {
+    EX.renderable(ball).disabled = true;
+    var game_state = mapper.store[mapper.getEntitiesForTag('game_state')];
+    var state = EX.state(game_state);
+    SVec.setVec(EX.transPos(ball), 0, 0);
+    SVec.setVec(EX.vel(ball), 0, 0);
+
+    // Remove ball from state and UI
+    var panel = mapper.store[mapper.getEntitiesForTag('ball_indicator')[0]];
+    state.balls--;
+
+    if (state.balls >= 0) {
+      EX.renderable(mapper.store[panel.children[state.balls]]).disabled = true;
+    }
+
+    if (state.balls < 0) {
+      this.gameOver(mapper);
+    } else {
+      // Reveal the ball after 2 seconds
+      setTimeout(function () {
+        EX.renderable(ball).disabled = false;
+      }, 2000);
+
+      // Pick a new speed for the ball and serve it
+      setTimeout(function () {
+        var new_vel = new SVec.Vector(0, -that.ball_speed);
+        SVec.rotVec(new_vel, SMath.rand(-Math.PI / 3, Math.PI / 3));
+        SVec.setVecVec(EX.vel(ball), new_vel);
+      }, 3000);
+    }
+  };
+  
+  this.gameOver = function (mapper) {
+    var game_state = mapper.store[mapper.getEntitiesForTag('game_state')];
+    var state = EX.state(game_state);
+    state.game_over = true;
   };
 
   var that = this;
@@ -54,10 +101,7 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
     ball_bottom: {
       type: 'BALL_GUTTER_BOTTOM',
       handle: function (data, target, delta, mapper, fire) {
-        var vel = EX.vel(target);
-        var pos = EX.transPos(target);
-        SVec.setVec(vel, vel.x, -vel.y);
-        SVec.setVec(pos, pos.x, pos.y + 4);
+        that.ballHitFloor(target, mapper)
       }
     },
     ball_left: {
@@ -83,7 +127,6 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
       handle: function (data, target, delta, mapper, fire) {
         var vel = EX.vel(target);
         var pos = EX.transPos(target);
-        var paddle_pos = EX.transPos(mapper.store[data.collider]);
         SVec.setVec(vel, vel.x, -vel.y);
         SVec.setVec(pos, pos.x, pos.y + 4);
         var ball_wiggle = Math.PI / 16;

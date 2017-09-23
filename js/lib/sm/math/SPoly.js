@@ -100,7 +100,7 @@ var SPoly = {
    * @param radius of the circle
    * @returns a Polygon with thirty-two vertices and the designated radius.
    */
-  polyCircle: function (radius) {
-    return this.generatePolygon(32, radius, 45 / this.DEG_RAD, 1.25, 1.2)
+  polyCircle: function (radius, vertCount) {
+    return this.generatePolygon(vertCount || 32, radius, 45 / this.DEG_RAD, 1.25, 1.2)
   }
 };

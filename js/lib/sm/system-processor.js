@@ -109,6 +109,7 @@ function SystemProcessor() {
 
 		/**
 		 * Fire the system's event listeners.
+     * todo: cache these keys lists.
 		 */
 		if (system.listeners) {
       var eventKeys = Object.keys(system.listeners);

@@ -125,6 +125,7 @@ function AnimationMapComponent(initialState, map) {
 
 function RenderableComponent(conf) {
   this.name = ComponentType.renderable;
+  this.opacity = 1;
   this.conf = conf ? conf : {
     disabled: false
   };

@@ -4,14 +4,9 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
   this.ball_speed = ball_speed;
   this.board_width = board_width;
   this.board_height = board_height;
-  this.gameStateID;
-  this.ballID;
+  this.gameStateID = null;
+  this.ballID = null;
   this.lastPaddleX = 0;
-
-  this.collision_notes = [
-
-  ];
-
   this.filter = [
     ComponentType.gameState
   ];
@@ -51,7 +46,7 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
     }
   };
   
-  this.ballHitFloor = function (ball, mapper) {
+  this.ballHitFloor = function (ball, mapper, fire) {
     EX.renderable(ball).disabled = true;
     var game_state = mapper.store[mapper.getEntitiesForTag('game_state')];
     var state = EX.state(game_state);
@@ -67,7 +62,7 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
     }
 
     if (state.balls < 0) {
-      this.gameOver(mapper);
+      this.gameOver(mapper, fire);
     } else {
       // Reveal the ball after 2 seconds
       setTimeout(function () {
@@ -82,11 +77,24 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
       }, 3000);
     }
   };
-  
-  this.gameOver = function (mapper) {
+
+  this.gameOver = function (mapper, fire) {
     var game_state = mapper.store[mapper.getEntitiesForTag('game_state')];
     var state = EX.state(game_state);
     state.game_over = true;
+    // fire(mapper.getEntitiesForTag('game_over_pane')[0], 'SLIDE_TEXT')
+  };
+  this.playRandomChime = function () {
+    var chimes = [
+      sc.notes.C4 / 3,
+      sc.notes.F4 / 3,
+      sc.notes.G4 / 3,
+      sc.notes.As4 / 3
+    ];
+
+    var note_index = Math.floor(SMath.rand(0, 3));
+    sm.sfx.beep(chimes[note_index], 'sine', 0.005, .15);
+    sm.sfx.beep(chimes[SMath.wrapIndex(note_index + 3, 3)] * 2, 'triangle', 0.005, .15);
   };
 
   var that = this;
@@ -97,9 +105,12 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
         var vel = EX.vel(target);
         SVec.setVec(vel, vel.x, -vel.y);
         var tile = mapper.store[data.collider];
-        EX.col(tile).active = false;
-        mapper.queueForDeletion(tile.ID);
-        mapper.store[that.gameStateID].components[ComponentType.gameState].gameState.score += 1;
+        if (tile) {
+          EX.col(tile).active = false;
+          mapper.queueForDeletion(tile.ID);
+          mapper.store[that.gameStateID].components[ComponentType.gameState].gameState.score += 1;
+          that.playRandomChime();
+        }
       }
     },
     ball_top: {
@@ -110,12 +121,15 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
         SVec.setVec(vel, vel.x, -vel.y);
         SVec.setVec(pos, pos.x, pos.y - 4);
         fire(data.collider, 'FLASH_GUTTER');
+        that.playRandomChime();
       }
    },
     ball_bottom: {
       type: 'BALL_GUTTER_BOTTOM',
       handle: function (data, target, delta, mapper, fire) {
-        that.ballHitFloor(target, mapper)
+        that.ballHitFloor(target, mapper, fire);
+        fire(data.collider, 'FLASH_GUTTER_RED');
+        that.playRandomChime();
       }
     },
     ball_left: {
@@ -126,6 +140,7 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
         SVec.setVec(vel, -vel.x, vel.y);
         SVec.setVec(pos, pos.x + 4, pos.y);
         fire(data.collider, 'FLASH_GUTTER');
+        that.playRandomChime();
       }
     },
     ball_right: {
@@ -136,6 +151,7 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
         SVec.setVec(vel, -vel.x, vel.y);
         SVec.setVec(pos, pos.x - 4, pos.y);
         fire(data.collider, 'FLASH_GUTTER');
+        that.playRandomChime();
       }
     },
     ball_paddle: {
@@ -146,7 +162,8 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
         SVec.setVec(vel, vel.x, -vel.y);
         SVec.setVec(pos, pos.x, pos.y + 4);
         var ball_wiggle = Math.PI / 16;
-        SVec.rotVec(vel, SMath.rand(-ball_wiggle, ball_wiggle))
+        SVec.rotVec(vel, SMath.rand(-ball_wiggle, ball_wiggle));
+        that.playRandomChime();
       }
     }
   };

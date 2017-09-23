@@ -8,7 +8,7 @@ function Breakout () {
 
   var BG_COLOR = "#47A8BD";
   var FOREGROUND_COLOR = "#F5E663";
-  var ball_speed = 112;
+  var ball_speed = 212;
   this.board_width = sm.gfx.width * 0.85;
   this.board_height = sm.gfx.height * 0.85;
 
@@ -43,7 +43,6 @@ function Breakout () {
       new VelocityComponent(ball_speed, ball_speed),
       new PolygonComponent(SPoly.polyCircle(4), null, '#FFFFFF'),
       new ColliderComponent(SPoly.polyCircle(4))
-      // new RenderableVector(new SVec.Vector(0, -32), '#FFFFFF', 1)
     ], [], ['ball']);
 
     // Gutters
@@ -77,11 +76,11 @@ function Breakout () {
       new RenderableComponent(),
       new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1), null, gutter_color),
       new ColliderComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1)),
-      new SequenceComponent([{ name: 'flash_gutter' }])
+      new SequenceComponent([{ name: 'flash_gutter_red' }])
     ], [], ['gutter_bottom']);
 
     var ball_indicator = e.buildEntity([
-      new TransformComponent(this.board_width / 2.05, this.board_height / 1.85),
+      new TransformComponent(this.board_width / 2.05, this.board_height / 2.15),
       new RenderableComponent(),
       new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 2.65, 1), '#FFFFFF', BG_COLOR)
     ], [
@@ -102,15 +101,27 @@ function Breakout () {
       ]).ID
     ], ['ball_indicator']);
 
+
+    // Score Pane
+    var score_pane = e.buildEntity([
+      new TextComponent('0', {
+        size: 48,
+        font: 'Questrial',
+        color: sc.color.white
+      }),
+      new TransformComponent(-this.board_width / 2.05, this.board_height / 2.25),
+      new RenderableComponent()
+      ], [], ['score_pane']);
+
     var blockPoly = SPoly.polySquare(16);
-    SPoly.scalePoly(blockPoly, new SVec.Vector(2.5, .45));
+    SPoly.scalePoly(blockPoly, new SVec.Vector(3.15, .85));
     var tile_IDS = [];
-    var start_x = -(this.board_width / 3);
-    var start_y = 100;
+    var start_x = -(this.board_width / 2.35);
+    var start_y = 96;
     var tile_length = 48;
     var tile_height = 18;
 
-    for (var i = 0; i < 8; i++) {
+    for (var i = 0; i < 10; i++) {
       for (var j = 0; j < 8; j++) {
         var block = e.buildEntity([
           new TransformComponent((j % 2 === 0 ? 32 : 0) + start_x + (i * tile_length) , start_y - (j * tile_height)),
@@ -122,27 +133,32 @@ function Breakout () {
       }
     }
 
-    var text_pane = e.buildEntity([
-      new TextComponent('0', {
-        size: 48,
-        font: 'Questrial',
-        color: sc.color.white
-      }),
-      new TransformComponent(-this.board_width / 2.05, this.board_height / 2.25),
-      new RenderableComponent()
-      ], [], ['score_pane']);
-
+    // Game over
+    // var text_pane = e.buildEntity([
+    //   new TextComponent('Game Over', {
+    //     size: 36,
+    //     font: 'Questrial',
+    //     color: '#FF0000'
+    //   }),
+    //   new TransformComponent(0, 0),
+    //   new RenderableComponent(),
+    //   new SequenceComponent([{ name: 'game_over_slide' }]),
+    //   new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 128, 2), null, sc.color.white)
+    //   ], [], ['game_over_pane']);
+    //
     // Render Root
     e.buildEntity([
       new RenderRoot(),
       new RenderableComponent(),
       new PolygonComponent(SPoly.polyCircle(0)),
+      new SequenceComponent([{name: 'fade_out'}]),
       new TransformComponent()
     ], [
       ball.ID,
       player.ID,
       gutter_l.ID, gutter_r.ID, gutter_t.ID, gutter_b.ID,
-      text_pane.ID,
+      // text_pane.ID,
+      score_pane.ID,
       ball_indicator.ID
     ].concat(tile_IDS));
 
@@ -157,15 +173,78 @@ function Breakout () {
         sequence: [
           {
             start: 0,
-            end: .24,
+            end: .25,
             handle: function (target, progress) {
               target.components[ComponentType.polygon].fill =
                 'rgba(255, 255, 255, ' + Math.pow(SFormat.float_two_pt(1 - progress), 3) + ')';
             }
           }
         ]
-      }
-    }));
+      },
+      flash_gutter_red: {
+        type: SequenceType.NORMAL,
+        length: .25,
+        startOn: ['FLASH_GUTTER_RED'], // If the target of this event is the same as this entity.
+        reset: false,
+        sequence: [
+          {
+            start: 0,
+            end: .24,
+            handle: function (target, progress) {
+              target.components[ComponentType.polygon].fill =
+                'rgba(204, 53, 60, ' + Math.pow(SFormat.float_two_pt(1 - progress), 3) + ')';
+            }
+          }
+        ]
+      },
+      fade_out: {
+        type: SequenceType.NORMAL,
+        length: .25,
+        startOn: ['FADE_OUT'], // If the target of this event is the same as this entity.
+        reset: false,
+        sequence: [
+          {
+            start: 0,
+            end: .25,
+            handle: function (target, progress) {
+              EX.renderable(target).opacity = EX.renderable(target).opacity * (1 - progress);
+            }
+          }
+        ]
+      },
+      game_over_slide: {
+        type: SequenceType.NORMAL,
+        length: 2,
+        startOn: ['SLIDE_TEXT'],
+        reset: false,
+        sequence: [
+          {
+            start: 0,
+            end: 1,
+            handle: function (target, progress) {
+              // SVec.setVec(pos, SMath.lerp(128, -172, Math.pow(progress, 4)), 0);
+              // target.components[ComponentType.text].conf.color = 'rgba(255, 255, 255, ' + (SFormat.float_two_pt(progress)) + ')';
+              // target.components[ComponentType.polygon].stroke = 'rgba(255, 255, 255, ' + (SFormat.float_two_pt(progress)) + ')';
+            }
+          },
+          {
+            start: 0,
+            end: 2,
+            handle: function (target, progress) {
+              var pos = EX.transPos(target);
+              SVec.setVec(pos, SMath.lerp(128, -172, Math.pow(progress, 4)), 0);
+            }
+          },
+          {
+            start: 1.45,
+            end: 1.95,
+            handle: function (target, progress) {
+              target.components[ComponentType.text].conf.color = 'rgba(255, 255, 255, ' + ( .99 - SFormat.float_two_pt(progress)) + ')';
+              target.components[ComponentType.polygon].stroke = 'rgba(255, 255, 255, ' + ( .99 - SFormat.float_two_pt(progress)) + ')';
+            }
+          }
+        ]
+      }}));
     s.addSystem(new CollisionSystem({
       debounce_interval: 1 / 40,
       collision_map: {

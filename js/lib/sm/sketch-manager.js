@@ -417,12 +417,28 @@
         sm.ctx.strokeStyle = color;
       },
 
+      setStrokeColor2: function (r, g, b, a) {
+        sm.ctx.strokeStyle = 'rgba(' +
+          r + ', ' +
+          g + ', ' +
+          b + ', ' +
+          a + ')'
+      },
+
       setStrokeWidth: function (width) {
         sm.ctx.lineWidth = width;
       },
 
       setFillColor: function (color) {
         sm.ctx.fillStyle = color;
+      },
+
+      setFillColor2: function (r, g, b, a) {
+        sm.ctx.fillStyle= 'rgba(' +
+          r + ', ' +
+          g + ', ' +
+          b + ', ' +
+          a + ')'
       },
 
       setTextColor: function (color) {
@@ -510,22 +526,20 @@
 
     sfx: {
       ctx: new (window.AudioContext || window.webkitAudioContext)(),
-      beep: function (note) {
+      beep: function (note, type, vol, length ) {
         var oscillator = this.ctx.createOscillator();
         var gainNode = this.ctx.createGain();
         oscillator.connect(gainNode);
         gainNode.connect(this.ctx.destination);
-        gainNode.gain.value = .025;
+        gainNode.gain.value = vol ? vol : 0.025;
         oscillator.frequency.value = note ? note : 440;
-        oscillator.type = 'square';
+        oscillator.type = type;
         oscillator.start();
+        var that = this;
         setTimeout(
             function () {
-              console.log('!!');
-              that.oscilators[type].stop();
-              that.oscilators[type].disconnect();
-            }, (length || 1000)
-
+              oscillator.stop();
+            }, (length * 1000 || 1000)
         );
       },
       loadSound: function (location) {

@@ -151,14 +151,16 @@ function Breakout () {
     s.addSystem(new SequenceSystem({
       flash_gutter: {
         type: SequenceType.NORMAL,
-        length: 1,
+        length: .25,
         startOn: ['FLASH_GUTTER'], // If the target of this event is the same as this entity.
+        reset: false,
         sequence: [
           {
-            start: .0,
-            end: 1,
+            start: 0,
+            end: .24,
             handle: function (target, progress) {
-              target.components[ComponentType.polygon].fill = 'rgba(255, 255, 255, ' + (SFormat.float_two_pt(progress)) + ')';
+              target.components[ComponentType.polygon].fill =
+                'rgba(255, 255, 255, ' + Math.pow(SFormat.float_two_pt(1 - progress), 3) + ')';
             }
           }
         ]

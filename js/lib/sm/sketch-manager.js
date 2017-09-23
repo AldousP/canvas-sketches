@@ -521,9 +521,11 @@
         oscillator.start();
         setTimeout(
             function () {
-              oscillator.stop();
-            },
-            200
+              console.log('!!');
+              that.oscilators[type].stop();
+              that.oscilators[type].disconnect();
+            }, (length || 1000)
+
         );
       },
       loadSound: function (location) {

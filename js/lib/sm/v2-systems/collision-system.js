@@ -73,20 +73,22 @@ function CollisionSystem (config) {
     var collider;
     for (var i = 0; i < entities.length; i++) {
       entity = entities[i];
-      for (var j = 0; j < mapKeys.length; j++) {
-        tag_index = entity.tags.indexOf(mapKeys[j]);
-        if (tag_index > -1) {
-          listeners  = this.config.collision_map[mapKeys[j]];
-          var listeners_keys = Object.keys(listeners);
-          for (var k = 0; k < entities.length; k++) {
-            collider = entities[k];
-            if (collider.ID !== entity.ID) {
-              for (var ll = 0; ll < listeners_keys.length; ll++) {
-                if (collider.tags.indexOf(listeners_keys[ll]) !== -1) {
-                  if (this.overlapping(entity, collider)) {
-                    fire(entity.ID, listeners[listeners_keys[ll]], {
-                      collider: collider.ID
-                    });
+      if (EX.col(entity).active) {
+        for (var j = 0; j < mapKeys.length; j++) {
+          tag_index = entity.tags.indexOf(mapKeys[j]);
+          if (tag_index > -1) {
+            listeners  = this.config.collision_map[mapKeys[j]];
+            var listeners_keys = Object.keys(listeners);
+            for (var k = 0; k < entities.length; k++) {
+              collider = entities[k];
+              if (collider.ID !== entity.ID) {
+                for (var ll = 0; ll < listeners_keys.length; ll++) {
+                  if (collider.tags.indexOf(listeners_keys[ll]) !== -1) {
+                    if (this.overlapping(entity, collider)) {
+                      fire(entity.ID, listeners[listeners_keys[ll]], {
+                        collider: collider.ID
+                      });
+                    }
                   }
                 }
               }

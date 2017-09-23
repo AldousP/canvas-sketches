@@ -97,6 +97,7 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
         var vel = EX.vel(target);
         SVec.setVec(vel, vel.x, -vel.y);
         var tile = mapper.store[data.collider];
+        EX.col(tile).active = false;
         mapper.queueForDeletion(tile.ID);
         mapper.store[that.gameStateID].components[ComponentType.gameState].gameState.score += 1;
       }
@@ -124,6 +125,7 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
         var pos = EX.transPos(target);
         SVec.setVec(vel, -vel.x, vel.y);
         SVec.setVec(pos, pos.x + 4, pos.y);
+        fire(data.collider, 'FLASH_GUTTER');
       }
     },
     ball_right: {
@@ -133,6 +135,7 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
         var pos = EX.transPos(target);
         SVec.setVec(vel, -vel.x, vel.y);
         SVec.setVec(pos, pos.x - 4, pos.y);
+        fire(data.collider, 'FLASH_GUTTER');
       }
     },
     ball_paddle: {

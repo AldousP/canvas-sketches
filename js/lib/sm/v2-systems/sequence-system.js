@@ -8,9 +8,28 @@ function SequenceSystem (conf) {
 	this.name = 'sequence-system';
 	this.conf = conf;
 
-	var keys = Object.keys(conf);
-	keys.forEach(function (key) {
+  this.sequencesForEvents = {};
+  this.listeners = {};
+
+  var keys = Object.keys(conf);
+  var that = this;
+  keys.forEach(function (key) {
 	  var sequence = conf[key];
+	  sequence.startOn.forEach(function (event) {
+      if (!that.sequencesForEvents[event]) that.sequencesForEvents[event] = [];
+      that.sequencesForEvents[event].push(key);
+	    that.listeners[event] = {
+        type: event,
+        handle: function (data, target, delta, mapper, fire) {
+          var sequences = EX.sequence(target);
+          sequences.forEach(function (sequence) {
+            if (that.sequencesForEvents[event].indexOf(sequence.name) !== -1) {
+              sequence.state.active = true;
+            }
+          })
+        }
+      }
+    })
   });
 
 	this.filter = [
@@ -31,18 +50,20 @@ function SequenceSystem (conf) {
               progress: 0,    // 0 - 1
               elapsedTime: 0, // Seconds
               direction: 1,   // -1 or 1
-              active: true,
-              complete: false
+              active: false
             }
           }
 
-          if (!ent_seq.state.complete) {
+          if (ent_seq.state.active) {
             var handler = this.conf[ent_seq.name];
-            if (ent_seq.playing && ent_seq.state.elapsedTime < handler.length) {
+            var reset = false;
+            if (ent_seq.state.elapsedTime < handler.length) {
               ent_seq.state.elapsedTime += delta;
             } else {
-              ent_seq.state.elapsedTime = 5;
-              ent_seq.state.complete = true;
+              ent_seq.state.elapsedTime = 0;
+              ent_seq.state.progress = 0;
+              ent_seq.state.active = false;
+              reset = true;
             }
             ent_seq.state.progress = ent_seq.state.elapsedTime / handler.length;
 
@@ -52,9 +73,12 @@ function SequenceSystem (conf) {
               if (action.start >= 0 && !action.end) {
                 if (ent_seq.state.elapsedTime > action.start) {
                   if (ent_seq.state.elapsedTime - delta <= action.start) {
-                    action.handle(entity);
+                    action.handle(entity, 0);
                   }
                 }
+              } else if (reset && handler.reset) {
+                action.handle(entity, 0);
+                console.log(entity);
               } else if (action.start < ent_seq.state.elapsedTime && ent_seq.state.elapsedTime < action.end) {
                 var length = (action.end - action.start);
                 var alpha = (ent_seq.state.elapsedTime - action.start) / length;
@@ -65,57 +89,5 @@ function SequenceSystem (conf) {
         }
       }
     }
-
-    // if (seq) {
-    //   var that = this;
-    //   seq.forEach(function (sequence) {
-    //     var actions = that.sequenceActions[sequence.name];
-    //     if (!actions) {
-    //       actions = {};
-    //     }
-    //
-    //
-    //
-    //     if (!sequence.type) {
-    //       sequence.type = SequenceType.NORMAL;
-    //     }
-    //     sequence.pos = ((sequence.length * sequence.pos) + delta * sequence.dir) / sequence.length;
-    //
-    //     if (sequence.pos > 1) {
-    //       if (actions && actions.complete ) {
-    //         actions.complete(entity)
-    //       }
-    //
-    //       switch (sequence.type) {
-    //         case SequenceType.NORMAL:
-    //           sequence.pos -= 1;
-    //           break;
-    //         case SequenceType.PING_PONG:
-    //           sequence.pos = 1 - (sequence.pos - 1);
-    //           sequence.dir = sequence.dir ? sequence.dir * -1 : -1
-    //       }
-    //     }
-    //
-    //     if (sequence.pos < 0) {
-    //       switch (sequence.type) {
-    //         case SequenceType.PING_PONG:
-    //           if (actions && actions.complete ) {
-    //             actions.complete(entity)
-    //           }
-    //           sequence.pos = Math.abs(sequence.pos);
-    //           sequence.dir = sequence.dir ? sequence.dir * -1 : -1
-    //       }
-    //     }
-    //
-    //     var result = sequence.pos;
-    //     if (sequence.easing && easers[sequence.easing]) {
-    //       result = easers[sequence.easing](sequence.pos);
-    //     }
-    //
-    //     if (actions && actions.update ) {
-    //       actions.update(entity, result)
-    //     }
-    //   });
-    // }
 	};
 }

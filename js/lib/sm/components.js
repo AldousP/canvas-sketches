@@ -148,6 +148,7 @@ function GameStateComponent(state) {
 
 function ColliderComponent(poly) {
   this.name = ComponentType.collider;
+  this.active = true;
   this.volume = poly;
 }
 
@@ -190,6 +191,10 @@ var EX = {
     } else {
       return null;
     }
+  },
+
+  col: function (entity) {
+    return entity.components[ComponentType.collider];
   },
 
   rendPoly: function (entity) {

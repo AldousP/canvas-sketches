@@ -8,7 +8,7 @@ function Breakout () {
 
   var BG_COLOR = "#47A8BD";
   var FOREGROUND_COLOR = "#F5E663";
-  var ball_speed = 182;
+  var ball_speed = 112;
   this.board_width = sm.gfx.width * 0.85;
   this.board_height = sm.gfx.height * 0.85;
 

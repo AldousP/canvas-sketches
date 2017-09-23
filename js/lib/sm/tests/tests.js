@@ -26,10 +26,13 @@ function entityMapperDeleteTest(it) {
   it('should create add an entity and delete an entity');
 
   var entityMapper = new EntityMapper();
-  var entity = entityMapper.buildEntity([], [], ['test_component']);
-  STest.assert(entityMapper.entityCount === 1);
+  var entity = entityMapper.buildEntity([new TransformComponent(), new PolygonComponent()], [], ['child_entity']);
+  var parent = entityMapper.buildEntity([new TransformComponent()], [entity.ID], ['parent_entity']);
+  STest.assert(entityMapper.entityCount === 2);
   entityMapper.deleteEntity(entity.ID);
-  STest.assert(entityMapper.entityCount === 0);
+  STest.assert(entityMapper.entityCount === 1);
+  STest.assert(parent.children.length === 0);
+  STest.assert(entityMapper.tagMap['child_entity'].length === 0);
 }
 
 function eventCullingTest(it) {

@@ -20,21 +20,25 @@ function Breakout () {
     var paddlePoly = SPoly.polySquare(64);
     SPoly.scalePoly(paddlePoly, new SVec.Vector(1.25, .15));
 
+    var gameState = e.buildEntity([
+      new GameStateComponent({
+        score: 0
+      })
+    ], [], ['game_state']);
+
     // Player paddle
     var player = e.buildEntity([
 	    new TransformComponent(0, -132),
       new RenderableComponent(),
-      new GameplayComponent(),
       new PolygonComponent(paddlePoly),
       new ColliderComponent(paddlePoly)
     ], [], ['player', 'paddle']);
 
     // Ball
     var ball = e.buildEntity([
-      new TransformComponent(),
+      new TransformComponent(0, -64),
       new RenderableComponent(),
-      new GameplayComponent(),
-      new VelocityComponent(ball_speed, -ball_speed),
+      new VelocityComponent(ball_speed, ball_speed),
       new PolygonComponent(SPoly.polyCircle(8)),
       new ColliderComponent(SPoly.polyCircle(8))
     ], [], ['ball']);
@@ -73,16 +77,19 @@ function Breakout () {
     SPoly.scalePoly(blockPoly, new SVec.Vector(1.25, .45));
     var tile_IDS = [];
     var start_x = -(this.board_width / 3);
-    var start_y = 72;
+    var start_y = 86;
     var tile_length = 48;
+    var tile_height = 32;
     for (var i = 0; i < 8; i++) {
-      var block = e.buildEntity([
-        new TransformComponent(start_x + (i * tile_length) , start_y),
-        new RenderableComponent(),
-        new PolygonComponent(blockPoly, null, '#FFFFFF'),
-        new ColliderComponent(blockPoly)
-      ], [], ['tile']);
-      tile_IDS.push(block.ID);
+      for (var j = 0; j < 2; j++) {
+        var block = e.buildEntity([
+          new TransformComponent(start_x + (i * tile_length) , start_y - (j * tile_height)),
+          new RenderableComponent(),
+          new PolygonComponent(blockPoly, null, '#FFFFFF'),
+          new ColliderComponent(blockPoly)
+        ], [], ['tile']);
+        tile_IDS.push(block.ID);
+      }
     }
 
     var text_pane = e.buildEntity([
@@ -92,10 +99,8 @@ function Breakout () {
         color: sc.color.white
       }),
       new TransformComponent(-this.board_width / 2, this.board_height / 2),
-      new RenderableComponent(),
-      new SequenceComponent([
-        { name: 'text_slide' }
-      ])], []);
+      new RenderableComponent()
+      ], [], ['score_pane']);
 
     // Render Root
     e.buildEntity([

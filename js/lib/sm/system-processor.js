@@ -81,10 +81,11 @@ function SystemProcessor() {
           }
         }
       } else {
-        this.processEntityList(currentSystem, Object.keys(entityMapper.store), entityMapper, delta);
+        this.processEntityList(currentSystem, entityMapper.entity_IDs, entityMapper, delta);
 			}
     }
 
+    entityMapper.deleteQueue();
     this.eventStore.cullSystemEvents('global', delta);
   };
 
@@ -95,7 +96,8 @@ function SystemProcessor() {
 	this.processEntityList = function (system, list, mapper, delta) {
 	  tempStore = [];
     for (var i = 0; i < list.length; i++) {
-      tempStore.push(mapper.store[list[i]]);
+      var temp = mapper.store[list[i]];
+      tempStore.push(temp);
     }
 
     system.process(

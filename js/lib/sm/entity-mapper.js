@@ -9,26 +9,50 @@ function EntityMapper() {
 	this.store = {};
 	// A mapping of entities to tags.
 	this.tagMap = {};
+	this.entity_IDs = [];
 
 	this.entityCount = 0;
+	this.deletionQueue = [];
 
 	this.addEntity = function (newEntity) {
 		this.store[newEntity.ID] = newEntity;
 		this.entityCount++;
+		this.entity_IDs.push(newEntity.ID);
 	};
 
 	var that = this;
+	
+	this.queueForDeletion = function (ID) {
+    this.deletionQueue.push(ID);
+  };
+	
+	this.deleteQueue = function () {
+    this.deletionQueue.forEach(function (ID) {
+      that.deleteEntity(ID);
+    });
+    this.deletionQueue = [];
+  };
+
 	this.deleteEntity = function (ID) {
 	  var entity = this.store[ID];
 	  this.store[ID] = undefined;
-	  console.log(this.tagMap);
 	  var tags = entity.tags;
 	  tags.forEach(function (tag) {
       var map = that.tagMap[tag];
-	    console.log(map);
 	    map.splice(map.indexOf(ID, 1));
     });
-    console.log(that);
+	  var parent = this.store[entity.parent];
+	  if (parent) {
+	    parent.children.splice(parent.children.indexOf(ID), 1);
+	    entity.parent = null;
+    }
+
+    var comp_keys = Object.keys(entity.components);
+    comp_keys.forEach(function (key) {
+      var comp = entity.components[key];
+      that.map[comp.name].splice(that.map[comp.name].indexOf(ID), 1);
+    });
+    this.entity_IDs.splice(this.entity_IDs.indexOf(ID), 1);
     this.entityCount--;
   };
 

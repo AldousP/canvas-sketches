@@ -5,9 +5,10 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
   this.board_width = board_width;
   this.board_height = board_height;
   this.ballID = -1;
+  this.gameStateID;
 
   this.filter = [
-    ComponentType.gameplay
+    ComponentType.gameState
   ];
 
   this.setup = function () {
@@ -19,18 +20,26 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
     var player_pos = player.components[ComponentType.transform].position;
     var range = this.board_width / 2;
     SVec.setVec(player_pos, SMath.clamp(sm.input.state.cursor.x, -range, range), player_pos.y);
+
+    var state = EX.state(entities[0]);
+    var text_pane = mapper.store[mapper.getEntitiesForTag('score_pane')[0]];
+    text_pane.components[ComponentType.text].strings = [state.score];
+
+    if (!this.gameStateID) {
+      this.gameStateID = entities[0].ID;
+    }
   };
 
+  var that = this;
   this.listeners = {
     ball_tile: {
       type: 'BALL_TILE',
       handle: function (data, target, delta, mapper, fire) {
         var vel = EX.vel(target);
-        var pos = EX.transPos(target);
         SVec.setVec(vel, vel.x, -vel.y);
         var tile = mapper.store[data.collider];
-        // console.log(tile);
-        mapper.deleteEntity(tile.ID);
+        mapper.queueForDeletion(tile.ID);
+        mapper.store[that.gameStateID].components[ComponentType.gameState].gameState.score += 1;
       }
     },
     ball_top: {

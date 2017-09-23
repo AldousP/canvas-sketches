@@ -138,9 +138,9 @@ function TransformComponent (x, y, r, h, v) {
   this.scale = new SVec.Vector(h, v);
 }
 
-function GameStateComponent() {
+function GameStateComponent(state) {
   this.name = ComponentType.gameState;
-  this.gameState = {};
+  this.gameState = state || {};
 }
 
 function ColliderComponent(poly) {
@@ -206,5 +206,9 @@ var EX = {
 
   renderable: function (entity) {
     return entity.components[ComponentType.renderable] ? entity.components[ComponentType.renderable].conf : null;
+  },
+
+  state: function (entity) {
+    return entity.components[ComponentType.gameState].gameState;
   }
 };

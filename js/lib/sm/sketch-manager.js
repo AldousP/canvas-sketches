@@ -419,13 +419,14 @@
       },
 
       setStrokeColor2: function (colorObj) {
-        if (!colorObj) {
-          sm.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
+        if (colorObj) {
+          sm.ctx.strokeStyle = 'rgba(' +
+            colorObj.r + ', ' +
+            colorObj.g + ', ' +
+            colorObj.b + ', ' +
+            colorObj.a + ')'
         } else {
-          if (!colorObj.colorString) {
-            SColor.updateColorString(colorObj);
-          }
-          sm.ctx.strokeStyle = colorObj.colorString;
+         sm.ctx.strokeStyle = sc.color.clear;
         }
       },
 
@@ -483,13 +484,16 @@
         sm.ctx.font = styleString;
       },
 
-      text: function (msgs, x, y, rotation) {
+      text: function (msgs, x, y, rotation, opacity) {
         this._processTextConf();
         var currentColor = sm.ctx.fillStyle;
-        var fontSize = sm.gfx.textConf;
 
         y = y ? -y : 0;
         x = x ? x : 0;
+
+        if (opacity) {
+          this.textConf.color.a *= opacity;
+        }
 
         sm.gfx.setFillColor2(this.textConf.color);
         if (msgs.forEach) {
@@ -506,6 +510,10 @@
           sm.ctx.rotate(rotation);
           sm.ctx.fillText(msgs, 0, 0);
           sm.ctx.restore();
+        }
+
+        if (opacity) {
+          this.textConf.color.a /= opacity;
         }
 
         if (currentColor) {

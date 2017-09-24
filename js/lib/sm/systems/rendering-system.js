@@ -12,11 +12,11 @@ function RenderingSystem () {
 
   this.process = function (entities, fire, delta, mapper) {
     entities.forEach(function (entity) {
-      drawEntity(entity, mapper);
+      drawEntity(entity, mapper, 1);
     })
 	};
 
-	function drawEntity (entity, mapper) {
+	function drawEntity (entity, mapper, parentOpacity) {
     var polygon = EX.rendPoly(entity);
     var pos = EX.transPos(entity);
     var rot = EX.transRot(entity);
@@ -27,6 +27,11 @@ function RenderingSystem () {
     if (renderable && !renderable.disabled) {
       if (pos) {
         sm.ctx.translate(pos.x, -pos.y);
+
+        var opacity = renderable.opacity;
+        if (opacity) {
+          parentOpacity *= opacity;
+        }
 
         if (rot) {
           sm.ctx.rotate(rot);
@@ -43,75 +48,48 @@ function RenderingSystem () {
           var fill = entity.components[ComponentType.polygon].fill;
 
           if (stroke) {
+            stroke.a *= parentOpacity;
+            // sm.gfx.setStrokeWidth(2);
             sm.gfx.setStrokeColor2(stroke);
           } else {
-            sm.gfx.setStrokeColor2();
+            sm.gfx.setStrokeColor2(sc.color.clear);
           }
 
           // todo: expose configuration for this.
-          sm.gfx.setStrokeWidth(2);
           if (fill) {
+            fill.a *= parentOpacity;
             sm.gfx.setFillColor2(fill);
             sm.gfx.drawPolygon(polygon, null, true);
           } else {
+            sm.gfx.setFillColor2(sc.color.clear);
             sm.gfx.drawPolygon(polygon);
+          }
+
+          if (stroke) {
+            stroke.a /= parentOpacity;
+          }
+
+          if (fill) {
+            fill.a /= parentOpacity;
           }
         }
 
         if (textData) {
-          sm.gfx.setTextConf(textData[1]);
-          sm.gfx.text(textData[0], 0, 0);
+          sm.gfx.setTextConf(textData.conf);
+          sm.gfx.text(textData.strings, 0, 0, 0, parentOpacity);
         }
-
-        // todo: port this animation logic
-        // var sheetIndex = -1;
-        // if (anim && pos) {
-        //   sheetIndex = this.sheetNames.indexOf(anim.handle);
-        //   if (sheetIndex < 0) {
-        //     this.loadData(anim.handle, state);
-        //   } else {
-        //     this.drawAnimation(
-        //       this.sheetFiles[sheetIndex],
-        //       anim.progress,
-        //       pos.x,
-        //       pos.y,
-        //       anim.width,
-        //       anim.height,
-        //       state.renderData.rotationSum,
-        //       anim.flipped
-        //     );
-        //   }
-        // }
-        //
-        // if (animMap && pos) {
-        //   var conf = animMap.animationMap;
-        //   var animations = conf.animations;
-        //   var activeAnimation = animations[animMap.activeState];
-        //   var file = activeAnimation.file;
-        //
-        //   sheetIndex = this.sheetNames.indexOf(file);
-        //   if (sheetIndex < 0) {
-        //     this.loadData(file, state);
-        //   } else {
-        //     this.drawAnimation(
-        //       this.sheetFiles[sheetIndex],
-        //       animMap.progress,
-        //       pos.x,
-        //       pos.y,
-        //       activeAnimation.width,
-        //       activeAnimation.height,
-        //       state.renderData.rotationSum,
-        //       activeAnimation.flipped
-        //     );
-        //   }
-        // }
 
         if (entity.children) {
           entity.children.forEach(function (childID) {
             var child = mapper.store[childID];
-            drawEntity(child, mapper);
+            if (child) {
+              drawEntity(child, mapper, parentOpacity);
+            }
           });
+        }
 
+        if (opacity) {
+          parentOpacity /= opacity;
         }
 
         if (rot) {

@@ -16,6 +16,10 @@
     target.b = (colorB.b - colorA.b) * alpha;
     target.a = (colorB.a - colorA.a) * alpha;
   };
+  
+  SColor.colorFromColor = function (color) {
+    return new Color(color.r, color.g, color.b, color.a);
+  };
 
   SColor.colorForHex = function (hex) {
     var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -28,7 +32,7 @@
       parseInt(result[1], 16),
       parseInt(result[2], 16),
       parseInt(result[3], 16),
-      255) : new Color(0, 0, 0, 0);
+      1) : new Color(0, 0, 0, 0);
   };
   
   SColor.colorString = function (r, g, b, a) {

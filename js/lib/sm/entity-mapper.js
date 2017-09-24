@@ -55,6 +55,12 @@ function EntityMapper() {
     this.entity_IDs.splice(this.entity_IDs.indexOf(ID), 1);
     this.entityCount--;
   };
+	
+	this.buildEntityWithRoot = function (components, children, tags, root) {
+	  var entity = this.buildEntity(components, children, tags, root);
+	  root.children.push(entity.ID);
+	  return entity;
+  };
 
 	this.buildEntity = function (components, children, tags) {
 		var entity = new Entity();
@@ -111,7 +117,11 @@ function EntityMapper() {
   };
 
   this.getFirstOfTag = function (tag) {
-    return this.store[this.tagMap[tag][0]];
+    if (this.tagMap[tag]) {
+      return this.store[this.tagMap[tag][0]];
+    } else {
+      return null;
+    }
   };
 
 }

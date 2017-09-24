@@ -123,10 +123,9 @@ function AnimationMapComponent(initialState, map) {
   this.progress = 0;
 }
 
-function RenderableComponent(opacity) {
+function RenderableComponent(conf) {
   this.name = ComponentType.renderable;
-  this.opacity = opacity ? opacity : 1;
-  this.conf = {};
+  this.conf = conf ? conf : { opacity: 1 };
 }
 
 function GameplayComponent() {
@@ -165,7 +164,31 @@ function RenderableVector(vector, color, stroke_width, off_set) {
 }
 
 /**
- * Helpers to quickly grab values out of an entities data.
+ * Helpers to quickly grab values out of component data
+ * @type {{}}
+ */
+var ES = {
+  setPos: function (entity, x, y) {
+    var pos = EX.transPos(entity);
+    if (pos) {
+      SVec.setVec(pos, x, y ? y : pos.y);
+    } else {
+      console.error('[SM.ES][setPos]: No position component on provided entity.')
+    }
+  },
+  
+  setText: function (entity, strings) {
+    var text = EX.text(entity);
+    if (text) {
+      text.strings = [strings];
+    } else {
+      console.error('[SM.ES][setText]: No text component on provided entity..')
+    }
+  }
+};
+
+/**
+ * Helpers to quickly grab values out of an entity.
  */
 var EX = {
   transPos: function (entity) {
@@ -206,17 +229,14 @@ var EX = {
   
   text: function (entity) {
     if (entity.components[ComponentType.text]) {
-      return [
-        entity.components[ComponentType.text].strings,
-        entity.components[ComponentType.text].conf
-      ];
+      return entity.components[ComponentType.text];
     } else {
       return null;
     }
   },
   
   sequence: function (entity) {
-    return entity.components[ComponentType.sequence].conf;
+    return entity.components[ComponentType.sequence] ?  entity.components[ComponentType.sequence].conf : null;
   },
 
   renderable: function (entity) {
@@ -229,5 +249,5 @@ var EX = {
 
   state: function (entity) {
     return entity.components[ComponentType.gameState].gameState;
-  }
+  },
 };

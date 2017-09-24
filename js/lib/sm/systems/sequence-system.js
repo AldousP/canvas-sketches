@@ -22,11 +22,13 @@ function SequenceSystem (conf) {
         type: event,
         handle: function (data, target, delta, mapper, fire) {
           var sequences = EX.sequence(target);
-          sequences.forEach(function (sequence) {
-            if (that.sequencesForEvents[event].indexOf(sequence.name) !== -1) {
-              sequence.state.active = true;
-            }
-          })
+          if (sequences) {
+            sequences.forEach(function (sequence) {
+              if (that.sequencesForEvents[event].indexOf(sequence.name) !== -1) {
+                sequence.state.active = true;
+              }
+            })
+          }
         }
       }
     })
@@ -78,7 +80,6 @@ function SequenceSystem (conf) {
                 }
               } else if (reset && handler.reset) {
                 action.handle(entity, 0);
-                console.log(entity);
               } else if (action.start < ent_seq.state.elapsedTime && ent_seq.state.elapsedTime < action.end) {
                 var length = (action.end - action.start);
                 var alpha = (ent_seq.state.elapsedTime - action.start) / length;

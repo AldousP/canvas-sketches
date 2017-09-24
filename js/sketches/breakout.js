@@ -11,74 +11,90 @@ function Breakout () {
   this.board_width = sm.gfx.width * 0.85;
   this.board_height = sm.gfx.height * 0.85;
 
+
   this.setup = function () {
-    this.update(0, sm.gfx);
     var e = this.entities;
     var s = this.systems;
 
-    var paddlePoly = SPoly.polySquare(64);
-    SPoly.scalePoly(paddlePoly, new SVec.Vector(1.25, .15));
-
-    var gameState = e.buildEntity([
+    // Game Data
+    e.buildEntity([
       new GameStateComponent({
         score: 0,
         balls: 3
       })
     ], [], ['game_state']);
 
+    var paddlePoly = SPoly.polySquare(64);
+    SPoly.scalePoly(paddlePoly, new SVec.Vector(1.25, .15));
+
+    // Scene Data
+    var root = e.buildEntity([
+      new RenderRoot(),
+      new RenderableComponent(),
+      new PolygonComponent(SPoly.polyCircle(0)),
+      new SequenceComponent([
+        {name: 'fade_in'},
+        {name: 'fade_out'}
+      ]),
+      new TransformComponent()
+    ], [], ['root']);
+
     // Player paddle
-    var player = e.buildEntity([
+    e.buildEntityWithRoot([
 	    new TransformComponent(0, -162),
       new RenderableComponent(),
       new PolygonComponent(paddlePoly, sc.color.white, BG_COLOR),
       new ColliderComponent(paddlePoly),
       new RenderableVector(new SVec.Vector(.1, 0), sc.color.white, 1)
-    ], [], ['player', 'paddle']);
+    ], [], ['player', 'paddle'], root);
 
     // Ball
-    var ball = e.buildEntity([
+    e.buildEntityWithRoot([
       new TransformComponent(0, -64),
       new RenderableComponent(),
       new VelocityComponent(ball_speed, ball_speed),
       new PolygonComponent(SPoly.polyCircle(4), null, sc.color.white),
       new ColliderComponent(SPoly.polyCircle(4))
-    ], [], ['ball']);
+    ], [], ['ball'], root);
 
-    // Gutters
+
+    // // Gutters
     var gutter_color = null;
-    var gutter_l = e.buildEntity([
+    e.buildEntityWithRoot([
       new TransformComponent(-312, 0),
       new RenderableComponent(),
       new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 1, 16), gutter_color, new Color(255, 255, 255, 0)),
       new ColliderComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 1, 16)),
       new SequenceComponent([{ name: 'flash_gutter' }])
-    ], [], ['gutter_left']);
+    ], [], ['gutter_left'], root);
 
-    var gutter_r = e.buildEntity([
+    e.buildEntityWithRoot([
       new TransformComponent(312, 0),
       new RenderableComponent(),
       new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 1, 16), gutter_color, new Color(255, 255, 255, 0)),
       new ColliderComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 1, 16)),
       new SequenceComponent([{ name: 'flash_gutter' }])
-    ], [], ['gutter_right']);
+    ], [], ['gutter_right'], root);
 
-    var gutter_t = e.buildEntity([
+    e.buildEntityWithRoot([
       new TransformComponent(0, 182),
       new RenderableComponent(),
       new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1), gutter_color, new Color(255, 255, 255, 0)),
       new ColliderComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1)),
       new SequenceComponent([{ name: 'flash_gutter' }])
-    ], [], ['gutter_top']);
+    ], [], ['gutter_top'], root);
 
-    var gutter_b = e.buildEntity([
+    e.buildEntityWithRoot([
       new TransformComponent(0, -182),
       new RenderableComponent(),
       new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1), gutter_color, new Color(255, 0, 0, 0)),
       new ColliderComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1)),
       new SequenceComponent([{ name: 'flash_gutter' }])
-    ], [], ['gutter_bottom']);
+    ], [], ['gutter_bottom'], root);
 
-    var ball_indicator = e.buildEntity([
+
+    // Create Ball UI Element
+    e.buildEntityWithRoot([
       new TransformComponent(this.board_width / 2.05, this.board_height / 2.15),
       new RenderableComponent(),
       new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 2.65, 1), sc.color.white, BG_COLOR)
@@ -98,11 +114,10 @@ function Breakout () {
         new RenderableComponent(),
         new PolygonComponent(SPoly.polyCircle(4, 64), sc.color.white, sc.color.white)
       ]).ID
-    ], ['ball_indicator']);
-
+    ], ['ball_indicator'], root);
 
     // Score Pane
-    var score_pane = e.buildEntity([
+    e.buildEntityWithRoot([
       new TextComponent('0', {
         size: 48,
         font: 'Questrial',
@@ -110,64 +125,38 @@ function Breakout () {
       }),
       new TransformComponent(-this.board_width / 2.05, this.board_height / 2.25),
       new RenderableComponent()
-      ], [], ['score_pane']);
+      ], [], ['score_pane'], root);
 
+
+    // Create Tiles
     var blockPoly = SPoly.polySquare(16);
     SPoly.scalePoly(blockPoly, new SVec.Vector(3.15, .85));
-    var tile_IDS = [];
     var start_x = -(this.board_width / 2.35);
     var start_y = 96;
     var tile_length = 48;
     var tile_height = 18;
+    var tile_columns = 10;
+    var tile_rows = 8;
 
-    for (var i = 0; i < 10; i++) {
-      for (var j = 0; j < 8; j++) {
-        var block = e.buildEntity([
+    for (var i = 0; i < tile_columns; i++) {
+      for (var j = 0; j < tile_rows; j++) {
+        e.buildEntityWithRoot([
           new TransformComponent((j % 2 === 0 ? 32 : 0) + start_x + (i * tile_length) , start_y - (j * tile_height)),
           new RenderableComponent(),
           new PolygonComponent(blockPoly, null, sc.color.white),
           new ColliderComponent(blockPoly)
-        ], [], ['tile']);
-        tile_IDS.push(block.ID);
+        ], [], ['tile'], root);
       }
     }
 
-    // Game over
-    // var text_pane = e.buildEntity([
-    //   new TextComponent('Game Over', {
-    //     size: 36,
-    //     font: 'Questrial',
-    //     color: '#FF0000'
-    //   }),
-    //   new TransformComponent(0, 0),
-    //   new RenderableComponent(),
-    //   new SequenceComponent([{ name: 'game_over_slide' }]),
-    //   new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 128, 2), null, sc.color.white)
-    //   ], [], ['game_over_pane']);
-    //
-    // Render Root
-    e.buildEntity([
-      new RenderRoot(),
-      new RenderableComponent(0.5),
-      new PolygonComponent(SPoly.polyCircle(0)),
-      new SequenceComponent([{name: 'fade_out'}]),
-      new TransformComponent()
-    ], [
-      ball.ID,
-      player.ID,
-      gutter_l.ID, gutter_r.ID, gutter_t.ID, gutter_b.ID,
-      // text_pane.ID,
-      score_pane.ID,
-      ball_indicator.ID
-    ].concat(tile_IDS));
-
+    // System Configuration
     s.addSystem(new BreakoutSystem(ball_speed, sm.gfx.width * .8, sm.gfx.height));
     s.addSystem(new VelocitySystem());
     s.addSystem(new SequenceSystem({
       flash_gutter: {
         type: SequenceType.NORMAL,
         length: .25,
-        startOn: ['FLASH_GUTTER'], // If the target of this event is the same as this entity.
+        startOn: ['FLASH_GUTTER'],
         reset: false,
         sequence: [
           {
@@ -179,54 +168,38 @@ function Breakout () {
           }
         ]
       },
-      fade_out: {
+      fade_in: {
         type: SequenceType.NORMAL,
-        length: .25,
-        startOn: ['FADE_OUT'], // If the target of this event is the same as this entity.
-        reset: false,
-        sequence: [
-          {
-            start: 0,
-            end: .25,
-            handle: function (target, progress) {
-              EX.renderable(target).opacity = EX.renderable(target).opacity * (1 - progress);
-            }
-          }
-        ]
-      },
-      game_over_slide: {
-        type: SequenceType.NORMAL,
-        length: 2,
-        startOn: ['SLIDE_TEXT'],
+        length: 1,
+        startOn: ['FADE_IN'],
         reset: false,
         sequence: [
           {
             start: 0,
             end: 1,
             handle: function (target, progress) {
-              // SVec.setVec(pos, SMath.lerp(128, -172, Math.pow(progress, 4)), 0);
-              // target.components[ComponentType.text].conf.color = 'rgba(255, 255, 255, ' + (SFormat.float_two_pt(progress)) + ')';
-              // target.components[ComponentType.polygon].stroke = 'rgba(255, 255, 255, ' + (SFormat.float_two_pt(progress)) + ')';
-            }
-          },
-          {
-            start: 0,
-            end: 2,
-            handle: function (target, progress) {
-              var pos = EX.transPos(target);
-              SVec.setVec(pos, SMath.lerp(128, -172, Math.pow(progress, 4)), 0);
-            }
-          },
-          {
-            start: 1.45,
-            end: 1.95,
-            handle: function (target, progress) {
-              target.components[ComponentType.text].conf.color = 'rgba(255, 255, 255, ' + ( .99 - SFormat.float_two_pt(progress)) + ')';
-              target.components[ComponentType.polygon].stroke = 'rgba(255, 255, 255, ' + ( .99 - SFormat.float_two_pt(progress)) + ')';
+              EX.renderable(target).opacity = progress;
             }
           }
         ]
-      }}));
+      },
+      fade_out: {
+        type: SequenceType.NORMAL,
+        length: 1,
+        startOn: ['FADE_OUT'],
+        reset: false,
+        sequence: [
+          {
+            start: 0,
+            end: 1,
+            handle: function (target, progress) {
+              EX.renderable(target).opacity = 1 - progress;
+            }
+          }
+        ]
+      }
+    }));
+
     s.addSystem(new CollisionSystem({
       debounce_interval: 1 / 40,
       collision_map: {
@@ -240,9 +213,11 @@ function Breakout () {
         }
       }
     }));
+
     this.systems.addSystem(new RenderingSystem());
   };
 
+  // Tick the system processor.
   this.update = function (delta, g) {
     g.clear(BG_COLOR);
     this.systems.process(this.entities, delta);

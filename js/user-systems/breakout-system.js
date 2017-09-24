@@ -4,6 +4,7 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
   this.ball_speed = ball_speed;
   this.board_width = board_width;
   this.board_height = board_height;
+  this.paddle_range = board_width / 2;
   this.gameStateID = null;
   this.ballID = null;
   this.lastPaddleX = 0;
@@ -16,33 +17,13 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
   };
 
   this.process = function (entities, fire, delta, mapper) {
-    var player = mapper.store[mapper.getEntitiesForTag('player')];
-    var player_pos = player.components[ComponentType.transform].position;
-    var range = this.board_width / 2;
-    var text_pane = mapper.store[mapper.getEntitiesForTag('score_pane')[0]];
+    var player = mapper.getFirstOfTag('player');
+    var game_state = EX.state(mapper.getFirstOfTag('game_state'));
+    var score_pane = mapper.getFirstOfTag('score_pane');
 
-    if (!this.ballID) {
-      this.ballID = mapper.store[mapper.getEntitiesForTag('ball')].ID;
-    }
-
-    if (!this.gameStateID) {
-      this.gameStateID = mapper.store[mapper.getEntitiesForTag('game_state')].ID;
-    }
-
-    var state = EX.state(mapper.store[this.gameStateID]);
-
-    if (!state.game_over) {
-      // Set Paddle Pos
-      SVec.setVec(player_pos, SMath.clamp(sm.input.state.cursor.x, -range, range), player_pos.y);
-      // Set Score
-      text_pane.components[ComponentType.text].strings = [state.score];
-
-      if (Math.abs(player_pos.x -  this.lastPaddleX) > 4) {
-        SVec.setVec(EX.renderableVec(player).vector, - (player_pos.x - this.lastPaddleX) * 128, 0);
-      }
-      this.lastPaddleX = player_pos.x;
-
-      SVec.setMag(EX.renderableVec(player).vector, (EX.renderableVec(player).vector.len * (0.85 * delta)));
+    if (!game_state.game_over) {
+      ES.setPos(player, SMath.clamp(sm.input.state.cursor.x, -this.paddle_range, this.paddle_range));
+      ES.setText(score_pane, game_state.score);
     }
   };
   
@@ -81,9 +62,11 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
   this.gameOver = function (mapper, fire) {
     var game_state = mapper.store[mapper.getEntitiesForTag('game_state')];
     var state = EX.state(game_state);
+
     state.game_over = true;
-    // fire(mapper.getEntitiesForTag('game_over_pane')[0], 'SLIDE_TEXT')
+    fire(mapper.getFirstOfTag('root').ID, 'FADE_OUT')
   };
+
   this.playRandomChime = function () {
     var chimes = [
       sc.notes.C4 / 3,
@@ -108,7 +91,7 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
         if (tile) {
           EX.col(tile).active = false;
           mapper.queueForDeletion(tile.ID);
-          mapper.store[that.gameStateID].components[ComponentType.gameState].gameState.score += 1;
+          EX.state(mapper.getFirstOfTag('game_state')).score += 1;
           that.playRandomChime();
         }
       }

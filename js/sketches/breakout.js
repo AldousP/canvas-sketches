@@ -39,6 +39,11 @@ function Breakout () {
       new TransformComponent()
     ], [], ['root']);
 
+    var UI_root = e.buildEntityWithRoot([
+      new TransformComponent(),
+      new RenderableComponent({opacity: 1})
+    ], [], [], root);
+
     // Player paddle
     e.buildEntityWithRoot([
 	    new TransformComponent(0, -162),
@@ -114,7 +119,7 @@ function Breakout () {
         new RenderableComponent(),
         new PolygonComponent(SPoly.polyCircle(4, 64), sc.color.white, sc.color.white)
       ]).ID
-    ], ['ball_indicator'], root);
+    ], ['ball_indicator'], UI_root);
 
     // Score Pane
     e.buildEntityWithRoot([
@@ -125,7 +130,7 @@ function Breakout () {
       }),
       new TransformComponent(-this.board_width / 2.05, this.board_height / 2.25),
       new RenderableComponent()
-      ], [], ['score_pane'], root);
+      ], [], ['score_pane'], UI_root);
 
 
     // Create Tiles

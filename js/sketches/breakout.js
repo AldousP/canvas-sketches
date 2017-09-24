@@ -6,8 +6,7 @@ function Breakout () {
     date: '09.18.2017'
   };
 
-  var BG_COLOR = "#47A8BD";
-  var FOREGROUND_COLOR = "#F5E663";
+  var BG_COLOR = SColor.colorForHex("#47A8BD");
   var ball_speed = 212;
   this.board_width = sm.gfx.width * 0.85;
   this.board_height = sm.gfx.height * 0.85;
@@ -31,9 +30,9 @@ function Breakout () {
     var player = e.buildEntity([
 	    new TransformComponent(0, -162),
       new RenderableComponent(),
-      new PolygonComponent(paddlePoly, '#FFFFFF', BG_COLOR),
+      new PolygonComponent(paddlePoly, sc.color.white, BG_COLOR),
       new ColliderComponent(paddlePoly),
-      new RenderableVector(new SVec.Vector(.1, 0), '#FFFFFF', 1)
+      new RenderableVector(new SVec.Vector(.1, 0), sc.color.white, 1)
     ], [], ['player', 'paddle']);
 
     // Ball
@@ -41,7 +40,7 @@ function Breakout () {
       new TransformComponent(0, -64),
       new RenderableComponent(),
       new VelocityComponent(ball_speed, ball_speed),
-      new PolygonComponent(SPoly.polyCircle(4), null, '#FFFFFF'),
+      new PolygonComponent(SPoly.polyCircle(4), null, sc.color.white),
       new ColliderComponent(SPoly.polyCircle(4))
     ], [], ['ball']);
 
@@ -50,7 +49,7 @@ function Breakout () {
     var gutter_l = e.buildEntity([
       new TransformComponent(-312, 0),
       new RenderableComponent(),
-      new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 1, 16), null, gutter_color),
+      new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 1, 16), gutter_color, new Color(255, 255, 255, 0)),
       new ColliderComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 1, 16)),
       new SequenceComponent([{ name: 'flash_gutter' }])
     ], [], ['gutter_left']);
@@ -58,7 +57,7 @@ function Breakout () {
     var gutter_r = e.buildEntity([
       new TransformComponent(312, 0),
       new RenderableComponent(),
-      new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 1, 16), null, gutter_color),
+      new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 1, 16), gutter_color, new Color(255, 255, 255, 0)),
       new ColliderComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 1, 16)),
       new SequenceComponent([{ name: 'flash_gutter' }])
     ], [], ['gutter_right']);
@@ -66,7 +65,7 @@ function Breakout () {
     var gutter_t = e.buildEntity([
       new TransformComponent(0, 182),
       new RenderableComponent(),
-      new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1), null, gutter_color),
+      new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1), gutter_color, new Color(255, 255, 255, 0)),
       new ColliderComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1)),
       new SequenceComponent([{ name: 'flash_gutter' }])
     ], [], ['gutter_top']);
@@ -74,30 +73,30 @@ function Breakout () {
     var gutter_b = e.buildEntity([
       new TransformComponent(0, -182),
       new RenderableComponent(),
-      new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1), null, gutter_color),
+      new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1), gutter_color, new Color(255, 0, 0, 0)),
       new ColliderComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1)),
-      new SequenceComponent([{ name: 'flash_gutter_red' }])
+      new SequenceComponent([{ name: 'flash_gutter' }])
     ], [], ['gutter_bottom']);
 
     var ball_indicator = e.buildEntity([
       new TransformComponent(this.board_width / 2.05, this.board_height / 2.15),
       new RenderableComponent(),
-      new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 2.65, 1), '#FFFFFF', BG_COLOR)
+      new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 2.65, 1), sc.color.white, BG_COLOR)
     ], [
       e.buildEntity([
         new TransformComponent(-24, 0),
         new RenderableComponent(),
-        new PolygonComponent(SPoly.polyCircle(4, 64), '#FFFFFF', '#FFFFFF')
+        new PolygonComponent(SPoly.polyCircle(4, 64), sc.color.white, sc.color.white)
       ]).ID,
       e.buildEntity([
         new TransformComponent(0, 0),
         new RenderableComponent(),
-        new PolygonComponent(SPoly.polyCircle(4, 64), '#FFFFFF', '#FFFFFF')
+        new PolygonComponent(SPoly.polyCircle(4, 64), sc.color.white, sc.color.white)
       ]).ID,
       e.buildEntity([
         new TransformComponent(24, 0),
         new RenderableComponent(),
-        new PolygonComponent(SPoly.polyCircle(4, 64), '#FFFFFF','#FFFFFF')
+        new PolygonComponent(SPoly.polyCircle(4, 64), sc.color.white, sc.color.white)
       ]).ID
     ], ['ball_indicator']);
 
@@ -126,7 +125,7 @@ function Breakout () {
         var block = e.buildEntity([
           new TransformComponent((j % 2 === 0 ? 32 : 0) + start_x + (i * tile_length) , start_y - (j * tile_height)),
           new RenderableComponent(),
-          new PolygonComponent(blockPoly, null, '#FFFFFF'),
+          new PolygonComponent(blockPoly, null, sc.color.white),
           new ColliderComponent(blockPoly)
         ], [], ['tile']);
         tile_IDS.push(block.ID);
@@ -149,7 +148,7 @@ function Breakout () {
     // Render Root
     e.buildEntity([
       new RenderRoot(),
-      new RenderableComponent(),
+      new RenderableComponent(0.5),
       new PolygonComponent(SPoly.polyCircle(0)),
       new SequenceComponent([{name: 'fade_out'}]),
       new TransformComponent()
@@ -175,24 +174,7 @@ function Breakout () {
             start: 0,
             end: .25,
             handle: function (target, progress) {
-              target.components[ComponentType.polygon].fill =
-                'rgba(255, 255, 255, ' + Math.pow(SFormat.float_two_pt(1 - progress), 3) + ')';
-            }
-          }
-        ]
-      },
-      flash_gutter_red: {
-        type: SequenceType.NORMAL,
-        length: .25,
-        startOn: ['FLASH_GUTTER_RED'], // If the target of this event is the same as this entity.
-        reset: false,
-        sequence: [
-          {
-            start: 0,
-            end: .24,
-            handle: function (target, progress) {
-              target.components[ComponentType.polygon].fill =
-                'rgba(204, 53, 60, ' + Math.pow(SFormat.float_two_pt(1 - progress), 3) + ')';
+              target.components[ComponentType.polygon].fill.a = Math.pow(SFormat.float_two_pt(1 - progress), 3);
             }
           }
         ]

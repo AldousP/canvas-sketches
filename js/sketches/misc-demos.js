@@ -6,7 +6,7 @@ function MiscDemos () {
     date: '09.23.2017'
   };
 
-  var BG_COLOR = "#3e63bd";
+  var BG_COLOR = SColor.colorForHex("#3e63bd");
 
   this.setup = function () {
     this.update(0, sm.gfx);

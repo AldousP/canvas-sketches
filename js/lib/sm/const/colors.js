@@ -5,17 +5,17 @@ if (!sc) {
 
 
 sc.color = {
-  clear: "rgba(0, 0, 0, 0)",
-  white : "#FFFFFF",
-  black : "#000",
-  red : "#FF0000",
-  green : "#00FF00",
-  blue : "#0000FF",
-  pink : "#FF00FF",
-  yellow : "#FFFF00",
-  cyan : "#00FFFF",
-  orange : "#FF8800",
-  dark_blue : "#000180"
+  clear: new Color(0, 0, 0, 0),
+  white : SColor.colorForHex("#FFFFFF"),
+  black : SColor.colorForHex("#000000"),
+  red : SColor.colorForHex("#FF0000"),
+  green : SColor.colorForHex("#00FF00"),
+  blue : SColor.colorForHex("#0000FF"),
+  pink : SColor.colorForHex("#FF00FF"),
+  yellow : SColor.colorForHex("#FFFF00"),
+  cyan : SColor.colorForHex("#00FFFF"),
+  orange : SColor.colorForHex("#FF8800"),
+  dark_blue : SColor.colorForHex("#000180")
 };
 
 /**

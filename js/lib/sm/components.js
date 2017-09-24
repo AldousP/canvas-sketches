@@ -123,12 +123,10 @@ function AnimationMapComponent(initialState, map) {
   this.progress = 0;
 }
 
-function RenderableComponent(conf) {
+function RenderableComponent(opacity) {
   this.name = ComponentType.renderable;
-  this.opacity = 1;
-  this.conf = conf ? conf : {
-    disabled: false
-  };
+  this.opacity = opacity ? opacity : 1;
+  this.conf = {};
 }
 
 function GameplayComponent() {

@@ -33,7 +33,7 @@ function RenderingSystem () {
         }
 
         if (renderableVec) {
-          sm.gfx.setStrokeColor(renderableVec.color);
+          sm.gfx.setStrokeColor2(renderableVec.color);
           sm.gfx.setStrokeWidth(renderableVec.stroke_width);
           sm.gfx.drawVec(renderableVec.vector);
         }
@@ -41,11 +41,17 @@ function RenderingSystem () {
         if (polygon) {
           var stroke = entity.components[ComponentType.polygon].stroke;
           var fill = entity.components[ComponentType.polygon].fill;
-          sm.gfx.setStrokeColor(stroke ? stroke : 'rgba(0, 0, 0, 0)');
+
+          if (stroke) {
+            sm.gfx.setStrokeColor2(stroke);
+          } else {
+            sm.gfx.setStrokeColor2();
+          }
+
           // todo: expose configuration for this.
           sm.gfx.setStrokeWidth(2);
           if (fill) {
-            sm.gfx.setFillColor(fill);
+            sm.gfx.setFillColor2(fill);
             sm.gfx.drawPolygon(polygon, null, true);
           } else {
             sm.gfx.drawPolygon(polygon);

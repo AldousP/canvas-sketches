@@ -225,12 +225,13 @@
       width: 0,
       height: 0,
       clear: function (color) {
+        color = color || sc.color.dark_blue;
         sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2);
-        if (color) {
-          sm.ctx.fillStyle = color;
-        } else {
-          sm.ctx.fillStyle = sm.conf.debug.logConsole.bgColor;
+        if (!color.colorString) {
+          SColor.updateColorString(color);
         }
+
+        sm.ctx.fillStyle = color.colorString;
         sm.ctx.fillRect(0, 0, sm.canvas.width * 100, sm.canvas.height * 100);
         sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
       },
@@ -417,12 +418,15 @@
         sm.ctx.strokeStyle = color;
       },
 
-      setStrokeColor2: function (r, g, b, a) {
-        sm.ctx.strokeStyle = 'rgba(' +
-          r + ', ' +
-          g + ', ' +
-          b + ', ' +
-          a + ')'
+      setStrokeColor2: function (colorObj) {
+        if (!colorObj) {
+          sm.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
+        } else {
+          if (!colorObj.colorString) {
+            SColor.updateColorString(colorObj);
+          }
+          sm.ctx.strokeStyle = colorObj.colorString;
+        }
       },
 
       setStrokeWidth: function (width) {
@@ -433,12 +437,12 @@
         sm.ctx.fillStyle = color;
       },
 
-      setFillColor2: function (r, g, b, a) {
+      setFillColor2: function (colorObj) {
         sm.ctx.fillStyle= 'rgba(' +
-          r + ', ' +
-          g + ', ' +
-          b + ', ' +
-          a + ')'
+          colorObj.r + ', ' +
+          colorObj.g + ', ' +
+          colorObj.b + ', ' +
+          colorObj.a + ')'
       },
 
       setTextColor: function (color) {
@@ -487,7 +491,7 @@
         y = y ? -y : 0;
         x = x ? x : 0;
 
-        sm.gfx.setFillColor(this.textConf.color);
+        sm.gfx.setFillColor2(this.textConf.color);
         if (msgs.forEach) {
           sm.ctx.save();
           sm.ctx.translate(x, y);

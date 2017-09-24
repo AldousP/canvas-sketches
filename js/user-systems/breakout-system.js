@@ -128,7 +128,7 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
       type: 'BALL_GUTTER_BOTTOM',
       handle: function (data, target, delta, mapper, fire) {
         that.ballHitFloor(target, mapper, fire);
-        fire(data.collider, 'FLASH_GUTTER_RED');
+        fire(data.collider, 'FLASH_GUTTER');
         that.playRandomChime();
       }
     },

@@ -594,6 +594,7 @@
           sm.unloadProgram();
         }
         sm.activeProgram = program;
+        window.sProg = program;
 
         program.systems = new SystemProcessor();
         program.entities = new EntityMapper();

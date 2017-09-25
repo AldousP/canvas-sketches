@@ -11,7 +11,6 @@ function Breakout () {
   this.board_width = sm.gfx.width * 0.85;
   this.board_height = sm.gfx.height * 0.85;
 
-
   this.setup = function () {
     var e = this.entities;
     var s = this.systems;
@@ -20,14 +19,14 @@ function Breakout () {
     e.buildEntity([
       new GameStateComponent({
         score: 0,
-        balls: 3
+        balls: 3,
+        paused: 0
       })
     ], [], ['game_state']);
 
     var paddlePoly = SPoly.polySquare(64);
     SPoly.scalePoly(paddlePoly, new SVec.Vector(1.25, .15));
 
-    // Scene Data
     var root = e.buildEntity([
       new RenderRoot(),
       new RenderableComponent(),
@@ -39,10 +38,22 @@ function Breakout () {
       new TransformComponent()
     ], [], ['root']);
 
+    // Scene Data
+    var scene_root = e.buildEntityWithRoot([
+      new RenderRoot(),
+      new RenderableComponent(),
+      new PolygonComponent(SPoly.polyCircle(0)),
+      new SequenceComponent([
+        {name: 'fade_in'},
+        {name: 'fade_out'}
+      ]),
+      new TransformComponent()
+    ], [], ['scene_root'], root);
+
     var UI_root = e.buildEntityWithRoot([
       new TransformComponent(),
       new RenderableComponent({opacity: 1})
-    ], [], [], root);
+    ], [], [], scene_root);
 
     // Player paddle
     e.buildEntityWithRoot([
@@ -51,7 +62,7 @@ function Breakout () {
       new PolygonComponent(paddlePoly, sc.color.white, BG_COLOR),
       new ColliderComponent(paddlePoly),
       new RenderableVector(new SVec.Vector(.1, 0), sc.color.white, 1)
-    ], [], ['player', 'paddle'], root);
+    ], [], ['player', 'paddle'], scene_root);
 
     // Ball
     e.buildEntityWithRoot([
@@ -60,10 +71,9 @@ function Breakout () {
       new VelocityComponent(ball_speed, ball_speed),
       new PolygonComponent(SPoly.polyCircle(4), null, sc.color.white),
       new ColliderComponent(SPoly.polyCircle(4))
-    ], [], ['ball'], root);
+    ], [], ['ball'], scene_root);
 
-
-    // // Gutters
+    // Gutters
     var gutter_color = null;
     e.buildEntityWithRoot([
       new TransformComponent(-312, 0),
@@ -71,7 +81,7 @@ function Breakout () {
       new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 1, 16), gutter_color, new Color(255, 255, 255, 0)),
       new ColliderComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 1, 16)),
       new SequenceComponent([{ name: 'flash_gutter' }])
-    ], [], ['gutter_left'], root);
+    ], [], ['gutter_left'], scene_root);
 
     e.buildEntityWithRoot([
       new TransformComponent(312, 0),
@@ -79,7 +89,7 @@ function Breakout () {
       new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 1, 16), gutter_color, new Color(255, 255, 255, 0)),
       new ColliderComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 1, 16)),
       new SequenceComponent([{ name: 'flash_gutter' }])
-    ], [], ['gutter_right'], root);
+    ], [], ['gutter_right'], scene_root);
 
     e.buildEntityWithRoot([
       new TransformComponent(0, 182),
@@ -87,7 +97,7 @@ function Breakout () {
       new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1), gutter_color, new Color(255, 255, 255, 0)),
       new ColliderComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1)),
       new SequenceComponent([{ name: 'flash_gutter' }])
-    ], [], ['gutter_top'], root);
+    ], [], ['gutter_top'], scene_root);
 
     e.buildEntityWithRoot([
       new TransformComponent(0, -182),
@@ -95,14 +105,14 @@ function Breakout () {
       new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1), gutter_color, new Color(255, 0, 0, 0)),
       new ColliderComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 32, 1)),
       new SequenceComponent([{ name: 'flash_gutter' }])
-    ], [], ['gutter_bottom'], root);
+    ], [], ['gutter_bottom'], scene_root);
 
 
     // Create Ball UI Element
     e.buildEntityWithRoot([
       new TransformComponent(this.board_width / 2.05, this.board_height / 2.15),
       new RenderableComponent(),
-      new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 2.65, 1), sc.color.white, BG_COLOR)
+      new PolygonComponent(SPoly.scalePolyConst(SPoly.polySquare(32), 2.95, 1), sc.color.white, BG_COLOR)
     ], [
       e.buildEntity([
         new TransformComponent(-24, 0),
@@ -132,10 +142,8 @@ function Breakout () {
       new RenderableComponent()
       ], [], ['score_pane'], UI_root);
 
-
     // Create Tiles
-    var blockPoly = SPoly.polySquare(16);
-    SPoly.scalePoly(blockPoly, new SVec.Vector(3.15, .85));
+    var blockPoly = SPoly.polyRect(64, 18);
     var start_x = -(this.board_width / 2.35);
     var start_y = 96;
     var tile_length = 48;
@@ -150,9 +158,47 @@ function Breakout () {
           new RenderableComponent(),
           new PolygonComponent(blockPoly, null, sc.color.white),
           new ColliderComponent(blockPoly)
-        ], [], ['tile'], root);
+        ], [], ['tile'], scene_root);
       }
     }
+
+    var game_over_root = e.buildEntityWithRoot([
+      new TransformComponent(),
+      new RenderableComponent({opacity: .01}),
+      new SequenceComponent([
+        {name: 'show_game_over_UI'}
+      ]),
+      new PolygonComponent(SPoly.polyRect(1024, 256), sc.color.white, sc.color.white)
+    ], [], ['game_over_UI'], root);
+
+    var score_pos = 128;
+    e.buildEntityWithRoot([
+      new TransformComponent(score_pos),
+      new RenderableComponent(),
+      new PolygonComponent(SPoly.polyCircle(32), sc.color.white, BG_COLOR)
+    ], [], [], game_over_root);
+
+    e.buildEntityWithRoot([
+      new TransformComponent(score_pos),
+      new RenderableComponent(),
+      new TextComponent(72, {
+        size: 36,
+        font: 'Questrial',
+        color: sc.color.white
+      })
+    ], [], ['game_over_score'], game_over_root);
+
+
+    e.buildEntityWithRoot([
+      new TransformComponent(-score_pos),
+      new RenderableComponent(),
+      new TextComponent('Game Over', {
+        size: 48,
+        font: 'Questrial',
+        color: BG_COLOR
+      })
+    ], [], ['game_over_text'], game_over_root);
+
 
     // System Configuration
     s.addSystem(new BreakoutSystem(ball_speed, sm.gfx.width * .8, sm.gfx.height));
@@ -199,6 +245,21 @@ function Breakout () {
             end: 1,
             handle: function (target, progress) {
               EX.renderable(target).opacity = 1 - progress;
+            }
+          }
+        ]
+      },
+      show_game_over_UI: {
+        type: SequenceType.NORMAL,
+        length: 1,
+        startOn: ['GAME_OVER'],
+        reset: false,
+        sequence: [
+          {
+            start: 0,
+            end: 1,
+            handle: function (target, progress) {
+              EX.renderable(target).opacity = progress;
             }
           }
         ]

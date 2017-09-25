@@ -2,7 +2,7 @@
 
 function CollisionDetection () {
   this.conf = {
-    name: 'Collision Detection',
+    name: 'collision',
     description: 'SAT Collision Detection',
     date: '09.17.2017'
   };

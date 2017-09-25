@@ -64,7 +64,9 @@ function BreakoutSystem(ball_speed, board_width, board_height) {
     var state = EX.state(game_state);
 
     state.game_over = true;
-    fire(mapper.getFirstOfTag('root').ID, 'FADE_OUT')
+    EX.text(mapper.getFirstOfTag('game_over_score')).strings = state.score;
+    fire(mapper.getFirstOfTag('scene_root').ID, 'FADE_OUT');
+    fire(mapper.getFirstOfTag('game_over_UI').ID, 'GAME_OVER');
   };
 
   this.playRandomChime = function () {

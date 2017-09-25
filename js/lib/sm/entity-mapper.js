@@ -14,6 +14,8 @@ function EntityMapper() {
 	this.entityCount = 0;
 	this.deletionQueue = [];
 
+	window.GLOBAL_EVENT = -1;
+
 	this.addEntity = function (newEntity) {
 		this.store[newEntity.ID] = newEntity;
 		this.entityCount++;

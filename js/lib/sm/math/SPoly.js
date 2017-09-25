@@ -67,7 +67,11 @@ var SPoly = {
    * @returns a Polygon with four vertices at the designated width.
    */
   polySquare: function (width) {
-    return this.generatePolygon(4, width / 2, 45 / this.DEG_RAD, 1.25, 1.2)
+    return this.generatePolygon(4, width / 2, 45 / this.DEG_RAD, 1, 1)
+  },
+
+  polyRect: function (width, height) {
+    return this.generatePolygon(4, width / 2, 45 / this.DEG_RAD, 1, height / width);
   },
 
   /**
@@ -79,7 +83,6 @@ var SPoly = {
     poly.pts.forEach(function (pt) {
       SVec.multVec(pt, scalar);
     });
-
     return poly;
   },
 

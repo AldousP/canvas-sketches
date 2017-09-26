@@ -28,7 +28,8 @@ var ComponentType = {
   gameState: 'gamestate',
   collider: 'collider',
   velocity: 'velocity',
-  renderableVector: 'renderableVector'
+  renderableVector: 'renderableVector',
+  appRoot: 'appRoot'
 };
 
 function PolygonComponent(polygon, stroke, fill) {
@@ -161,6 +162,10 @@ function RenderableVector(vector, color, stroke_width, off_set) {
   this.color = color;
   this.stroke_width = stroke_width;
   this.off_set = off_set;
+}
+
+function AppRoot () {
+  this.name = ComponentType.appRoot;
 }
 
 /**

@@ -13,5 +13,5 @@
   });
 
   sm.init('canvas');
-  sm.loadV2Program(new Breakout());
+  sm.loadV2Program(new Snake());
 }());

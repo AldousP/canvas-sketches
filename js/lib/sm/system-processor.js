@@ -34,7 +34,6 @@ function SystemProcessor() {
       this.systemNames.push(newSystem.name);
 
       if (newSystem.setup) {
-        new
         newSystem.setup(entityMapper);
       }
     }

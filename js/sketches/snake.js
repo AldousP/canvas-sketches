@@ -19,6 +19,14 @@ function Snake () {
 
     s.addSystem(new SnakeSystem(), e);
     s.addSystem(new VelocitySystem(), e);
+    s.addSystem(new CollisionSystem({
+      debounce_interval: 1 / 40,
+      collision_map: {
+        'snake': {
+          'wall' : 'SNAKE_HIT_WALL'
+        }
+      }
+    }));
     s.addSystem(new RenderingSystem(), e);
   };
   
@@ -71,30 +79,35 @@ function Snake () {
       new RenderableComponent(),
       new TransformComponent(),
       new VelocityComponent(0, 0, 32),
-      new PolygonComponent(SPoly.polySquare(18), sc.color.white, sc.color.white)
+      new PolygonComponent(SPoly.polySquare(18), sc.color.white, sc.color.white),
+      new ColliderComponent(SPoly.polySquare(18))
       ], [], ['snake'], this.scene_root);
 
     e.buildEntityWithRoot([
       new TransformComponent(-324, 0),
       new PolygonComponent(SPoly.polyRect(72, 512), sc.color.white, sc.color.clear),
+      new ColliderComponent(SPoly.polyRect(72, 512)),
       new RenderableComponent()
     ], [], ['wall'], this.scene_root);
 
     e.buildEntityWithRoot([
       new TransformComponent(0, 182),
       new PolygonComponent(SPoly.polyRect(1024, 72), sc.color.white, sc.color.clear),
+      new ColliderComponent(SPoly.polyRect(1024, 72)),
       new RenderableComponent()
     ], [], ['wall'], this.scene_root);
 
     e.buildEntityWithRoot([
       new TransformComponent(0, -182),
       new PolygonComponent(SPoly.polyRect(1024, 72), sc.color.white, sc.color.clear),
+      new ColliderComponent(SPoly.polyRect(1024, 72)),
       new RenderableComponent()
     ], [], ['wall'], this.scene_root);
 
     e.buildEntityWithRoot([
       new TransformComponent(324, 0),
       new PolygonComponent(SPoly.polyRect(72, 512), sc.color.white, sc.color.clear),
+      new ColliderComponent(SPoly.polyRect(72, 512)),
       new RenderableComponent()
     ], [], ['wall'], this.scene_root);
   };

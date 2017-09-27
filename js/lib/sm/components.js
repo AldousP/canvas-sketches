@@ -177,7 +177,7 @@ var ES = {
   setPos: function (entity, x, y) {
     var pos = EX.transPos(entity);
     if (pos) {
-      SVec.setVec(pos, x, y ? y : pos.y);
+      SVec.setVec(pos, x ? x : pos.x, y ? y : pos.y);
     } else {
       console.error('[SM.ES][setPos]: No position component on provided entity.')
     }

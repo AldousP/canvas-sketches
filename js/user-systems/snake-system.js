@@ -53,6 +53,12 @@ function SnakeSystem() {
   };
 
   this.listeners = {
-
+    snake_hit_wall: {
+      type: 'SNAKE_HIT_WALL',
+      handle: function (data, target, delta, mapper, fire) {
+        target.components[ComponentType.transform].position.x = 0;
+        target.components[ComponentType.transform].position.y = 0;
+      }
+    }
   };
 }

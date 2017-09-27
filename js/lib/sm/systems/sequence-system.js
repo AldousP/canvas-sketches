@@ -56,7 +56,7 @@ function SequenceSystem (conf) {
             }
           }
 
-          if (ent_seq && ent_seq.state.active) {
+          if (ent_seq.state && ent_seq.state.active) {
             var handler = this.conf[ent_seq.name];
             var reset = false;
             if (ent_seq.state.elapsedTime < handler.length) {

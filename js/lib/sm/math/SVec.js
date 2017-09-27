@@ -71,7 +71,11 @@ SVec.cpyVec = function (vec) {
 
 SVec.setMag = function (vec, length) {
   var scalar = length / vec.len;
-  return SVec.sclVec(vec, scalar);
+  if (scalar && vec.len) {
+    return SVec.sclVec(vec, scalar);
+  } else {
+    return vec;
+  }
 };
 
 /**

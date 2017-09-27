@@ -50,9 +50,10 @@ function RotationComponent(rotation, radians) {
   this.rotation = rotation ? rotation : 0;
 }
 
-function VelocityComponent(x, y) {
+function VelocityComponent(x, y, friction) {
   this.name = ComponentType.velocity;
   this.velocity = new SVec.Vector(x, y);
+  this.friction = friction ? friction : 0;
 }
 
 function AccelerationComponent(x, y) {
@@ -179,6 +180,15 @@ var ES = {
       SVec.setVec(pos, x, y ? y : pos.y);
     } else {
       console.error('[SM.ES][setPos]: No position component on provided entity.')
+    }
+  },
+
+  addVel: function (entity, x, y) {
+    var vel = EX.vel(entity);
+    if (vel) {
+      vel.x += x;
+      vel.y += y;
+      SVec.calcLen(vel);
     }
   },
   

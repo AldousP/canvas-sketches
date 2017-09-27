@@ -6,7 +6,7 @@ function Snake () {
     date: '09.23.2017'
   };
 
-  var BG_COLOR = SColor.colorForHex("#3e63bd");
+  var BG_COLOR = SColor.colorForHex("#812e4d");
 
   this.setup = function () {
     this.update(0, sm.gfx);
@@ -17,8 +17,9 @@ function Snake () {
     this.setupRenderState(this.render_root, e);
     this.setupSceneState(e);
 
-    s.addSystem(new RenderingSystem());
-    s.addSystem(new SnakeSystem());
+    s.addSystem(new SnakeSystem(), e);
+    s.addSystem(new VelocitySystem(), e);
+    s.addSystem(new RenderingSystem(), e);
   };
   
   this.setupAppState = function (e) {
@@ -69,8 +70,33 @@ function Snake () {
     var the_snake = e.buildEntityWithRoot([
       new RenderableComponent(),
       new TransformComponent(),
-      new PolygonComponent(SPoly.polySquare(64), sc.color.white, sc.color.white)
+      new VelocityComponent(0, 0, 32),
+      new PolygonComponent(SPoly.polySquare(18), sc.color.white, sc.color.white)
       ], [], ['snake'], this.scene_root);
+
+    e.buildEntityWithRoot([
+      new TransformComponent(-324, 0),
+      new PolygonComponent(SPoly.polyRect(72, 512), sc.color.white, sc.color.clear),
+      new RenderableComponent()
+    ], [], ['wall'], this.scene_root);
+
+    e.buildEntityWithRoot([
+      new TransformComponent(0, 182),
+      new PolygonComponent(SPoly.polyRect(1024, 72), sc.color.white, sc.color.clear),
+      new RenderableComponent()
+    ], [], ['wall'], this.scene_root);
+
+    e.buildEntityWithRoot([
+      new TransformComponent(0, -182),
+      new PolygonComponent(SPoly.polyRect(1024, 72), sc.color.white, sc.color.clear),
+      new RenderableComponent()
+    ], [], ['wall'], this.scene_root);
+
+    e.buildEntityWithRoot([
+      new TransformComponent(324, 0),
+      new PolygonComponent(SPoly.polyRect(72, 512), sc.color.white, sc.color.clear),
+      new RenderableComponent()
+    ], [], ['wall'], this.scene_root);
   };
 
   /**

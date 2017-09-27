@@ -26,7 +26,7 @@ function SystemProcessor() {
     })
   };
 
-	this.addSystem = function (newSystem) {
+	this.addSystem = function (newSystem, entityMapper) {
 	  if (this.systemNames.indexOf(newSystem.name) > -1) {
 	    sm.log.error('Skipping non unique system name: ' + newSystem.name,'systems');
     } else {
@@ -35,7 +35,7 @@ function SystemProcessor() {
 
       if (newSystem.setup) {
         new
-        newSystem.setup();
+        newSystem.setup(entityMapper);
       }
     }
 	};

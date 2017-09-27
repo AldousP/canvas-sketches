@@ -1,7 +1,9 @@
 function SnakeSystem() {
   this.name = 'snake_system';
   this.active = true;
-  this.movement_speed = 64;
+  this.movement_speed = 128;
+
+  this.sequences = [];
 
 
   this.filter = [
@@ -50,6 +52,10 @@ function SnakeSystem() {
         color: sc.color.white
       });
     }
+
+    this.sequences.forEach(function (sequence) {
+
+    })
   };
 
   this.listeners = {
@@ -58,6 +64,7 @@ function SnakeSystem() {
       handle: function (data, target, delta, mapper, fire) {
         target.components[ComponentType.transform].position.x = 0;
         target.components[ComponentType.transform].position.y = 0;
+        fire(data.collider, 'FLASH');
       }
     }
   };

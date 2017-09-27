@@ -61,8 +61,7 @@ function RenderingSystem () {
             sm.gfx.setFillColor2(fill);
             sm.gfx.drawPolygon(polygon, null, true);
           } else {
-            sm.gfx.setFillColor2(sc.color.clear);
-            sm.gfx.drawPolygon(polygon);
+            sm.gfx.drawPolygon(polygon, null, false);
           }
 
           if (stroke) {

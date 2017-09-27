@@ -27,6 +27,26 @@ function Snake () {
         }
       }
     }));
+    s.addSystem(new SequenceSystem({
+      flash: {
+        type: SequenceType.NORMAL,
+        length: .25,
+        startOn: ['FLASH'],
+        reset: false,
+        sequence: [
+          {
+            start: 0,
+            end: .25,
+            handle: function (target, progress) {
+              target.components[ComponentType.polygon].fill.r = 255;
+              target.components[ComponentType.polygon].fill.g = 255;
+              target.components[ComponentType.polygon].fill.b = 255;
+              target.components[ComponentType.polygon].fill.a = Math.pow(SFormat.float_two_pt(1 - progress), 3);
+            }
+          }
+        ]
+      }
+    }));
     s.addSystem(new RenderingSystem(), e);
   };
   
@@ -74,41 +94,46 @@ function Snake () {
    * Create the scene full of entities for gameplay.
    * @param e the entity mapper.
    */
+  var snake_size = 18;
   this.setupSceneState = function (e) {
     var the_snake = e.buildEntityWithRoot([
       new RenderableComponent(),
       new TransformComponent(),
       new VelocityComponent(0, 0, 32),
-      new PolygonComponent(SPoly.polySquare(18), sc.color.white, sc.color.white),
-      new ColliderComponent(SPoly.polySquare(18))
+      new PolygonComponent(SPoly.polyCircle(snake_size / 2), SColor.colorFromColor(sc.color.white), SColor.colorFromColor(sc.color.clear)),
+      new ColliderComponent(SPoly.polySquare(snake_size))
       ], [], ['snake'], this.scene_root);
 
     e.buildEntityWithRoot([
       new TransformComponent(-324, 0),
-      new PolygonComponent(SPoly.polyRect(72, 512), sc.color.white, sc.color.clear),
+      new PolygonComponent(SPoly.polyRect(72, 512), SColor.colorFromColor(sc.color.clear), SColor.colorFromColor(sc.color.clear)),
       new ColliderComponent(SPoly.polyRect(72, 512)),
-      new RenderableComponent()
+      new RenderableComponent(),
+      new SequenceComponent([ { name: 'flash'} ])
     ], [], ['wall'], this.scene_root);
 
     e.buildEntityWithRoot([
       new TransformComponent(0, 182),
-      new PolygonComponent(SPoly.polyRect(1024, 72), sc.color.white, sc.color.clear),
+      new PolygonComponent(SPoly.polyRect(1024, 72), SColor.colorFromColor(sc.color.clear), SColor.colorFromColor(sc.color.clear)),
       new ColliderComponent(SPoly.polyRect(1024, 72)),
-      new RenderableComponent()
+      new RenderableComponent(),
+      new SequenceComponent([ { name: 'flash'} ])
     ], [], ['wall'], this.scene_root);
 
     e.buildEntityWithRoot([
       new TransformComponent(0, -182),
-      new PolygonComponent(SPoly.polyRect(1024, 72), sc.color.white, sc.color.clear),
+      new PolygonComponent(SPoly.polyRect(1024, 72), SColor.colorFromColor(sc.color.clear), SColor.colorFromColor(sc.color.clear)),
       new ColliderComponent(SPoly.polyRect(1024, 72)),
-      new RenderableComponent()
+      new RenderableComponent(),
+      new SequenceComponent([ { name: 'flash'} ])
     ], [], ['wall'], this.scene_root);
 
     e.buildEntityWithRoot([
       new TransformComponent(324, 0),
-      new PolygonComponent(SPoly.polyRect(72, 512), sc.color.white, sc.color.clear),
+      new PolygonComponent(SPoly.polyRect(72, 512), SColor.colorFromColor(sc.color.clear), SColor.colorFromColor(sc.color.clear)),
       new ColliderComponent(SPoly.polyRect(72, 512)),
-      new RenderableComponent()
+      new RenderableComponent(),
+      new SequenceComponent([ { name: 'flash'} ])
     ], [], ['wall'], this.scene_root);
   };
 

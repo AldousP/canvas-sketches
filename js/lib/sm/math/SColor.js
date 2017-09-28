@@ -9,6 +9,14 @@
     this.b = b;
     this.a = a;
   };
+  
+  SColor.rand = function (target) {
+    target.r = Math.floor(SMath.rand(0, 255));
+    target.g = Math.floor(SMath.rand(0, 255));
+    target.b = Math.floor(SMath.rand(0, 255));
+    target.a = 1;
+    return target;
+  };
 
   SColor.lerp = function (target, colorA, colorB, alpha) {
     target.r = (colorB.r - colorA.r) * alpha;

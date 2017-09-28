@@ -23,7 +23,8 @@ function Snake () {
       debounce_interval: 1 / 40,
       collision_map: {
         'snake': {
-          'wall' : 'SNAKE_HIT_WALL'
+          'wall' : 'SNAKE_HIT_WALL',
+          'snake_food': 'SNAKE_ATE_FOOD'
         }
       }
     }));

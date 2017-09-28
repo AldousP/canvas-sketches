@@ -100,7 +100,7 @@ function Snake () {
     var the_snake = e.buildEntityWithRoot([
       new RenderableComponent(),
       new TransformComponent(),
-      new VelocityComponent(0, 0, 32),
+      new VelocityComponent(0, 0, 0),
       new PolygonComponent(SPoly.polyCircle(snake_size / 2), SColor.colorFromColor(sc.color.white), SColor.colorFromColor(sc.color.clear)),
       new ColliderComponent(SPoly.polySquare(snake_size))
       ], [], ['snake'], this.scene_root);

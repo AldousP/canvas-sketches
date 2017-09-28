@@ -191,6 +191,15 @@ var ES = {
       SVec.calcLen(vel);
     }
   },
+
+  setVel: function (entity, x, y) {
+    var vel = EX.vel(entity);
+    if (vel) {
+      vel.x = x;
+      vel.y = y;
+      SVec.calcLen(vel);
+    }
+  },
   
   setText: function (entity, strings) {
     var text = EX.text(entity);

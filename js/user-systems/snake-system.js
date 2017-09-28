@@ -38,7 +38,7 @@ function SnakeSystem() {
     var game_state = mapper.getFirstOfTag('game_state');
 
     if (sm.input.state.keyboard[sc.keys.a]) {
-      ES.addVel(snake, -this.movement_speed * delta, 0);
+      ES.setVel(snake, -this.movement_speed, 0);
       sm.gfx.setTextConf({
         font: 'arial',
         size: 32,
@@ -47,7 +47,7 @@ function SnakeSystem() {
     }
 
     if (sm.input.state.keyboard[sc.keys.d]) {
-      ES.addVel(snake, this.movement_speed * delta, 0);
+      ES.setVel(snake, this.movement_speed, 0);
       sm.gfx.setTextConf({
         font: 'arial',
         size: 32,
@@ -56,7 +56,7 @@ function SnakeSystem() {
     }
 
     if (sm.input.state.keyboard[sc.keys.w]) {
-      ES.addVel(snake, 0, this.movement_speed * delta);
+      ES.setVel(snake, 0, this.movement_speed);
       sm.gfx.setTextConf({
         font: 'arial',
         size: 32,
@@ -65,7 +65,7 @@ function SnakeSystem() {
     }
 
     if (sm.input.state.keyboard[sc.keys.s]) {
-      ES.addVel(snake, 0, -this.movement_speed * delta);
+      ES.setVel(snake, 0, -this.movement_speed);
       sm.gfx.setTextConf({
         font: 'arial',
         size: 32,

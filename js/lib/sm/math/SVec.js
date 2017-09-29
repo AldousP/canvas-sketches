@@ -145,6 +145,17 @@ SVec.subVecVec = function (vec, vec2) {
 };
 
 /**
+ * Subtracts the contents of the second Vector from the first.
+ */
+SVec.subVecVec2 = function (t, vecA, vecB) {
+  t.x = vecA.x - vecB.x;
+  t.y = vecA.y - vecB.y;
+
+  SVec.calcLen(t);
+  return t;
+};
+
+/**
  * Normalizes the provided Vector
  */
 SVec.normVec = function (vec) {

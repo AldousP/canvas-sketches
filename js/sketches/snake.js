@@ -6,6 +6,8 @@ function Snake () {
     date: '09.23.2017'
   };
 
+  this.board_width = sm.gfx.width * 0.85;
+  this.board_height = sm.gfx.height * 0.85;
   var BG_COLOR = SColor.colorForHex("#812e4d");
 
   this.setup = function () {
@@ -16,6 +18,7 @@ function Snake () {
     this.setupAppState(e);
     this.setupRenderState(this.render_root, e);
     this.setupSceneState(e);
+    this.setupUIState(e);
 
     s.addSystem(new SnakeSystem(), e);
     s.addSystem(new VelocitySystem(), e);
@@ -24,7 +27,8 @@ function Snake () {
       collision_map: {
         'snake': {
           'wall' : 'SNAKE_HIT_WALL',
-          'snake_food': 'SNAKE_ATE_FOOD'
+          'snake_food': 'SNAKE_ATE_FOOD',
+          'snake_child': 'SNAKE_HIT_SELF'
         }
       }
     }));
@@ -101,13 +105,20 @@ function Snake () {
       new RenderableComponent(),
       new TransformComponent(),
       new VelocityComponent(0, 0, 0),
-      new PolygonComponent(SPoly.polyCircle(snake_size / 2), SColor.colorFromColor(sc.color.white), SColor.colorFromColor(sc.color.clear)),
+      new SnakeHeadComponent(),
+      new PolygonComponent(
+        SPoly.polyCircle(snake_size / 2),
+        SColor.colorFromColor(sc.color.white),
+        SColor.colorFromColor(sc.color.white)),
       new ColliderComponent(SPoly.polySquare(snake_size))
       ], [], ['snake'], this.scene_root);
 
     e.buildEntityWithRoot([
       new TransformComponent(-324, 0),
-      new PolygonComponent(SPoly.polyRect(72, 512), SColor.colorFromColor(sc.color.clear), SColor.colorFromColor(sc.color.clear)),
+      new PolygonComponent(
+        SPoly.polyRect(72, 512),
+        SColor.colorFromColor(sc.color.clear),
+        SColor.colorFromColor(sc.color.clear)),
       new ColliderComponent(SPoly.polyRect(72, 512)),
       new RenderableComponent(),
       new SequenceComponent([ { name: 'flash'} ])
@@ -115,7 +126,10 @@ function Snake () {
 
     e.buildEntityWithRoot([
       new TransformComponent(0, 182),
-      new PolygonComponent(SPoly.polyRect(1024, 72), SColor.colorFromColor(sc.color.clear), SColor.colorFromColor(sc.color.clear)),
+      new PolygonComponent(
+        SPoly.polyRect(1024, 72),
+        SColor.colorFromColor(sc.color.clear),
+        SColor.colorFromColor(sc.color.clear)),
       new ColliderComponent(SPoly.polyRect(1024, 72)),
       new RenderableComponent(),
       new SequenceComponent([ { name: 'flash'} ])
@@ -123,7 +137,10 @@ function Snake () {
 
     e.buildEntityWithRoot([
       new TransformComponent(0, -182),
-      new PolygonComponent(SPoly.polyRect(1024, 72), SColor.colorFromColor(sc.color.clear), SColor.colorFromColor(sc.color.clear)),
+      new PolygonComponent(
+        SPoly.polyRect(1024, 72),
+        SColor.colorFromColor(sc.color.clear),
+        SColor.colorFromColor(sc.color.clear)),
       new ColliderComponent(SPoly.polyRect(1024, 72)),
       new RenderableComponent(),
       new SequenceComponent([ { name: 'flash'} ])
@@ -131,11 +148,27 @@ function Snake () {
 
     e.buildEntityWithRoot([
       new TransformComponent(324, 0),
-      new PolygonComponent(SPoly.polyRect(72, 512), SColor.colorFromColor(sc.color.clear), SColor.colorFromColor(sc.color.clear)),
+      new PolygonComponent(
+        SPoly.polyRect(72, 512),
+        SColor.colorFromColor(sc.color.clear),
+        SColor.colorFromColor(sc.color.clear)),
       new ColliderComponent(SPoly.polyRect(72, 512)),
       new RenderableComponent(),
       new SequenceComponent([ { name: 'flash'} ])
     ], [], ['wall'], this.scene_root);
+  };
+
+  this.setupUIState = function (e) {
+    // Score Pane
+    e.buildEntityWithRoot([
+      new TextComponent('0', {
+        size: 48,
+        font: 'Questrial',
+        color: sc.color.white
+      }),
+      new TransformComponent(-this.board_width / 2.05, this.board_height / 2.25),
+      new RenderableComponent()
+    ], [], ['score_pane'], this.UI_root);
   };
 
   /**

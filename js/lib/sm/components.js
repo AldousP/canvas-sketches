@@ -208,6 +208,10 @@ var ES = {
     } else {
       console.error('[SM.ES][setText]: No text component on provided entity..')
     }
+  },
+  
+  setGameState: function (entity, property, value) {
+    entity.components[ComponentType.gameState].gameState[property] = value;
   }
 };
 

@@ -37,25 +37,27 @@ function EntityMapper() {
 
 	this.deleteEntity = function (ID) {
 	  var entity = this.store[ID];
-	  this.store[ID] = undefined;
-	  var tags = entity.tags;
-	  tags.forEach(function (tag) {
-      var map = that.tagMap[tag];
-	    map.splice(map.indexOf(ID, 1));
-    });
-	  var parent = this.store[entity.parent];
-	  if (parent) {
-	    parent.children.splice(parent.children.indexOf(ID), 1);
-	    entity.parent = null;
-    }
+	  if (entity) {
+      this.store[ID] = undefined;
+      var tags = entity.tags;
+      tags.forEach(function (tag) {
+        var map = that.tagMap[tag];
+        map.splice(map.indexOf(ID, 1));
+      });
+      var parent = this.store[entity.parent];
+      if (parent) {
+        parent.children.splice(parent.children.indexOf(ID), 1);
+        entity.parent = null;
+      }
 
-    var comp_keys = Object.keys(entity.components);
-    comp_keys.forEach(function (key) {
-      var comp = entity.components[key];
-      that.map[comp.name].splice(that.map[comp.name].indexOf(ID), 1);
-    });
-    this.entity_IDs.splice(this.entity_IDs.indexOf(ID), 1);
-    this.entityCount--;
+      var comp_keys = Object.keys(entity.components);
+      comp_keys.forEach(function (key) {
+        var comp = entity.components[key];
+        that.map[comp.name].splice(that.map[comp.name].indexOf(ID), 1);
+      });
+      this.entity_IDs.splice(this.entity_IDs.indexOf(ID), 1);
+      this.entityCount--;
+    }
   };
 	
 	this.buildEntityWithRoot = function (components, children, tags, root) {

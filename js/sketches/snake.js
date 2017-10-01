@@ -11,7 +11,6 @@ function Snake () {
   var BG_COLOR = SColor.colorForHex("#812e4d");
 
   this.setup = function () {
-    this.update(0, sm.gfx);
     var e = this.entities;
     var s = this.systems;
 

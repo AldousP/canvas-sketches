@@ -139,6 +139,7 @@ function TransformComponent (x, y, r, h, v) {
   this.position = new SVec.Vector(x, y);
   this.rotation = r ? r : 0;
   this.scale = new SVec.Vector(h, v);
+  this.lastPosition = new SVec.Vector();
 }
 
 function GameStateComponent(state) {
@@ -200,6 +201,15 @@ var ES = {
       SVec.calcLen(vel);
     }
   },
+
+  setAccl: function (entity, x, y) {
+    var accl = EX.accl(entity);
+    if (accl) {
+      accl.x = x;
+      accl.y = y;
+      SVec.calcLen(accl);
+    }
+  },
   
   setText: function (entity, strings) {
     var text = EX.text(entity);
@@ -222,6 +232,14 @@ var EX = {
   transPos: function (entity) {
     if (entity.components[ComponentType.transform]) {
       return entity.components[ComponentType.transform].position
+    } else {
+      return null;
+    }
+  },
+
+  transLastPos: function (entity) {
+    if (entity.components[ComponentType.transform]) {
+      return entity.components[ComponentType.transform].lastPosition
     } else {
       return null;
     }

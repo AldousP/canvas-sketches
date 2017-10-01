@@ -17,6 +17,9 @@ SVec.Vector = function Vector(x, y) {
   this.x = x ? x : 0;
   this.y = y ? y : 0;
   this.len = Math.sqrt((x * x) + (y * y));
+  if (!this.len) {
+    this.len = 0;
+  }
 };
 
 /**

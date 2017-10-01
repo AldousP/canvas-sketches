@@ -21,7 +21,8 @@ function CollisionDetection () {
       ], [], ['render_root']);
 
 
-    for (var i = 0; i < 7; i++) {
+    var boxCount = 3;
+    for (var i = 0; i < boxCount; i++) {
       this.entities.buildEntityWithRoot(
         [
           new TransformComponent(-256 + (64 * i), 128 + (64 * i)),
@@ -51,8 +52,6 @@ function CollisionDetection () {
         new ColliderComponent( SPoly.scalePolyConst(SPoly.polySquare(base_radius * 2), 16, 1))
       ], [], ['floor'], renderRoot);
 
-
-
     this.systems.addSystem({
       name: 'transformSystem',
       filter: [ ComponentType.transform ],
@@ -80,12 +79,11 @@ function CollisionDetection () {
             SVec.setVecVec(EX.transPos(target), EX.transLastPos(target));
             ES.setVel(target, 0, 0);
             ES.setAccl(target, 0, 0);
+            SVec.addVecVec(EX.transPos(target), data.penetration);
           }
         }
       }
     });
-
-
 
     this.systems.addSystem(new CollisionSystem({
       debounce_interval: 1 / 40,

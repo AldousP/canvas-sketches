@@ -43,18 +43,28 @@ function CollisionSystem (config) {
     });
 
     var gap_found = false;
-    axes.forEach(function (axis) {
+    var separation_vector = new SVec.Vector();
+    axes.forEach(function (axis, index) {
       var proj_1 = SPoly.project(poly, pos, axis);
       var proj_2 = SPoly.project(col_poly, col_pos, axis);
       var overlap = SVec.overlap(proj_1, proj_2);
       if (overlap.len === 0) {
         gap_found = true;
       } else {
+        var len = Math.abs(overlap.y - overlap.x);
+        if (len < separation_vector.len || index === 0) {
+          SVec.setVecVec(separation_vector, axis);
+          SVec.setMag(separation_vector, len);
+        }
         overlaps.push(overlap);
       }
     });
 
-    return !gap_found;
+    if (gap_found) {
+      separation_vector = null;
+    }
+
+    return separation_vector;
   };
 
 	this.process = function (entities, fire, delta, mapper) {
@@ -84,9 +94,11 @@ function CollisionSystem (config) {
               if (collider.ID !== entity.ID) {
                 for (var ll = 0; ll < listeners_keys.length; ll++) {
                   if (collider.tags.indexOf(listeners_keys[ll]) !== -1) {
-                    if (this.overlapping(entity, collider)) {
+                    var penetation = this.overlapping(entity, collider);
+                    if (penetation) {
                       fire(entity.ID, listeners[listeners_keys[ll]], {
-                        collider: collider.ID
+                        collider: collider.ID,
+                        penetration: penetation
                       });
                     }
                   }

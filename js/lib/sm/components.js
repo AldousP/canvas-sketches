@@ -29,7 +29,8 @@ var ComponentType = {
   collider: 'collider',
   velocity: 'velocity',
   renderableVector: 'renderableVector',
-  appRoot: 'appRoot'
+  appRoot: 'appRoot',
+  sensor: 'sensor'
 };
 
 function PolygonComponent(polygon, stroke, fill) {
@@ -169,6 +170,11 @@ function RenderableVector(vector, color, stroke_width, off_set) {
 
 function AppRoot () {
   this.name = ComponentType.appRoot;
+}
+
+function SensorComponent (sensors) {
+  this.name = ComponentType.sensor;
+  this.sensors = sensors ? sensors : [];
 }
 
 /**

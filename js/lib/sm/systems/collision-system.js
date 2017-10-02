@@ -107,6 +107,7 @@ function CollisionSystem (config) {
             }
           }
         }
+        SVec.setVecVec(EX.col(entity).lastPosition, EX.transPos(entity));
       }
     }
 	};

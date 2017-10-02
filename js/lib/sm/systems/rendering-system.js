@@ -49,7 +49,7 @@ function RenderingSystem () {
 
           if (stroke) {
             stroke.a *= parentOpacity;
-            // sm.gfx.setStrokeWidth(2);
+            sm.gfx.setStrokeWidth(2);
             sm.gfx.setStrokeColor2(stroke);
           } else {
             sm.gfx.setStrokeColor2(sc.color.clear);

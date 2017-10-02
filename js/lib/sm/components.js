@@ -151,6 +151,7 @@ function ColliderComponent(poly) {
   this.name = ComponentType.collider;
   this.active = true;
   this.volume = poly;
+  this.lastPosition = new SVec.Vector();
 }
 
 function SequenceComponent(sequences) {

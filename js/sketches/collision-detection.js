@@ -44,18 +44,18 @@ function CollisionDetection () {
 
     }
 
-    this.entities.buildEntityWithRoot(
-      [
-        new TransformComponent(0, -128),
-        new VelocityComponent(0, 0),
-        new AccelerationComponent(0, 0),
-        new RenderableComponent(),
-        new PolygonComponent(
-          SPoly.scalePolyConst(SPoly.polySquare(base_radius * 2), 16, 1),
-          SColor.colorFromColor(sc.color.white)
-        ),
-        new ColliderComponent( SPoly.scalePolyConst(SPoly.polySquare(base_radius * 2), 16, 1))
-      ], [], ['floor'], renderRoot);
+    // this.entities.buildEntityWithRoot(
+    //   [
+    //     new TransformComponent(0, -128),
+    //     new VelocityComponent(0, 0),
+    //     new AccelerationComponent(0, 0),
+    //     new RenderableComponent(),
+    //     new PolygonComponent(
+    //       SPoly.scalePolyConst(SPoly.polySquare(base_radius * 2), 16, 1),
+    //       SColor.colorFromColor(sc.color.white)
+    //     ),
+    //     new ColliderComponent( SPoly.scalePolyConst(SPoly.polySquare(base_radius * 2), 16, 1))
+    //   ], [], ['floor'], renderRoot);
 
     this.entities.buildEntityWithRoot(
       [
@@ -64,10 +64,10 @@ function CollisionDetection () {
         new AccelerationComponent(0, 0),
         new RenderableComponent(),
         new PolygonComponent(
-          SPoly.scalePolyConst(SPoly.polySquare(base_radius ), 4, 4),
+          SPoly.scalePolyConst(SPoly.polySquare(base_radius ), 4, 1),
           SColor.colorFromColor(sc.color.white)
         ),
-        new ColliderComponent(SPoly.scalePolyConst(SPoly.polySquare(base_radius ), 4, 4))
+        new ColliderComponent(SPoly.scalePolyConst(SPoly.polySquare(base_radius ), 4, 1))
       ], [], ['floor'], renderRoot);
 
     this.systems.addSystem({
@@ -92,35 +92,41 @@ function CollisionDetection () {
           sm.gfx.setStrokeWidth(4);
           sm.gfx.drawPtVec(collider.pos, collider.pen);
         });
+
         entities.forEach(function (entity) {
           if (sm.input.state.keyboard[sc.keys.a]) {
-            SVec.addVecConst(EX.vel(entity), -128 * delta, 0);
+            SVec.addVecConst(EX.vel(entity), -512 * delta, 0);
           }
 
           if (sm.input.state.keyboard[sc.keys.d]) {
-            SVec.addVecConst(EX.vel(entity), 128 * delta, 0);
+            SVec.addVecConst(EX.vel(entity), 512 * delta, 0);
           }
-
 
           if (sm.input.state.keyboard[sc.keys.s]) {
-            SVec.setVec(EX.vel(entity), 0, -512);
+            SVec.addVecConst(EX.vel(entity), 0, -512 * delta);
           }
 
-          if (sm.input.state.keyboard[sc.keys.space]) {
-            SVec.setVec(EX.vel(entity), 0, 256);
+          if (sm.input.state.keyboard[sc.keys.w]) {
+            SVec.addVecConst(EX.vel(entity), 0, 512 * delta);
           }
 
-          SVec.addVecConst(EX.vel(entity), 0, gravity * delta);
+          if (sm.input.state.keyboard[sc.keys.escape]) {
+            mapper.queueForDeletion(entity.ID);
+          }
+
         });
       },
       listeners: {
         box_hit_floor: {
           type: 'BOX_HIT_FLOOR',
           handle: function (data, target, delta, mapper, fire) {
-            ES.setVel(target, EX.vel(target).x, 0);
-            ES.setAccl(target, 0, 0);
-            colliders.push({ pen: data.penetration, pos: SVec.cpyVec(EX.transPos(target))});
-            SVec.addVecVec(EX.transPos(target), SVec.sclVec(data.penetration, 1.25));
+            if (target) {
+              var vel = EX.vel(target);
+              SVec.rotVec(vel, Math.PI);
+              SVec.sclVec(vel, .25);
+              ES.setAccl(target, 0, 0);
+              SVec.addVecVec(EX.transPos(target), SVec.sclVec(data.penetration, 1.5));
+            }
           }
         }
       }
@@ -171,7 +177,7 @@ function CollisionDetection () {
       }
     }));
     this.systems.addSystem(new CollisionSystem({
-      debounce_interval: 1 / 45,
+      debounce_interval: 1 / 30,
       collision_map: {
         'box': {
           'floor': 'BOX_HIT_FLOOR'

@@ -22,6 +22,7 @@ function CollisionSystem (config) {
     var poly = entity.components[ComponentType.collider].volume;
     var pos = entity.components[ComponentType.transform].position;
 
+
     poly.pts.forEach(function (pt, index) {
       var ptA = SVec.cpyVec(pt);
       var ptB = SVec.cpyVec(poly.pts[SMath.wrapIndex(index + 1, poly.pts.length)]);
@@ -33,6 +34,7 @@ function CollisionSystem (config) {
 
     var col_poly = collider.components[ComponentType.collider].volume;
     var col_pos = collider.components[ComponentType.transform].position;
+
     col_poly.pts.forEach(function (pt, index) {
       var ptA = SVec.cpyVec(pt);
       var ptB = SVec.cpyVec(col_poly.pts[SMath.wrapIndex(index + 1, col_poly.pts.length)]);
@@ -45,9 +47,11 @@ function CollisionSystem (config) {
     var gap_found = false;
     var separation_vector = new SVec.Vector();
     axes.forEach(function (axis, index) {
+      // SVec.setVec(axis, Math.abs(axis.x), Math.abs(axis.y));
       var proj_1 = SPoly.project(poly, pos, axis);
       var proj_2 = SPoly.project(col_poly, col_pos, axis);
       var overlap = SVec.overlap(proj_1, proj_2);
+
       if (overlap.len === 0) {
         gap_found = true;
       } else {

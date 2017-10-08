@@ -302,5 +302,6 @@ var EX = {
 
   state: function (entity) {
     return entity.components[ComponentType.gameState].gameState;
-  },
+  }
 };
+

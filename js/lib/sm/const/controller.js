@@ -1,4 +1,11 @@
-DS4 = {
+'use strict';
+if (!sc) {
+  var sc = {};
+}
+
+sc.inputs = {};
+
+sc.inputs.controller = {
   up: 12,
   left: 14,
   right: 15,
@@ -13,7 +20,7 @@ DS4 = {
   R2: 7,
   leftstick: 10,
   rightstick: 11,
-  share: 8,
-  options: 9,
+  select: 8,
+  start: 9,
   touchpad: 17
 };

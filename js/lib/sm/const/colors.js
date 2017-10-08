@@ -1,29 +1,35 @@
-var Color = {
-  clear: "rgba(0, 0, 0, 0)",
-  white : "#FFFFFF",
-  black : "#000",
-  red : "#FF0000",
-  green : "#00FF00",
-  blue : "#0000FF",
-  pink : "#FF00FF",
-  yellow : "#FFFF00",
-  cyan : "#00FFFF",
-  orange : "#FF8800",
-  dark_blue : "#000180"
+'use strict';
+if (!sc) {
+  var sc = {};
+}
+
+
+sc.color = {
+  clear: new Color(0, 0, 0, 0),
+  white : SColor.colorForHex("#FFFFFF"),
+  black : SColor.colorForHex("#000000"),
+  red : SColor.colorForHex("#FF0000"),
+  green : SColor.colorForHex("#00FF00"),
+  blue : SColor.colorForHex("#0000FF"),
+  pink : SColor.colorForHex("#FF00FF"),
+  yellow : SColor.colorForHex("#FFFF00"),
+  cyan : SColor.colorForHex("#00FFFF"),
+  orange : SColor.colorForHex("#FF8800"),
+  dark_blue : SColor.colorForHex("#000180")
 };
 
 /**
  * @return {string}
  */
-var RGBA = function (R, G, B, A) {
+sc.color.RGBA = function (R, G, B, A) {
   return 'rgba(' + R + ", " + G + ', ' + B + ', ' + A + ')';
 };
 
-var randColor = function () {
-  return RGBA(
+sc.color.randColor = function () {
+  return sc.color.RGBA(
       Math.floor(SMath.rand(0, 255)),
       Math.floor(SMath.rand(0, 255)),
       Math.floor(SMath.rand(0, 255)),
-      sm.utils.formatters.float_two_pt(SMath.rand(0, 1))
+      SFormat.float_two_pt(SMath.rand(0, 1))
   );
 };

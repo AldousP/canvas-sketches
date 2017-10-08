@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/lib/element_styles.css" />
     <link rel="stylesheet" href="css/app.css" />
     <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Questrial" rel="stylesheet">
   </head>
   <body class="moderno">
     <div class="letterhead hide-mobile">
@@ -24,47 +25,8 @@
               <h2 id="app-title" class="hide-mobile">No Program Loaded</h2>
               <h5 id="app-description" class="hide-mobile">No Description</h5>
             </div>
-            <canvas id="canvas" class="canvas" width="720" height="360"></canvas>
+            <canvas id="canvas" class="canvas" width="640" height="360"></canvas>
             <div id="web-boy" class="show-mobile">WebBoy</div>
-            <div id="program-selector" class="hide-mobile">
-              <div class="program-option" onclick="loadFSMAnimations()">
-                <img src="assets/program-icons/FSM-animations.png" width="64" height="64">
-                <h5>FSM Animations</h5>
-              </div>
-              <div class="program-option" onclick="loadSequences()">
-                <img src="assets/program-icons/sequences.png" width="64" height="64">
-                <h5>Sequences</h5>
-              </div>
-              <div class="program-option" onclick="loadAnimation()">
-                <img src="assets/program-icons/animations.png" width="64" height="64">
-                <h5>Animation</h5>
-              </div>
-              <div class="program-option" onclick="loadInputTests()">
-                <img src="assets/program-icons/input-tests.png" width="64" height="64">
-                <h5>Input Tests</h5>
-              </div>
-              <div class="program-option" onclick="loadStateMachines()">
-                <img src="assets/program-icons/statemachines.png" width="64" height="64">
-                <h5>FSM</h5>
-              </div>
-              <div class="program-option" onclick="loadClipping()">
-                <img src="assets/program-icons/clipping.png" width="64" height="64">
-                <h5>Clipping</h5>
-              </div>
-              <div class="program-option" onclick="loadNesting()">
-                <img src="assets/program-icons/nesting.png" width="64" height="64">
-                <h5>Nesting</h5>
-              </div>
-              <div class="program-option" onclick="loadCameras()">
-                <img src="assets/program-icons/cameras.png" width="64" height="64">
-                <h5>Cameras</h5>
-              </div>
-              <div class="program-option" onclick="loadTextTests()">
-                <img src="assets/program-icons/text-tests.png" width="64" height="64">
-                <h5>Text Examples</h5>
-              </div>
-
-            </div>
           </div>
         </div>
       </div>
@@ -144,44 +106,44 @@
       </div>
     </div>
 
-    <script src="js/lib/sm/const/system-type.js"></script>
+    <script src="js/lib/sm/math/SMath.js"></script>
+    <script src="js/lib/sm/math/SVec.js"></script>
+    <script src="js/lib/sm/math/SColor.js"></script>
+    <script src="js/lib/sm/math/SPoly.js"></script>
+    <script src="js/lib/sm/math/SFormat.js"></script>
+
     <script src="js/lib/sm/const/colors.js"></script>
     <script src="js/lib/sm/const/notes.js"></script>
     <script src="js/lib/sm/const/keys.js"></script>
-    <script src="js/lib/sm/const/DS4.js"></script>
-
-    <script src="js/lib/sm/math/SMath.js"></script>
-    <script src="js/lib/sm/math/vector.js"></script>
-    <script src="js/lib/sm/math/geometry.js"></script>
+    <script src="js/lib/sm/const/controller.js"></script>
 
     <script src="js/lib/sm/sketch-manager.js"></script>
     <script src="js/lib/sm/entity-mapper.js"></script>
     <script src="js/lib/sm/system-processor.js"></script>
+    <script src="js/lib/sm/event-store.js"></script>
     <script src="js/lib/sm/components.js"></script>
     <script src="js/lib/sm/entity.js"></script>
-    <script src="js/lib/sm/extractors/extractors.js"></script>
-
-    <script src="js/lib/sm/systems/background-system.js"></script>
-    <script src="js/lib/sm/systems/animation-system.js"></script>
-    <script src="js/lib/sm/systems/camera-system.js"></script>
-    <script src="js/lib/sm/systems/input-system.js"></script>
-    <script src="js/lib/sm/systems/movement-system.js"></script>
-    <script src="js/lib/sm/systems/path-system.js"></script>
-    <script src="js/lib/sm/systems/physics-system.js"></script>
+    <script src="js/lib/sm/event-types.js"></script>
+    <script src="js/lib/sm/systems/velocity-system.js"></script>
+    <script src="js/lib/sm/systems/state-machine-system.js"></script>
     <script src="js/lib/sm/systems/rendering-system.js"></script>
-    <script src="js/lib/sm/systems/rendering-system.js"></script>
+    <script src="js/lib/sm/systems/sensor-system.js"></script>
+    <script src="js/lib/sm/systems/collision-system.js"></script>
     <script src="js/lib/sm/systems/sequence-system.js"></script>
-    <script src="js/lib/sm/systems/statemachine-system.js"></script>
+    <script src="js/user-systems/pong-system.js"></script>
+    <script src="js/user-systems/snake-system.js"></script>
+    <script src="js/user-systems/breakout-system.js"></script>
+    <script src="js/user-systems/user-systems.js"></script>
 
-    <script src="js/sketches/nesting.js"></script>
-    <script src="js/sketches/clipping.js"></script>
-    <script src="js/sketches/cameras.js"></script>
-    <script src="js/sketches/text-tests.js"></script>
-    <script src="js/sketches/animation.js"></script>
-    <script src="js/sketches/statemachines.js"></script>
-    <script src="js/sketches/input-demos.js"></script>
-    <script src="js/sketches/sequences.js"></script>
-    <script src="js/sketches/FSM-animation.js"></script>
+    <script src="js/sketches/v2-sketch-demo.js"></script>
+    <script src="js/sketches/pong.js"></script>
+    <script src="js/sketches/breakout.js"></script>
+    <script src="js/sketches/snake.js"></script>
+    <script src="js/sketches/platforming-demos.js"></script>
+    <script src="js/sketches/entity-tree.js"></script>
+    <script src="js/sketches/collision-detection.js"></script>
+    <script src="js/lib/sm/tests/STest.js"></script>
+    <script src="js/lib/sm/tests/tests.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>

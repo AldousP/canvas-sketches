@@ -5,6 +5,8 @@
  */
 
 (function () {
+  var tmpVec = new SVec.Vector();
+
   window.sm = {
     programDescription: function () {
       return sm.activeProgram ? sm.activeProgram.state.meta.description : 'No Program Loaded';
@@ -59,7 +61,7 @@
           logToScreen: true,
           logToBrowserConsole: true,
           textConf : {
-            color: Color.white,
+            color: sc.color.white,
             size: 12,
             font: 'Arial',
             style : 'normal',
@@ -97,23 +99,12 @@
     logs: [],
     ctx: {},
     canvas: {},
-    utils : {
-      formatters : {
-        float_two_pt : function (val) {
-          return parseFloat((Math.round(val * 100) / 100).toFixed(2));
-        },
-
-        float_one_pt : function (val) {
-          return parseFloat((Math.round(val * 100) / 100).toFixed(1));
-        }
-      }
-    },
     input: {
       state: {
+        cursor: new SVec.Vector(),
         keyboard: {
 
         },
-        mousePos: new Vector(),
         controllers: [
 
         ]
@@ -129,7 +120,55 @@
           var keyCode = event.keyCode;
           sm.input.state.keyboard[keyCode] = false;
         });
+
+        sm.input.conf = {};
+        var stylePaddingLeft = parseInt(document.defaultView.getComputedStyle(sm.canvas, null)['paddingLeft'], 10) || 0;
+        var stylePaddingTop = parseInt(document.defaultView.getComputedStyle(sm.canvas, null)['paddingTop'], 10)|| 0;
+        var styleBorderLeft = parseInt(document.defaultView.getComputedStyle(sm.canvas, null)['borderLeftWidth'], 10) || 0;
+        var styleBorderTop = parseInt(document.defaultView.getComputedStyle(sm.canvas, null)['borderTopWidth'], 10) || 0;
+        // Some pages have fixed-position bars at the top or left of the page
+        // They will mess up mouse coordinates and this fixes that
+        var html = document.body.parentNode;
+        var htmlTop = html.offsetTop;
+        var htmlLeft = html.offsetLeft;
+
+        var element = sm.canvas, offsetX = 0, offsetY = 0;
+
+        // Compute the total offset. It's possible to cache this if you want
+        if (element.offsetParent !== undefined) {
+          do {
+            offsetX += element.offsetLeft;
+            offsetY += element.offsetTop;
+          } while ((element = element.offsetParent));
+        }
+
+        offsetX += stylePaddingLeft + styleBorderLeft + htmlLeft;
+        offsetY += stylePaddingTop + styleBorderTop + htmlTop;
+        
+        sm.input.conf.offsetX = offsetX;
+        sm.input.conf.offsetY = offsetY;
+        
+        sm.canvas.onmousemove = function (evt) {
+          var x = evt.clientX;
+          var y = evt.clientY;
+          var newX = x - sm.input.conf.offsetX;
+          var newY = y - sm.input.conf.offsetY;
+          newX -= sm.canvas.offsetWidth / 2;
+          newY -= sm.canvas.offsetHeight / 2;
+          newY *= -1;
+
+          SVec.setVec(sm.input.state.cursor, newX, newY);
+        };
+        
+        sm.canvas.onmousedown = function () {
+          sm.input.state.mouseDown = true;
+        };
+
+        sm.canvas.onmouseup = function () {
+          sm.input.state.mouseDown = false;
+        };
       },
+
       update: function () {
         var controllers = navigator.getGamepads();
 
@@ -144,7 +183,6 @@
           });
           sm.input.state.controllers = realControllers;
         }
-
       }
     },
     log: {
@@ -178,7 +216,7 @@
 
     gfx: {
       textConf : {
-        color: Color.white,
+        color: sc.color.white,
         size: 12,
         font: 'Arial',
         style : 'normal',
@@ -187,17 +225,26 @@
       width: 0,
       height: 0,
       clear: function (color) {
+        color = color || sc.color.dark_blue;
         sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2);
-        if (color) {
-          sm.ctx.fillStyle = color;
-        } else {
-          sm.ctx.fillStyle = sm.conf.debug.logConsole.bgColor;
+        if (!color.colorString) {
+          SColor.updateColorString(color);
         }
+
+        sm.ctx.fillStyle = color.colorString;
         sm.ctx.fillRect(0, 0, sm.canvas.width * 100, sm.canvas.height * 100);
         sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
       },
+      
+      drawPolygonConst: function (polygon, x, y, fill, rotation) {
+        SVec.setVec(tmpVec, x, y);
+        this.drawPolygon(polygon, tmpVec, fill, rotation);
+      },
 
       drawPolygon: function (polygon, pos, fill, rotation) {
+        if (!pos) {
+          pos = tmpVec;
+        }
         sm.ctx.translate(pos.x, -pos.y);
         sm.ctx.rotate(rotation);
         sm.ctx.beginPath();
@@ -371,12 +418,32 @@
         sm.ctx.strokeStyle = color;
       },
 
+      setStrokeColor2: function (colorObj) {
+        if (colorObj) {
+          sm.ctx.strokeStyle = 'rgba(' +
+            colorObj.r + ', ' +
+            colorObj.g + ', ' +
+            colorObj.b + ', ' +
+            colorObj.a + ')'
+        } else {
+         sm.ctx.strokeStyle = sc.color.clear;
+        }
+      },
+
       setStrokeWidth: function (width) {
         sm.ctx.lineWidth = width;
       },
 
       setFillColor: function (color) {
         sm.ctx.fillStyle = color;
+      },
+
+      setFillColor2: function (colorObj) {
+        sm.ctx.fillStyle= 'rgba(' +
+          colorObj.r + ', ' +
+          colorObj.g + ', ' +
+          colorObj.b + ', ' +
+          colorObj.a + ')'
       },
 
       setTextColor: function (color) {
@@ -401,33 +468,40 @@
         var style = conf.style;
         var weight = 'normal';
         var align = conf.align;
+        var color = conf.color;
+        if (!color) {
+          conf.color = sc.color.white;
+        }
         var styleString = '';
 
         styleString += (style ? style : 'normal') + ' ';
         styleString += (weight ? weight : 'normal') + ' ';
-        styleString += size + 'px ';
-        styleString += font + ' ';
+        styleString += (size ? size : '12') + 'px ';
+        styleString += (font ? font : 'arial') + ' ';
 
         sm.ctx.textBaseline = 'middle';
         sm.ctx.textAlign = align ? align : 'center';
         sm.ctx.font = styleString;
       },
 
-      text: function (msgs, x, y, rotation) {
+      text: function (msgs, x, y, rotation, opacity) {
         this._processTextConf();
         var currentColor = sm.ctx.fillStyle;
-        var fontSize = sm.gfx.textConf.size;
 
         y = y ? -y : 0;
         x = x ? x : 0;
 
-        sm.gfx.setFillColor(this.textConf.color);
+        if (opacity) {
+          this.textConf.color.a *= opacity;
+        }
+
+        sm.gfx.setFillColor2(this.textConf.color);
         if (msgs.forEach) {
           sm.ctx.save();
           sm.ctx.translate(x, y);
           sm.ctx.rotate(rotation);
           msgs.forEach(function (msg, index) {
-            sm.ctx.fillText(msg, 0, (index * fontSize));
+            sm.ctx.fillText(msg, 0, (index * 12));
           });
           sm.ctx.restore();
         } else {
@@ -436,6 +510,10 @@
           sm.ctx.rotate(rotation);
           sm.ctx.fillText(msgs, 0, 0);
           sm.ctx.restore();
+        }
+
+        if (opacity) {
+          this.textConf.color.a /= opacity;
         }
 
         if (currentColor) {
@@ -454,31 +532,38 @@
       },
 
       playTrack: function () {
-        
+
       }
     },
 
     sfx: {
       ctx: new (window.AudioContext || window.webkitAudioContext)(),
-      beep: function (note) {
+      beep: function (note, type, vol, length ) {
         var oscillator = this.ctx.createOscillator();
         var gainNode = this.ctx.createGain();
         oscillator.connect(gainNode);
         gainNode.connect(this.ctx.destination);
-        gainNode.gain.value = .025;
+        gainNode.gain.value = vol ? vol : 0.025;
         oscillator.frequency.value = note ? note : 440;
-        oscillator.type = 'square';
+        oscillator.type = type;
         oscillator.start();
+        var that = this;
         setTimeout(
             function () {
               oscillator.stop();
-            },
-            200
+            }, (length * 1000 || 1000)
         );
+      },
+      loadSound: function (location) {
+        return new Audio(location);
+      },
+
+      playSound: function (sound) {
+        sound.play();
       }
     },
 
-    init: function (canvasMountId, program) {
+    init: function (canvasMountId) {
       this.log.notify('Mounting @ ' + canvasMountId + '...', sm.context);
       var mountPoint = document.getElementById(canvasMountId);
 
@@ -493,58 +578,40 @@
       sm.gfx.width = sm.canvas.width;
       sm.gfx.height = sm.canvas.height;
 
-
       sm.input.init();
       sm.input.update();
-      if (program) {
-        sm.loadProgram(program);
-      }
     },
 
-    loadProgram: function (program) {
-      var state = program.state;
-      var meta = state ? state.meta : null;
+    loadV2Program: function (program) {
+      var conf = program.conf;
 
-      if (sm.activeProgram) {
-        sm.unloadProgram();
-      }
-
-      if (!state) {
-        sm.log.error('No state found on provided program.');
+      if (!conf) {
+        sm.log.error('No conf found on provided program.');
         return -1;
-      }
+      } else {
+        sm.log.notify('Loading Program: ' + conf.name + '...', sm.context);
+        if (sm.activeProgram) {
+          sm.unloadProgram();
+        }
+        sm.activeProgram = program;
+        window.sProg = program;
 
-      if (!meta) {
-        sm.log.error('No meta object found on the provided program');
-        return -1;
-      }
-
-      sm.log.notify('Loading Program: ' + meta.name + '...', sm.context);
-      program.entityMapper = new EntityMapper();
-      program.systemProcessor = new SystemProcessor(program.entityMapper, state);
-
-      program.fireEvent = function (event, payload) {
-        program.systemProcessor.fireEvent(event, payload);
-      };
-
-      try {
+        program.systems = new SystemProcessor();
+        program.entities = new EntityMapper();
         program.setup();
-      } catch (e) {
-        sm.log.error('Error loading program: ' + meta.name);
-        sm.log.error(e);
-        return;
-      }
 
-      sm.activeProgram = program;
-      sm.log.notify('Starting...', meta.name);
-      document.body.dispatchEvent(new CustomEvent('smProgramLoaded',
-          {
-            'detail': {
-              'name': meta.name,
-              'description': meta.description
-            }
-          })
-      );
+	      /**
+         * Fires a DOM event so that program information can be displayed.
+	       */
+	      document.body.dispatchEvent(new CustomEvent('smProgramLoaded',
+            {
+              'detail': {
+                'name': conf.name,
+                'description': conf.description
+              }
+            })
+        );
+      }
     },
 
     unloadProgram: function () {
@@ -552,10 +619,11 @@
         track.pause();
         track.currentTime = 0;
       });
+
       if (!sm.activeProgram) {
         sm.log.notify('Nothing to unload. Did you load a program?', sm.context);
       } else {
-        var name = sm.activeProgram.state.meta.name;
+        var name = sm.activeProgram.conf.name;
         sm.log.notify('Unloading: ' + name + '...', sm.context);
         sm.activeProgram = undefined;
         document.body.dispatchEvent(
@@ -568,20 +636,17 @@
       sm.time.update();
       sm.input.update();
 
-      sm.gfx.clear(Color.dark_blue);
+      sm.gfx.clear(sc.color.dark_blue);
 
       sm.gfx.preDraw();
-      var state;
-      var meta;
+      sm.gfx.setTextConf({});
       if (sm.activeProgram) {
-        state = sm.activeProgram.state;
-        meta = state.meta;
         if (!sm.conf.paused ) {
           sm.ctx.translate(sm.canvas.width / 2, sm.canvas.height / 2);
-          sm.activeProgram.update(sm.time.delta);
+          sm.activeProgram.update(sm.time.delta, sm.gfx);
           sm.ctx.translate(-sm.canvas.width / 2, -sm.canvas.height / 2);
         } else {
-          sm.gfx.setFillColor(Color.green);
+          sm.gfx.setFillColor(sc.color.green);
           sm.gfx.text(true, 'SM-PAUSED', 0, 0);
         }
       }
@@ -593,7 +658,7 @@
         if (sm.activeProgram) {
 					sm.gfx.setFillColor(sm.conf.debug.logConsole.color);
 				} else {
-					sm.gfx.setFillColor(Color.white);
+					sm.gfx.setFillColor(sc.color.white);
         }
         var viewPortW = sm.canvas.width;
         var viewPortH = sm.canvas.height;
@@ -608,18 +673,6 @@
             ((viewPortH / 2) - offsetH * 2)
         );
         sm.logs.reverse();
-      }
-
-      // Render FPS & Title
-      if (sm.conf.debug.active) {
-        if (sm.activeProgram) {
-          sm.gfx.setTextConf(sm.conf.debug.logConsole.textConf);
-          sm.gfx.text(meta.name, sm.canvas.width / 2.75, sm.canvas.height / 2.2);
-          sm.gfx.text(sm.utils.formatters.float_two_pt(sm.time.frameRate),
-              sm.canvas.width / 2.75,
-              sm.canvas.height / 2.45
-          );
-        }
       }
 
       // Reset State and Input

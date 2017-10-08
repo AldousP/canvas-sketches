@@ -1,65 +1,131 @@
 function EntityMapper() {
-  this.entities = [];  // Linear mapping of all entities
-  this.entityMap = {}; // Mapping of entities by component type.
+	'use strict';
 
-  this.actions = [];
-  this.actionHistory = [];
-  this.actionHistoryLength = 0;
+	// Used rather than an index, to avoid spillage bugs.
+	this.entity_ID = 0;
+	// Maps entity IDs to component type. The same entity may appear in multiple lists.
+	this.map = {};
+	// A list of all entities by ID
+	this.store = {};
+	// A mapping of entities to tags.
+	this.tagMap = {};
+	this.entity_IDs = [];
 
-	this.createEntity = function (components, name, children, parentID) {
-	  var entity = new Entity();
-	  entity.ID = this.entities.length;
-	  if (name) {
-      entity.name = name;
-    }
-	  var that = this;
-    components.forEach(function (component) {
-      entity.components[component.name] = component;
-      if (!that.entityMap[component.name]) {
-        that.entityMap[component.name] = [];
-      }
-      that.entityMap[component.name].push(entity);
-    });
-    this.entities.push(entity);
+	this.entityCount = 0;
+	this.deletionQueue = [];
 
-    if (children) {
-      this.bindToParent(entity, children);
-    }
+	window.GLOBAL_EVENT = -1;
 
-    if (parentID) {
-      this.bindToParent(this.entities[parentID], this);
-    }
+	this.addEntity = function (newEntity) {
+		this.store[newEntity.ID] = newEntity;
+		this.entityCount++;
+		this.entity_IDs.push(newEntity.ID);
+	};
 
-    return entity;
+	var that = this;
+	
+	this.queueForDeletion = function (ID) {
+    this.deletionQueue.push(ID);
   };
 	
-	this.injectComponents = function (entity, components) {
-    var that = this;
-    components.forEach(function (component) {
-      entity.components[component.name] = component;
-      if (!that.entityMap[component.name]) {
-        that.entityMap[component.name] = [];
+	this.deleteQueue = function () {
+    this.deletionQueue.forEach(function (ID) {
+      that.deleteEntity(ID);
+    });
+    this.deletionQueue = [];
+  };
+
+	this.deleteEntity = function (ID) {
+	  var entity = this.store[ID];
+	  if (entity) {
+      this.store[ID] = undefined;
+      var tags = entity.tags;
+      tags.forEach(function (tag) {
+        var map = that.tagMap[tag];
+        map.splice(map.indexOf(ID, 1));
+      });
+      var parent = this.store[entity.parent];
+      if (parent) {
+        parent.children.splice(parent.children.indexOf(ID), 1);
+        entity.parent = null;
       }
-      that.entityMap[component.name].push(entity);
+
+      var comp_keys = Object.keys(entity.components);
+      comp_keys.forEach(function (key) {
+        var comp = entity.components[key];
+        that.map[comp.name].splice(that.map[comp.name].indexOf(ID), 1);
+      });
+      this.entity_IDs.splice(this.entity_IDs.indexOf(ID), 1);
+      this.entityCount--;
+    }
+  };
+	
+	this.buildEntityWithRoot = function (components, children, tags, root) {
+	  var entity = this.buildEntity(components, children, tags, root);
+	  root.children.push(entity.ID);
+	  return entity;
+  };
+
+	this.buildEntity = function (components, children, tags) {
+		var entity = new Entity();
+		entity.ID = this.entity_ID ++;
+		entity.components = {};
+		entity.children = children ? children : [];
+		var that = this;
+		entity.children.forEach(function (child) {
+		  that.store[child].parent = entity.ID;
+    });
+		this.injectComponents(entity, components);
+		this.addEntity(entity);
+
+		if (tags) {
+		  tags.forEach(function (tag) {
+		    that.tagEntity(entity.ID, tag);
+      })
+    }
+
+		return entity;
+	};
+
+	this.injectComponents = function (entity, components) {
+		for (var i = 0; i < components.length; i++) {
+			var comp = components[i];
+			if (!this.map[comp.name]) {
+				this.map[comp.name] = [];
+			}
+			this.map[comp.name].push(entity.ID);
+			entity.components[comp.name] = comp;
+		}
+	};
+	
+	this.tagEntities = function (entities, tagName) {
+	  var that = this;
+	  entities.forEach(function (entity) {
+	    that.tagEntity(entity, tagName)
     })
   };
-	
-	this.bindToParent = function (parent, children) {
-	  var childrenComponent = parent.components[ComponentType.children];
-	  if (!childrenComponent) {
-	    childrenComponent = new ChildrenComponent();
+
+  this.tagEntity = function (entityID, tagName) {
+    if (!this.tagMap[tagName]) {
+      this.tagMap[tagName] = [];
     }
-	  var parentComponent = new ParentComponent(parent.ID);
-	  for (var i = 0; i < children.length; i ++) {
-      var child = children[i];
-      childrenComponent.children.push(child.ID);
-      this.injectComponents(child, [parentComponent]);
+
+    if (this.tagMap[tagName].indexOf(entityID) === -1) {
+      this.tagMap[tagName].push(entityID);
+      this.store[entityID].tags.push(tagName);
     }
-    this.injectComponents(parent, [childrenComponent]);
   };
 
-
-  this.logEntities = function () {
-    console.log(JSON.stringify(this.entities, null, '\t'));
+  this.getEntitiesForTag = function (tag) {
+    return this.tagMap[tag];
   };
+
+  this.getFirstOfTag = function (tag) {
+    if (this.tagMap[tag]) {
+      return this.store[this.tagMap[tag][0]];
+    } else {
+      return null;
+    }
+  };
+
 }

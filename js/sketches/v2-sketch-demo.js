@@ -15,12 +15,10 @@ function v2SketchDemo() {
 	    new PositionComponent(0, 0),
 	    new RotationComponent(),
       new RenderableComponent(),
-      new MovementComponent(),
       new PolygonComponent(SPoly.polySquare(64))
     ]);
 
 	  this.systems.addSystem(new SampleSystemA());
-	  this.systems.addSystem(new MovementSystem());
     this.systems.addSystem(new RenderingSystem());
   };
 

@@ -158,16 +158,17 @@ function SystemProcessor() {
               if (
                 eventInQueue.targetID !== -1
                 && mapper.store[eventInQueue.targetID]
-                && mapper.store[eventInQueue.targetID]
               ) {
                 eventListener.handle(
                   eventInQueue.data,
                   mapper.store[eventInQueue.targetID],
                   delta,
                   mapper,
-                  this.fireEvent);
+                  this.fireEvent,
+                  eventInQueue.type
+                );
               } else {
-                eventListener.handle(eventInQueue.data, null, delta, mapper, this.fireEvent);
+                eventListener.handle(eventInQueue.data, null, delta, mapper, this.fireEvent, eventInQueue.type);
               }
             }
           }

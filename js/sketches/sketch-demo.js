@@ -11,7 +11,7 @@ function SketchDemo() {
     this.update(0, sm.gfx);
 
     this.entities.buildEntity([
-      new StateMachineComponent('SAMPLE_FSM'),
+      new StateMachineComponent('sample_FSM'),
 	    new TransformComponent(0, 0),
       new RenderableComponent(),
       new PolygonComponent(SPoly.polySquare(64), SColor.colorFromColor(sc.color.white))
@@ -29,7 +29,7 @@ function SketchDemo() {
       }
     });
 
-    this.systems.addSystem(new StateMachineSystem());
+    this.systems.addSystem(new StateMachineSystem(sample_FSM_config));
     this.systems.addSystem(new RenderingSystem());
   };
 
@@ -50,32 +50,34 @@ function SketchDemo() {
 
 var sample_FSM_config = {
   sample_FSM: {
-    listeners: {
-      'SAMPLE_ACTION': function (data, target, shift) {
-
-      }
-    },
     states: {
       IDLE: {
-        process: function (target, delta, timeInState, shift) {
-
+        process: function (target, delta, timeInState, shiftTo) {
+          console.log('Processing Idle State', delta, timeInState);
+        },
+        
+        exit: function () {
+          console.log('Exiting Idle State...');
         },
 
         listeners: {
-          'SAMPLE_ACTION': function (data, target, shift) {
-
+          'ACTION_PRESSED': function (data, target, shiftTo) {
+            shiftTo('ACTIVE', target);
           }
         }
       },
 
       ACTIVE: {
-        process: function (target, delta, timeInState, shift) {
-
+        enter: function () {
+          console.log('Entering Active State...')
+        },
+        process: function (target, delta, timeInState, shiftTo) {
+          console.log('Processing Active State', delta, timeInState);
         },
 
         listeners: {
-          'SAMPLE_ACTION': function (data, target, shift) {
-
+          'ACTION_PRESSED': function (data, target, shiftTo) {
+            shiftTo('IDLE', target);
           }
         }
       }

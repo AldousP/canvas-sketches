@@ -112,11 +112,11 @@ function AnimationComponent (handle, length, width, height) {
   this.height = height;
 }
 
-function StateMachineComponent(fsmName) {
+function StateMachineComponent(fsmName, state) {
   this.name = ComponentType.stateMachine;
   this.fsmName = fsmName;
   this.stateTime = 0;
-  this.currentState = ''
+  this.currentState = state ? state : null;
 }
 
 function AnimationMapComponent(initialState, map) {
@@ -302,6 +302,10 @@ var EX = {
 
   state: function (entity) {
     return entity.components[ComponentType.gameState].gameState;
+  },
+  
+  fsm: function (entity) {
+    return entity.components[ComponentType.stateMachine]
   }
 };
 

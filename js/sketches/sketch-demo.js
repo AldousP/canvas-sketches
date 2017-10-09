@@ -11,7 +11,7 @@ function SketchDemo() {
     this.update(0, sm.gfx);
 
     this.entities.buildEntity([
-      // new StateMachineComponent('SAMPLE_FSM'),
+      new StateMachineComponent('SAMPLE_FSM'),
 	    new TransformComponent(0, 0),
       new RenderableComponent(),
       new PolygonComponent(SPoly.polySquare(64), SColor.colorFromColor(sc.color.white))

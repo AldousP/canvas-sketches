@@ -3,7 +3,9 @@ function EventStore() {
 
 	this.events = {};
 	this.systemEventMap = {};
-	this.eventTypeMap = {};
+	this.eventTypeMap = {
+	  _all: []
+  };
 	this.pooledEventsByType = {};
 	this.eventCount = 0;
 	this.blankIDS = [];
@@ -52,6 +54,7 @@ function EventStore() {
     }
 
     this.eventTypeMap[type].push(event.eventID);
+    this.eventTypeMap['_all'].push(event.eventID);
 		this.systemEventMap[source].push(event.eventID);
 
     return event.eventID;
@@ -62,7 +65,9 @@ function EventStore() {
     this.events[ID] = undefined;
 
     var eventsByType = this.eventTypeMap[event.type];
-    eventsByType.splice(eventsByType.indexOf(event.eventID));
+    eventsByType.splice(eventsByType.indexOf(event.eventID), 1);
+
+    this.eventTypeMap._all.splice(this.eventTypeMap._all.indexOf(event.eventID), 1);
 
     this.eventCount--;
     this.blankIDS.push(event.eventID);

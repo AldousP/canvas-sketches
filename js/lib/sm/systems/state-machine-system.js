@@ -12,6 +12,7 @@ function StateMachineSystem (config) {
 	
 	this.listeners = {
     _all: {
+      type: '_all',
       handle: function (data, target, delta, mapper, fire) {
         console.log('Heard from ')
       }

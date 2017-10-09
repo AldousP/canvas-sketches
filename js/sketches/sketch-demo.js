@@ -53,15 +53,14 @@ var sample_FSM_config = {
     states: {
       IDLE: {
         process: function (target, delta, timeInState, shiftTo) {
-          console.log('Processing Idle State', delta, timeInState);
+
         },
         
         exit: function () {
-          console.log('Exiting Idle State...');
         },
 
         listeners: {
-          'ACTION_PRESSED': function (data, target, shiftTo) {
+          'ACTION_PRESSED': function (data, target, shiftTo, timeInState) {
             shiftTo('ACTIVE', target);
           }
         }
@@ -69,14 +68,14 @@ var sample_FSM_config = {
 
       ACTIVE: {
         enter: function () {
-          console.log('Entering Active State...')
+
         },
         process: function (target, delta, timeInState, shiftTo) {
-          console.log('Processing Active State', delta, timeInState);
+
         },
 
         listeners: {
-          'ACTION_PRESSED': function (data, target, shiftTo) {
+          'ACTION_PRESSED': function (data, target, shiftTo, timeInState) {
             shiftTo('IDLE', target);
           }
         }

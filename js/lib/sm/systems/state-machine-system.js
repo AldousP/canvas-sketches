@@ -5,8 +5,16 @@ function StateMachineSystem (config) {
 	this.filter = [
 		ComponentType.stateMachine
 	];
+
+  this.process = function (entities, fire, delta, mapper) {
+
+  };
 	
-	this.process = function (entity, fire) {
-		
-	};
+	this.listeners = {
+    _all: {
+      handle: function (data, target, delta, mapper, fire) {
+        console.log('Heard from ')
+      }
+    }
+	}
 }

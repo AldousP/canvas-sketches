@@ -13,5 +13,5 @@
   });
 
   sm.init('canvas');
-  sm.loadV2Program(new v2SketchDemo());
+  sm.loadV2Program(new SketchDemo());
 }());

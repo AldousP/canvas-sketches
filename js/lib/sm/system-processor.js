@@ -104,6 +104,8 @@ function SystemProcessor() {
         } else {
           this.processEntityList(currentSystem, entityMapper.entity_IDs, entityMapper, delta);
         }
+
+        this.processEvents(currentSystem, entityMapper, delta)
       }
     }
 
@@ -122,43 +124,46 @@ function SystemProcessor() {
       tempStore.push(temp);
     }
 
-    system.process(
-      tempStore,
-      this.fireSystemEvent.bind(system),
-      delta,
-      mapper
-    );
+    if (system.process) {
+      system.process(
+        tempStore,
+        this.fireSystemEvent.bind(system),
+        delta,
+        mapper
+      );
+    }
+  };
 
-		/**
-		 * Fire the system's event listeners.
-     * todo: cache these keys lists.
-		 */
-		if (system.listeners) {
+  this.processEvents = function (system, mapper, delta) {
+    /**
+     * Fire the system's event listeners.
+     */
+    if (system.listeners) {
       var eventKeys = Object.keys(system.listeners);
-	    var eventListener;
-	    for (i = 0; i < eventKeys.length; i++) {
-		    eventListener = system.listeners[eventKeys[i]];
-		    var queuedEventsIDs = this.eventStore.eventTypeMap[eventListener.type];
-		    if (queuedEventsIDs && this.eventStore.eventCount) {
-		    	for (var j = 0; j < queuedEventsIDs.length; j++) {
+      var eventListener;
+      for (var i = 0; i < eventKeys.length; i++) {
+        eventListener = system.listeners[eventKeys[i]];
+        var queuedEventsIDs = this.eventStore.eventTypeMap[eventListener.type];
+        if (queuedEventsIDs && this.eventStore.eventCount) {
+          for (var j = 0; j < queuedEventsIDs.length; j++) {
             var eventInQueue = this.eventStore.events[queuedEventsIDs[j]];
 
-				    /**
-				     * Don't react to events fired by this system.
-				     */
-		    		if (eventInQueue && eventInQueue.src !== system.name) {
-					    /**
-					     * Fire the event handler and pass it the target entity.
-					     */
-		    			if (eventInQueue.targetID !== -1 && mapper.store[eventInQueue.targetID] && mapper.store[eventInQueue.targetID]) {
-		    				eventListener.handle(eventInQueue.data, mapper.store[eventInQueue.targetID], delta, mapper, this.fireEvent);
-					    } else {
-						    eventListener.handle(eventInQueue.data, null, delta, mapper, this.fireEvent);
-					    }
-				    }
-			    }
-		    }
-	    }
+            /**
+             * Don't react to events fired by this system.
+             */
+            if (eventInQueue && eventInQueue.src !== system.name) {
+              /**
+               * Fire the event handler and pass it the target entity.
+               */
+              if (eventInQueue.targetID !== -1 && mapper.store[eventInQueue.targetID] && mapper.store[eventInQueue.targetID]) {
+                eventListener.handle(eventInQueue.data, mapper.store[eventInQueue.targetID], delta, mapper, this.fireEvent);
+              } else {
+                eventListener.handle(eventInQueue.data, null, delta, mapper, this.fireEvent);
+              }
+            }
+          }
+        }
+      }
     }
   };
 

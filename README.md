@@ -10,7 +10,7 @@ function SketchDemo() {
   this.conf = {
     name: 'Sketch Demo',
     description: 'A basic scene in SM.',
-    date: '08.13.2017'
+    date: '01.01.20XX'
   };
 
   var BG_COLOR = SColor.colorForHex("#933f5f");
@@ -22,14 +22,18 @@ function SketchDemo() {
       new TransformComponent(0, 0),
       new RenderableComponent(),
       new RenderRoot(),
-      new PolygonComponent(SPoly.polySquare(64), SColor.colorFromColor(sc.color.white))
+      new PolygonComponent(
+        SPoly.polySquare(64), 
+        SColor.colorFromColor(sc.color.white)
+      )
     ]);
     
    this.systems.addSystem(new RenderingSystem());
   };
 
   /**
-   * Perform frame by frame behavior.
+   * Called each tick.
+   * 
    * @param delta elapsed time since last frame
    * @param g, shorthand reference to sm.gfx.
    */
@@ -40,10 +44,11 @@ function SketchDemo() {
 }
 ```
 
-Which take advantage of provided classes and managing geometry, scene-entities, and handling inputs.
+Which take advantage of provided classes for creating geometry, manipulating scene-entities, and handling inputs.
 
 sm lives in the window as ```sm``` it contains the following modules:
 
+```JavaScript
 conf
 time
 canvas
@@ -52,17 +57,19 @@ log
 gfx
 music
 sfx
+```
 
 In addition to the following methods:
 
+```JavaScript
 init()
 loadProgram()
 unloadProgram()
 toggleDebug()
 togglePause()
+```
 
-
-To initialize sm, run ```sm.init```. sm will bind to the provided canvas target and renders the contents of its idle console or the active program. 
+To initialize sm, run ```sm.init```. sm will connect to the specified canvas element and render its idle console until a program is loaded.  
 
 ```JavaScript
 /*
@@ -74,4 +81,18 @@ sm.init('canvas-id');
  * Loads program.
  */
 sm.loadProgram(new SampleProgram());
+```
+
+When a program is loaded, the name and description in its conf object will be emitted as a DOM event.
+An event will also be fired when the program is unloaded.
+
+```JavaScript
+document.body.addEventListener('smProgramLoaded', function (event) {
+  appTitle.innerText = event.detail.name;
+  appDescription.innerText = event.detail.description;
+});
+
+document.body.addEventListener('smProgramUnloaded', function () {
+  appTitle.innerText = 'No Program Loaded';
+});
 ```

@@ -501,7 +501,7 @@
           sm.ctx.translate(x, y);
           sm.ctx.rotate(rotation);
           msgs.forEach(function (msg, index) {
-            sm.ctx.fillText(msg, 0, (index * 12));
+            sm.ctx.fillText(msg, 0, (index * sm.gfx.textConf.size));
           });
           sm.ctx.restore();
         } else {

@@ -13,5 +13,5 @@
   });
 
   sm.init('canvas');
-  sm.loadV2Program(new SketchDemo());
+  sm.loadV2Program(new AstralAssailants());
 }());

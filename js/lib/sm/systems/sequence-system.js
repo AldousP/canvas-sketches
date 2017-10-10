@@ -1,7 +1,8 @@
 var SequenceType = {
   NORMAL: 0,
   PING_PONG: 1,
-  REVERSED: 2
+  REVERSED: 2,
+  NORMAL_LOOPING: 3
 };
 
 function SequenceSystem (conf) {
@@ -15,23 +16,25 @@ function SequenceSystem (conf) {
   var that = this;
   keys.forEach(function (key) {
 	  var sequence = conf[key];
-	  sequence.startOn.forEach(function (event) {
-      if (!that.sequencesForEvents[event]) that.sequencesForEvents[event] = [];
-      that.sequencesForEvents[event].push(key);
-	    that.listeners[event] = {
-        type: event,
-        handle: function (data, target, delta, mapper, fire) {
-          var sequences = EX.sequence(target);
-          if (sequences) {
-            sequences.forEach(function (sequence) {
-              if (that.sequencesForEvents[event].indexOf(sequence.name) !== -1) {
-                sequence.state.active = true;
-              }
-            })
+	  if (sequence.startOn) {
+      sequence.startOn.forEach(function (event) {
+        if (!that.sequencesForEvents[event]) that.sequencesForEvents[event] = [];
+        that.sequencesForEvents[event].push(key);
+        that.listeners[event] = {
+          type: event,
+          handle: function (data, target, delta, mapper, fire) {
+            var sequences = EX.sequence(target);
+            if (sequences) {
+              sequences.forEach(function (sequence) {
+                if (that.sequencesForEvents[event].indexOf(sequence.name) !== -1) {
+                  sequence.state.active = true;
+                }
+              })
+            }
           }
         }
-      }
-    })
+      })
+    }
   });
 
 	this.filter = [
@@ -52,20 +55,27 @@ function SequenceSystem (conf) {
               progress: 0,    // 0 - 1
               elapsedTime: 0, // Seconds
               direction: 1,   // -1 or 1
-              active: false
+              active: ent_seq.startActive
             }
           }
 
+          // console.log(ent_seq);
           if (ent_seq.state && ent_seq.state.active) {
             var handler = this.conf[ent_seq.name];
             var reset = false;
+
             if (ent_seq.state.elapsedTime < handler.length) {
               ent_seq.state.elapsedTime += delta;
-            } else {
+            }
+
+            if (ent_seq.state.elapsedTime > handler.length){
               ent_seq.state.elapsedTime = 0;
               ent_seq.state.progress = 0;
-              ent_seq.state.active = false;
-              reset = true;
+
+              if (ent_seq.type !== SequenceType.NORMAL_LOOPING) {
+                ent_seq.state.active = false;
+                reset = true;
+              }
             }
             ent_seq.state.progress = ent_seq.state.elapsedTime / handler.length;
 

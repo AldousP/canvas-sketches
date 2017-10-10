@@ -11,7 +11,6 @@ function SystemProcessor() {
 	    var index = that.systemNames.indexOf(system);
 	    if (index !== -1) {
         that.systems[index].disabled = true;
-        console.log(that.systems[index]);
       }
     })
   };
@@ -32,6 +31,11 @@ function SystemProcessor() {
     } else {
       this.systems.push(newSystem);
       this.systemNames.push(newSystem.name);
+
+      newSystem.sequences = [];
+      newSystem.addSequence = function (sequence) {
+        this.sequences.push(sequence);
+      };
 
       if (newSystem.setup) {
         newSystem.setup(entityMapper);
@@ -105,12 +109,21 @@ function SystemProcessor() {
           this.processEntityList(currentSystem, entityMapper.entity_IDs, entityMapper, delta);
         }
 
-        this.processEvents(currentSystem, entityMapper, delta)
+        this.processEvents(currentSystem, entityMapper, delta);
+        this.processSequences(currentSystem, entityMapper, delta);
       }
     }
 
     entityMapper.deleteQueue();
     this.eventStore.cullSystemEvents('global', delta);
+  };
+
+	this.processSequences = function (system, mapper, delta) {
+	  if (system.sequences) {
+	    system.sequences.forEach(function (sequence) {
+	      SSeq.updateSequence(sequence, delta);
+      })
+    }
   };
 
   /**

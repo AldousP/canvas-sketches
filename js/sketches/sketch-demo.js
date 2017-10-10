@@ -19,6 +19,23 @@ function SketchDemo() {
 
     this.systems.addSystem({
       name: 'Gameplay System',
+      setup: function () {
+
+        this.addSequence(
+          new Sequence('sample_sequence', 3, [
+            new SequenceSegment(0, 1, function (progress) {
+              console.log('A', progress);
+            }),
+            new SequenceSegment(1, 2, function (progress) {
+              console.log('B', progress);
+            }),
+            new SequenceSegment(2, 3, function (progress) {
+              console.log('C', progress);
+            })
+          ], true)
+        );
+
+      },
       listeners: {
         action_pressed: {
           type: 'ACTION_PRESSED',

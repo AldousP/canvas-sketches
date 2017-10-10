@@ -44,18 +44,18 @@ function CollisionDetection () {
 
     }
 
-    // this.entities.buildEntityWithRoot(
-    //   [
-    //     new TransformComponent(0, -128),
-    //     new VelocityComponent(0, 0),
-    //     new AccelerationComponent(0, 0),
-    //     new RenderableComponent(),
-    //     new PolygonComponent(
-    //       SPoly.scalePolyConst(SPoly.polySquare(base_radius * 2), 16, 1),
-    //       SColor.colorFromColor(sc.color.white)
-    //     ),
-    //     new ColliderComponent( SPoly.scalePolyConst(SPoly.polySquare(base_radius * 2), 16, 1))
-    //   ], [], ['floor'], renderRoot);
+    this.entities.buildEntityWithRoot(
+      [
+        new TransformComponent(0, -128),
+        new VelocityComponent(0, 0),
+        new AccelerationComponent(0, 0),
+        new RenderableComponent(),
+        new PolygonComponent(
+          SPoly.scalePolyConst(SPoly.polySquare(base_radius * 2), 16, 1),
+          SColor.colorFromColor(sc.color.white)
+        ),
+        new ColliderComponent( SPoly.scalePolyConst(SPoly.polySquare(base_radius * 2), 16, 1))
+      ], [], ['floor'], renderRoot);
 
     this.entities.buildEntityWithRoot(
       [
@@ -132,50 +132,6 @@ function CollisionDetection () {
       }
     });
 
-    this.systems.addSystem(new StateMachineSystem({
-      'player_FSM' : {
-        listeners: {
-          SAMPLE_EVENT : function (data, target, delta, mapper, fire, shift) {
-            
-          }
-        },
-        states: {
-          IDLE: {
-            process: function (entity, fire, delta, timeInState, shift) {
-
-            },
-
-            listeners: {
-              SAMPLE_EVENT : function (data, target, delta, mapper, fire, shift) {
-                
-              }
-            }
-          },
-          FALLING: {
-            process: function (entity, fire, delta, timeInState, shift) {
-
-            },
-
-            listeners: {
-              SAMPLE_EVENT : function (data, target, delta, mapper, fire, shift) {
-
-              }
-            }
-          },
-          JUMPING: {
-            process: function (entity, fire, delta, timeInState, shift) {
-
-            },
-
-            listeners: {
-              SAMPLE_EVENT : function (data, target, delta, mapper, fire, shift) {
-
-              }
-            }
-          }
-        }
-      }
-    }));
     this.systems.addSystem(new CollisionSystem({
       debounce_interval: 1 / 30,
       collision_map: {

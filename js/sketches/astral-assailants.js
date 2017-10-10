@@ -10,6 +10,7 @@ function AstralAssailants () {
   this.board_height = sm.gfx.height * 0.85;
   var BG_COLOR = SColor.colorForHex("#412681");
 
+  var that = this;
   this.setup = function () {
     var e = this.entities;
     var s = this.systems;
@@ -30,7 +31,7 @@ function AstralAssailants () {
         action_pressed: {
           type: 'action_pressed',
           handle: function (data, target, delta, mapper, fire, type) {
-            console.log('AYY.')
+            fire(that.title_screen.ID, 'FADE_OUT');
           }
         }
       }
@@ -44,23 +45,6 @@ function AstralAssailants () {
         },
         keys: [ sc.keys.space]
       }
-
-      // moveCamera : {
-      //   controller: {
-      //     port: 0,
-      //     axes: {
-      //       leftStick: {
-      //         deadZone: .25
-      //       }
-      //     }
-      //   },
-      //   pad: {
-      //     left: [ sc.keys.left, sc.keys.a ],
-      //     right: [ sc.keys.right, sc.keys.d ],
-      //     up: [ sc.keys.up, sc.keys.w ],
-      //     down: [ sc.keys.down, sc.keys.s ]
-      //   }
-      // }
     }));
     s.addSystem(new CollisionSystem({
       debounce_interval: 1 / 40,
@@ -72,6 +56,21 @@ function AstralAssailants () {
     }));
 
     s.addSystem(new SequenceSystem({
+      fade_out: {
+        type: SequenceType.NORMAL,
+        length: 1,
+        startOn: ['FADE_OUT'],
+        reset: false,
+        sequence: [
+          {
+            start: 0,
+            end: 1,
+            handle: function (target, progress) {
+              EX.renderable(target).opacity = 1 - progress;
+            }
+          }
+        ]
+      },
       flash_1_sec: {
         type: SequenceType.NORMAL,
         length: 1,
@@ -124,6 +123,7 @@ function AstralAssailants () {
 
   /**
    * Set the render_root component's children to a UI_root and a scene_root.
+   *
    * @param render_root the render_root component.
    * @param e the entity mapper.
    */
@@ -138,11 +138,18 @@ function AstralAssailants () {
       new RenderableComponent()
     ], [], ['scene_root'], render_root);
   };
-  
+
+  /**
+   * Sets up the start screen within the UI root.
+   *
+   * @param UI_root
+   * @param e
+   */
   this.setupStartScreen = function (UI_root, e) {
     this.title_screen = e.buildEntityWithRoot([
       new TransformComponent(),
-      new RenderableComponent()
+      new RenderableComponent(),
+      new SequenceComponent([{name: 'fade_out'}])
     ], [], ['title-screen'], this.UI_root);
 
     e.buildEntityWithRoot([

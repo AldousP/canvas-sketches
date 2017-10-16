@@ -6,36 +6,12 @@ var SequenceType = {
 };
 
 function SequenceSystem (conf) {
+
+  this.eventForSystem = {};
 	this.name = 'sequence-system';
 	this.conf = conf;
-
-  this.sequencesForEvents = {};
-  this.listeners = {};
-
   var keys = Object.keys(conf);
   var that = this;
-  keys.forEach(function (key) {
-	  var sequence = conf[key];
-	  if (sequence.startOn) {
-      sequence.startOn.forEach(function (event) {
-        if (!that.sequencesForEvents[event]) that.sequencesForEvents[event] = [];
-        that.sequencesForEvents[event].push(key);
-        that.listeners[event] = {
-          type: event,
-          handle: function (data, target, delta, mapper, fire) {
-            var sequences = EX.sequence(target);
-            if (sequences) {
-              sequences.forEach(function (sequence) {
-                if (that.sequencesForEvents[event].indexOf(sequence.name) !== -1) {
-                  sequence.state.active = true;
-                }
-              })
-            }
-          }
-        }
-      })
-    }
-  });
 
 	this.filter = [
 		ComponentType.sequence
@@ -59,7 +35,6 @@ function SequenceSystem (conf) {
             }
           }
 
-          // console.log(ent_seq);
           if (ent_seq.state && ent_seq.state.active) {
             var handler = this.conf[ent_seq.name];
             var reset = false;
@@ -82,18 +57,12 @@ function SequenceSystem (conf) {
             var action;
             for (var ll = 0; ll < handler.sequence.length; ll++) {
               action = handler.sequence[ll];
-              if (action.start >= 0 && !action.end) {
-                if (ent_seq.state.elapsedTime > action.start) {
-                  if (ent_seq.state.elapsedTime - delta <= action.start) {
-                    action.handle(entity, 0);
-                  }
-                }
-              } else if (reset && handler.reset) {
-                action.handle(entity, 0);
-              } else if (action.start < ent_seq.state.elapsedTime && ent_seq.state.elapsedTime < action.end) {
+              if (action.start < ent_seq.state.elapsedTime && ent_seq.state.elapsedTime < action.end) {
                 var length = (action.end - action.start);
                 var alpha = (ent_seq.state.elapsedTime - action.start) / length;
                 action.handle(entity, alpha);
+              } else if (ent_seq.state.elapsedTime - delta <= action.end) {
+                action.handle(entity, 1);
               }
             }
           }
@@ -101,4 +70,49 @@ function SequenceSystem (conf) {
       }
     }
 	};
+
+  this.listeners = {
+    _all: {
+      type: '_all',
+      handle: function (data, target, delta, mapper, fire, type) {
+        var sequenceEntities = mapper.map[ComponentType.sequence];
+        var affectedSequences = that.eventForSystem[type];
+
+        if (affectedSequences) {
+          affectedSequences.forEach(function (sequence) {
+            var entity;
+            sequenceEntities.forEach(function (entityID) {
+              entity = mapper.store[entityID];
+
+              var sequences = EX.sequence(entity);
+              sequences.forEach(function (entity_sequence) {
+
+                if (entity_sequence.name === sequence) {
+                  entity_sequence.state.active = true;
+                }
+              });
+
+            })
+          })
+        }
+      }
+    }
+  };
+
+  this.processConf = function () {
+    var seqKeys = Object.keys(that.conf);
+    seqKeys.forEach(function (key) {
+      var seq = conf[key];
+      if (seq.startOn && seq.startOn.length) {
+        for (var i = 0; i < seq.startOn.length; i++) {
+          if (!that.eventForSystem[seq.startOn[i]]) {
+            that.eventForSystem[seq.startOn[i]] = [];
+          }
+          that.eventForSystem[seq.startOn[i]].push(key);
+        }
+      }
+    });
+  };
+
+  this.processConf();
 }

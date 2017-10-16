@@ -4,7 +4,8 @@ function SystemProcessor() {
 	this.systems = [];
 	this.systemNames = [];
 	this.eventStore = new EventStore();
-	
+	this.eventHandlerMap = {};
+
 	this.disableSystems = function (systems) {
 	  var that = this;
 	  systems.forEach(function (system) {

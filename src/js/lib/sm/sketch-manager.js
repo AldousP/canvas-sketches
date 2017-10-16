@@ -11,6 +11,11 @@
     programDescription: function () {
       return sm.activeProgram ? sm.activeProgram.state.meta.description : 'No Program Loaded';
     },
+
+    fireEvent: function (event_name, payload){
+      sm.activeProgram.systems.fireEvent(null, event_name, payload);
+    },
+
     toggleDebug : function () {
       sm.conf.debug.active = !sm.conf.debug.active;
     },
@@ -33,11 +38,11 @@
     },
 
     resizeCanvas : function () {
-      if (sm.conf.mobile.is_mobile) {
-        sm.canvas.width = sm.canvas.height;
-      } else {
-        sm.canvas.width = sm.canvas.height * 2;
-      }
+      // if (sm.conf.mobile.is_mobile) {
+      //   sm.canvas.width = sm.canvas.height;
+      // } else {
+      //   sm.canvas.width = sm.canvas.height * 2;
+      // }
 
       if (sm.activeProgram && sm.activeProgram.onResize) {
         sm.activeProgram.onResize(sm.conf.mobile.is_mobile);
@@ -98,7 +103,7 @@
     },
     logs: [],
     ctx: {},
-    canvas: {},
+    canvas: null,
     input: {
       state: {
         cursor: new SVec.Vector(),
@@ -144,10 +149,10 @@
 
         offsetX += stylePaddingLeft + styleBorderLeft + htmlLeft;
         offsetY += stylePaddingTop + styleBorderTop + htmlTop;
-        
+
         sm.input.conf.offsetX = offsetX;
         sm.input.conf.offsetY = offsetY;
-        
+
         sm.canvas.onmousemove = function (evt) {
           var x = evt.clientX;
           var y = evt.clientY;
@@ -159,7 +164,7 @@
 
           SVec.setVec(sm.input.state.cursor, newX, newY);
         };
-        
+
         sm.canvas.onmousedown = function () {
           sm.input.state.mouseDown = true;
         };
@@ -571,19 +576,22 @@
         this.ctx = mountPoint.getContext('2d');
         this.canvas = mountPoint;
         window.requestAnimationFrame(this.appLoop);
+        sm.gfx.width = sm.canvas.width;
+        sm.gfx.height = sm.canvas.height;
+
+        sm.input.init();
+        sm.input.update();
+        sm.loaded = true;
       } else {
-        this.log.error(console.error('Specified Mount Point: ' + canvasMountId + ' is not a canvas.'), sm.context);
+        this.log.error('Specified Mount Point: ' + canvasMountId + ' is not a canvas.', sm.context);
       }
-
-      sm.gfx.width = sm.canvas.width;
-      sm.gfx.height = sm.canvas.height;
-
-      sm.input.init();
-      sm.input.update();
     },
 
     loadV2Program: function (program) {
       var conf = program.conf;
+      if (!sm.loaded) {
+        return;
+      }
 
       if (!conf) {
         sm.log.error('No conf found on provided program.');
